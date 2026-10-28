@@ -1,7 +1,7 @@
 Ref,Qty,Function,MPN,Manufacturer,LCSC #,Stock (2026-10-28),Unit price USD,Price tier,Status,Notes
 U1,1,"MCU module (8 MB flash, no PSRAM)",ESP32-S3-WROOM-1-N8,Espressif,C2913198,1762,4.91,1+,VERIFIED 2026-10-28,N8R8 variant C2913201 shows 0 stock; N8 keeps GPIO33-37 usable
 U2,1,AC-DC 5 V / 1 A / 5 W module,HLK-5M05,Hi-Link,C209907,3052,2.9474,1+,VERIFIED + datasheet read,"38 x 23 x 18 mm; 90-265 VAC; 3000 VAC isolation; datasheet asks for 0.5 A slow fuse + varistor 10D561K. Alt HLK-PM01 C209903 (700 mA, 34x20) too small for peak budget"
-U3,1,"3.3 V LDO, 600 mA, SOT-25 (owner choice 2026-10-28)",AP2112K-3.3TRG1,Diodes Inc,C51118,4510,0.1792,5+,VERIFIED listing,"600 mA max, SOT-23-5 thermal limit: see PLAN section 8. Alts: SGM2212-3.3 C3294699 (SOT-223, $0.5739), AMS1117-3.3 C6186"
+U3,1,"3.3 V LDO, SOT-223 (selected 2026-10-28 over AP2112K)",SGM2212-3.3XKC3G/TR,SGMICRO,C3294699,9071,0.5739,1+,LISTING ONLY,"datasheet NOT read (1 A-class rating assumed); used in PUMP-SENTRY-S3. Alts: AMS1117-3.3 C6186, AP2112K-3.3 C51118 (600 mA, SOT-23-5, marginal)"
 U4,1,USB ESD protection (D+/D-),USBLC6-2SC6,ST,C7519,39325,0.1814,5+,VERIFIED listing,same part as LED dimmer
 U5,1,"I2C level shifter 3.3 V to 5 V (16x2 backpack only, DNP otherwise)",PCA9306DCUR,TI,C33196,7253,0.6734,1+,LISTING ONLY,
 U6,1,4-ch 3.3 V to 5 V buffer for 12864 (DNP if not used),SN74AHCT125DR,TI,C155176,1677,0.3999,1+,VERIFIED 2026-10-28,"same part as LED dimmer; 4 gates = CS, MOSI, CLK, RST"

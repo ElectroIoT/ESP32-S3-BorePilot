@@ -163,7 +163,7 @@ Relay: 10 A 250 VAC listed for the NO contact at resistive load, and listed line
 | Buzzer | 0 | 30 mA | assumption |
 | **Total (12864 fitted)** | **about 345 mA** | **about 750 mA** | |
 
-Result: worst case 75 % of the HLK-5M05 rating, with 470 uF bulk covering the Wi-Fi bursts. HLK-PM01 (700 mA) would leave no margin and was rejected. LDO dissipation at 4.6 V in: 1.3 V x 120 mA = 0.16 W typical, 0.6 W at a burst: acceptable for SOT-223 with a copper pad, **marginal for the SOT-23-5 AP2112K (600 mA max, about 250 C/W): the owner chose it on 2026-10-28 (C51118), so a 450 mA Wi-Fi burst is 75 % of its limit and 0.6 W would heat it about 150 C above ambient if sustained. Keep Wi-Fi TX power moderate, use a large copper pad, and fall back to SGM2212-3.3 C3294699 (SOT-223) if bring-up shows brown-outs or thermal shutdown**. HLK mains-side load about 9 VA.
+Result: worst case 75 % of the HLK-5M05 rating, with 470 uF bulk covering the Wi-Fi bursts. HLK-PM01 (700 mA) would leave no margin and was rejected. LDO dissipation at 4.6 V in: 1.3 V x 120 mA = 0.16 W typical, 0.6 W at a burst: acceptable for SOT-223 with a copper pad, fine for the SOT-223 SGM2212 with a copper pad. AP2112K (C51118, SOT-23-5, 600 mA, about 250 C/W) was considered and not selected: a 450 mA Wi-Fi burst is 75 % of its limit and it runs hot.
 
 ## 9. BOM (LCSC, looked up 2026-10-28)
 
@@ -173,7 +173,7 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 |---|---|---|---|---|---|---|---|
 | U1 | 1 | MCU module (8 MB flash, no PSRAM) | ESP32-S3-WROOM-1-N8 | [C2913198](https://www.lcsc.com/product-detail/C2913198.html) | 1762 | 4.9100 (1+) | VERIFIED 2026-10-28. N8R8 variant C2913201 shows 0 stock; N8 keeps GPIO33-37 usable |
 | U2 | 1 | AC-DC 5 V / 1 A / 5 W module | HLK-5M05 | [C209907](https://www.lcsc.com/product-detail/C209907.html) | 3052 | 2.9474 (1+) | VERIFIED + datasheet read. 38 x 23 x 18 mm; 90-265 VAC; 3000 VAC isolation; datasheet asks for 0.5 A slow fuse + varistor 10D561K. Alt HLK-PM01 C209903 (700 mA, 34x20) too small for peak budget |
-| U3 | 1 | 3.3 V LDO, 600 mA, SOT-25 (owner choice 2026-10-28) | AP2112K-3.3TRG1 | [C51118](https://www.lcsc.com/product-detail/C51118.html) | 4510 | 0.1792 (5+) | VERIFIED listing. 600 mA max, SOT-23-5 thermal limit: see PLAN section 8. Alts: SGM2212-3.3 C3294699 (SOT-223, $0.5739), AMS1117-3.3 C6186 |
+| U3 | 1 | 3.3 V LDO, SOT-223 (selected 2026-10-28 over AP2112K) | SGM2212-3.3XKC3G/TR | [C3294699](https://www.lcsc.com/product-detail/C3294699.html) | 9071 | 0.5739 (1+) | LISTING ONLY. datasheet NOT read (1 A-class rating assumed); used in PUMP-SENTRY-S3. Alts: AMS1117-3.3 C6186, AP2112K-3.3 C51118 (600 mA, SOT-23-5, marginal) |
 | U4 | 1 | USB ESD protection (D+/D-) | USBLC6-2SC6 | [C7519](https://www.lcsc.com/product-detail/C7519.html) | 39325 | 0.1814 (5+) | VERIFIED listing. same part as LED dimmer |
 | U5 | 1 | I2C level shifter 3.3 V to 5 V (16x2 backpack only, DNP otherwise) | PCA9306DCUR | [C33196](https://www.lcsc.com/product-detail/C33196.html) | 7253 | 0.6734 (1+) | LISTING ONLY.  |
 | U6 | 1 | 4-ch 3.3 V to 5 V buffer for 12864 (DNP if not used) | SN74AHCT125DR | [C155176](https://www.lcsc.com/product-detail/C155176.html) | 1677 | 0.3999 (1+) | VERIFIED 2026-10-28. same part as LED dimmer; 4 gates = CS, MOSI, CLK, RST |
@@ -201,7 +201,7 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | R12-R17 | 6 | 4.7 k 0603 (I2C pull-ups 3V3/5V sides, PZEM divider) | 0603WAF4701T5E | [C23162](https://www.lcsc.com/product-detail/C23162.html) | 3779700 | 0.0028 (100+) | VERIFIED listing. estimated count |
 | R18-R21 | 4 | 100 k 0603 (MOSFET gate pull-downs: relays off during boot) | RC0603FR-07100KL | [C14675](https://www.lcsc.com/product-detail/C14675.html) | 8065000 | 0.0023 (100+) | VERIFIED listing.  |
 
-Rough parts total at the listed tier prices: **about USD 13.8** (excluding J12, PCB, PZEM-004T module, display modules, enclosure, mains wiring).
+Rough parts total at the listed tier prices: **about USD 14.2** (excluding J12, PCB, PZEM-004T module, display modules, enclosure, mains wiring).
 
 External modules (not LCSC, not selected here): PZEM-004T v3 with CT, one of 16x2 I2C LCD / 0.96" SSD1306 OLED / 12864B ST7920 module. Not placed in v1: X2 capacitor and common-mode choke for EMC certification (HLK datasheet), RGB LED, per-channel optocouplers.
 
