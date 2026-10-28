@@ -160,13 +160,16 @@ h3{margin:0 0 6px;font-size:1.05rem;color:var(--c)}.cnt{font-weight:400;color:va
 svg.dia text{font-family:system-ui,Segoe UI,sans-serif;fill:var(--fg)}.ref{font-size:12px;font-weight:700}.role{font-size:10.5px;fill:var(--mut)!important}.lab{font-size:9.5px;fill:var(--mut)!important}
 .pin{font-size:11px}.net{font-size:11px;font-weight:700}.ext{font-size:10px;fill:var(--mut)!important}.flag{font-size:10px;font-weight:700;fill:#10151c!important}
 .w{cursor:pointer;transition:opacity .15s}svg.hl .w{opacity:.15}svg.hl .w.on{opacity:1}.w.done line,.w.done polyline{stroke-dasharray:4 4}
-a{color:#3b82f6}@media print{.legend{display:none}}"""
+a{color:#3b82f6}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}progress{width:260px;height:14px;accent-color:#2fbf71}
+button{border:0;border-radius:8px;padding:7px 12px;background:#ff9f43;color:#1b1b1b;font-weight:700;cursor:pointer}.secck{cursor:pointer}.secck input{width:20px;height:20px;accent-color:var(--c);vertical-align:middle}
+.card.alldone{box-shadow:0 0 0 3px #2fbf71 inset}.card.alldone h3{text-decoration:line-through;opacity:.7}@media print{.legend{display:none}}"""
 
 def build():
     o = [f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BorePilot Wiring by Section</title><style>{CSS}</style></head><body><main>']
     o.append('<div class="hero"><h1>BorePilot - wiring by section</h1><p>One pin-to-net diagram per section, grouped under the same 5 schematic pages as the <a style="color:#fff" href="schematic-guide.html">schematic guide</a>. Draw each box as a part, then connect the pins that share a net.</p></div>')
     o.append('<div class="warn"><b>Plan stage.</b> Planned nets from PLAN.md, not a finished schematic. Each box lists pins by the names planned for the symbol (module pin numbers where I know them: USBLC6, PCA9306, 74AHCT125, J9 header; others by function). <b>Check every pin name against the EasyEDA symbol and datasheet</b> (SGM2212, SRD relay, USB-C, PZEM, display modules). 230 V AC on J2, J3, U2, J4, J5: engineer review before mains power.</div>')
     o.append('<div class="legend"><span><i style="background:#e53935"></i>L</span><span><i style="background:#1e88e5"></i>N</span><span><i style="background:#fb8c00"></i>5 V / VBUS</span><span><i style="background:#f4b400"></i>3.3 V</span><span><i style="background:#8a93a3"></i>GND</span><span><i style="background:#2fbf71"></i>GPIO / control</span><span><i style="background:#00bcd4"></i>UART</span><span><i style="background:#ec407a"></i>I2C / display</span><span><i style="background:#8e24aa"></i>USB</span><span><i style="background:#8d6e63"></i>relay contact</span> &middot; <b>hover</b> a wire = highlight net, <b>click</b> = mark done</div>')
+    o.append('<div class="bar"><progress id="pg" value="0" max="1"></progress><span id="pt" class="mut"></span><button id="rs">Reset all ticks</button></div>')
     o.append('<div class="chips">' + "".join(f'<a class="chip" style="background:{pg[3]}" href="#{pg[0]}">{e(pg[1].split(" - ")[0])}</a>' for pg in GG.PAGES) + '</div>')
     o.append('<p class="mut">Lane labels: <b>name -&gt; p2, p3</b> means the same net continues on schematic page 2 and 3 (net label). GND, 5 V and 3.3 V are drawn as symbols/flags at the pin.</p>')
     for n, pg in enumerate(GG.PAGES, 1):
@@ -176,15 +179,33 @@ def build():
         for sid in pg[2]:
             sc = next(s for s in G.S if s[0] == sid)
             cnt = len(sec_parts[sid])
-            o.append(f'<section class="card" style="--c:{sc[2]}"><h3>{e(sc[1])}<span class="cnt">{cnt} parts, page {n}</span></h3><p class="mut">{e(sc[3])}</p><div class="scroll">{section_svg(sid)}</div></section>')
+            o.append(f'<section class="card" id="sec-{sid}" data-sec="{sid}" style="--c:{sc[2]}"><h3><label class="secck"><input type="checkbox" class="seccb" data-sec="{sid}"> {e(sc[1])}</label><span class="cnt">{cnt} parts, page {n}</span><span class="cnt secprog" data-sec="{sid}"></span></h3><p class="mut">{e(sc[3])}</p><div class="scroll">{section_svg(sid).replace("<svg ", f"<svg data-sec=\"{sid}\" ", 1)}</div></section>')
     o.append("""<script>
-document.querySelectorAll('svg.dia').forEach(svg=>{
+const K='borepilot-wiring-ticks';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+const svgs=[...document.querySelectorAll('svg.dia')];
+function nets(svg){return [...new Set([...svg.querySelectorAll('.w[data-net]')].map(w=>w.dataset.net))]}
+function apply(){let done=0,total=0;
+ svgs.forEach(svg=>{const sid=svg.dataset.sec,ns=nets(svg);let d=0;
+  svg.querySelectorAll('.w[data-net]').forEach(w=>w.classList.toggle('done',!!st[sid+'|'+w.dataset.net]));
+  ns.forEach(n=>{if(st[sid+'|'+n])d++});
+  const card=document.getElementById('sec-'+sid);card.classList.toggle('alldone',d===ns.length&&ns.length>0);
+  card.querySelector('.seccb').checked=(d===ns.length&&ns.length>0);
+  card.querySelector('.secprog').textContent=d+' / '+ns.length+' nets wired';
+  done+=d;total+=ns.length});
+ document.getElementById('pg').max=total;document.getElementById('pg').value=done;
+ document.getElementById('pt').textContent=done+' / '+total+' nets wired';
+ try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}}
+svgs.forEach(svg=>{const sid=svg.dataset.sec;
  svg.querySelectorAll('.w[data-net]').forEach(w=>{
   w.addEventListener('mouseenter',()=>{svg.classList.add('hl');svg.querySelectorAll('.w[data-net="'+w.dataset.net+'"]').forEach(x=>x.classList.add('on'))});
   w.addEventListener('mouseleave',()=>{svg.classList.remove('hl');svg.querySelectorAll('.w.on').forEach(x=>x.classList.remove('on'))});
-  w.addEventListener('click',()=>{svg.querySelectorAll('.w[data-net="'+w.dataset.net+'"]').forEach(x=>x.classList.toggle('done'))});
- });
-});
+  w.addEventListener('click',()=>{const k=sid+'|'+w.dataset.net;if(st[k])delete st[k];else st[k]=1;apply()});
+ })});
+document.querySelectorAll('.seccb').forEach(cb=>cb.addEventListener('change',()=>{
+ const sid=cb.dataset.sec,svg=document.querySelector('svg.dia[data-sec="'+sid+'"]');
+ nets(svg).forEach(n=>{if(cb.checked)st[sid+'|'+n]=1;else delete st[sid+'|'+n]});apply()}));
+document.getElementById('rs').onclick=()=>{if(confirm('Clear all ticks?')){st={};apply()}};
+apply();
 </script></main></body></html>""")
     return "".join(o)
 
