@@ -130,7 +130,7 @@ def section_svg(sid):
         else:
             lx = laneX[net]
             others = sorted(sec_of_net[net] - {sid}, key=lambda s: page_of[s])
-            lab = net + ("  → p" + ",p".join(str(page_of[s]) for s in others) if others else "")
+            lab = net
             pw = 6.6 * len(lab) + 14
             o.append(f'<g class="w" data-net="{e(net)}"><line x1="{PXR}" y1="{py}" x2="{lx}" y2="{py}" stroke="{c}" stroke-width="2"/><circle cx="{PXR}" cy="{py}" r="3" fill="{c}"/><circle cx="{lx}" cy="{py}" r="2.6" fill="{c}"/><rect x="{PXR+14}" y="{py-9}" width="{pw:.0f}" height="18" rx="9" fill="{c}"/><text x="{PXR+22}" y="{py+4}" class="pill">{e(lab)}</text></g>')
     for net in lanes:
