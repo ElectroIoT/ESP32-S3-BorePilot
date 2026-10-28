@@ -129,7 +129,7 @@ USB path:
 J2 (AC in, 2-way 5.08 mm) -> HLK-5M05 AC pins and J3 (2-way tap terminal feeding the PZEM-004T's voltage input). **Owner decision 2026-10-28: no on-board fuse and no varistor.** The HLK datasheet marks both as mandatory ("must be connected"), so protection must then come from the panel (MCB/fuse upstream of J2); this is a safety item for the engineer review. the datasheet also lists a 0.1 uF/275 VAC X2 capacitor and a 10-15 mH common-mode choke that are **needed for EMC certification but are not placed** in v1 (open item). No protective earth is carried on the board: if the pump has an earth lead it goes to the enclosure/terminal block, not through the PCB (Q8).
 
 ### 7.2 Isolation barrier
-- Zones: left/bottom "mains" zone (J2, F1, RV1, U2 AC pins, J3, relay contact pins, J4, J5), right/top "SELV" zone (everything else). The barrier is a **routed slot** of at least 1.0 mm width, with no copper and no silkscreen-only separation.
+- Zones: left/bottom "mains" zone (J2, U2 AC pins, J3, relay contact pins, J4, J5), right/top "SELV" zone (everything else). The barrier is a **routed slot** of at least 1.0 mm width, with no copper and no silkscreen-only separation.
 - The HLK module straddles the barrier: AC pins on the mains side, DC pins on the SELV side. Confirm the module pin spacing against its datasheet drawing (not checked).
 - Relays straddle it too: coil pins on the SELV side, COM/NO/NC pins on the mains side. SRD-05VDC-SL-C is rated 1500 VAC coil-to-contact (datasheet). Treat that as **basic/functional insulation only**: the datasheet gives no creepage/clearance, pollution degree or impulse rating.
 - Target spacing (proposal, to be validated by an engineer against IEC 62368-1 / IEC 60664-1 for 250 VAC, pollution degree 2, FR-4 material group IIIa): >= 6.4 mm creepage and >= 3 mm clearance mains-to-SELV, aim for 8 mm where the PCB allows, milled slot under the HLK and relays, no vias or pours crossing the slot, 2 mm keep-out from mains copper to the board edge and mounting holes.
@@ -201,7 +201,7 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | R12-R17 | 6 | 4.7 k 0603 (I2C pull-ups 3V3/5V sides, PZEM divider) | 0603WAF4701T5E | [C23162](https://www.lcsc.com/product-detail/C23162.html) | 3779700 | 0.0028 (100+) | VERIFIED listing. estimated count |
 | R18-R21 | 4 | 100 k 0603 (MOSFET gate pull-downs: relays off during boot) | RC0603FR-07100KL | [C14675](https://www.lcsc.com/product-detail/C14675.html) | 8065000 | 0.0023 (100+) | VERIFIED listing.  |
 
-Rough parts total at the listed tier prices: **about USD 13.6** (excluding J12, PCB, PZEM-004T module, display modules, enclosure, mains wiring).
+Rough parts total at the listed tier prices: **about USD 14.2** (excluding J12, PCB, PZEM-004T module, display modules, enclosure, mains wiring).
 
 External modules (not LCSC, not selected here): PZEM-004T v3 with CT, one of 16x2 I2C LCD / 0.96" SSD1306 OLED / 12864B ST7920 module. Not placed in v1: X2 capacitor and common-mode choke for EMC certification (HLK datasheet), RGB LED, per-channel optocouplers.
 
@@ -265,7 +265,7 @@ Planned test sequence (to be written as test/hardware-test-plan.md): 0 inspectio
 | Q6 | 2 float/level inputs (J10) wanted? Any 12 V/24 V sensor inputs? | 2 dry-contact inputs, 3.3 V only |
 | Q7 | Product and repo name. The folder is ESP32-S3-Pump-Controller. A name/trademark/Play-Store-style collision check has **not** been done. | working title |
 | Q8 | Is a PE (earth) terminal wanted on the board? | no, earth stays off-board |
-| Q9 | Mains voltage and region: 230 V only (India) or 120 V as well? | 230 V; HLK range is 90-265 VAC but the MOV 10D561K and spacing target 250 V |
+| Q9 | Mains voltage and region: 230 V only (India) or 120 V as well? | 230 V; HLK range is 90-265 VAC but spacing targets 250 V |
 | Q10 | Create a private GitHub repo `ElectroIoT/ESP32-S3-Pump-Controller` and push? | stays local, nothing pushed |
 | Q11 | JLCPCB assembly or hand-built? (affects extended-part count and THT choices) | hand-built prototype |
 | Q12 | **ANSWERED 2026-10-28: buzzer as an optional (DNP-able) part.** RGB LED still open. | buzzer optional, RGB no |
