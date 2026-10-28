@@ -291,30 +291,47 @@ def v_lcd16():
     return svg(380, "".join(b), "OPTION A: 16x2 I2C LCD through the PCA9306 level shifter")
 
 
+U6_L = [("1  1OE#", "GND"), ("2  1A", "LCD_CS"), ("3  1Y", "LCD_RS_5V"), ("4  2OE#", "GND"), ("5  2A", "LCD_MOSI"), ("6  2Y", "LCD_RW_5V"), ("7  GND", "GND")]
+U6_R = [("VCC  14", "+5V"), ("4OE#  13", "GND"), ("4A  12", "LCD_RST"), ("4Y  11", "LCD_RST_5V"), ("3OE#  10", "GND"), ("3A  9", "LCD_CLK"), ("3Y  8", "LCD_E_5V")]
+J9_R = [("20  BLK", "BL_K"), ("19  BLA", "+5V"), ("18  VOUT", "VOUT"), ("17  RST", "LCD_RST_5V"), ("16  NC", "NC"), ("15  PSB", "PSB"),
+        ("14  DB7", "NC"), ("13  DB6", "NC"), ("12  DB5", "NC"), ("11  DB4", "NC"), ("10  DB3", "NC"), ("9  DB2", "NC"), ("8  DB1", "NC"), ("7  DB0", "NC"),
+        ("6  E", "LCD_E_5V"), ("5  R/W", "LCD_RW_5V"), ("4  RS", "LCD_RS_5V"), ("3  V0", "V0"), ("2  VDD", "+5V"), ("1  VSS", "GND")]
+
+
 def v_lcd12864():
     b = []
-    s, ys, h = part(130, 60, 200, "U6", "SN74AHCT125 buffer", "C155176",
-                    [("2 1A", "LCD_CS"), ("5 2A", "LCD_MOSI"), ("9 3A", "LCD_CLK"), ("12 4A", "LCD_RST"), ("14 VCC", "+5V"), ("7 GND", "GND"), ("1 1OE", "GND"), ("4 2OE", "GND"), ("10 3OE", "GND"), ("13 4OE", "GND")],
-                    [("3 1Y", None), ("6 2Y", None), ("8 3Y", None), ("11 4Y", None)])
+    b.append(txt(14, 44, "Pins are drawn exactly like the EasyEDA symbols: U6 pins 1-7 left, 14-8 right; J9 pins 20 (top) to 1 (bottom) on the right.", "lab"))
+    b.append(txt(14, 58, "Every coloured flag is a net label: put the same name on the pin in EasyEDA and the two pins are connected.", "lab"))
+    s, ys, h = part(120, 80, 150, "U6", "SN74AHCT125DR", "C155176", U6_L, U6_R)
     b.append(s)
-    s2, ys2, h2 = part(560, 60, 160, "J9", "12864 ST7920 header", "C41413628",
-                       [("4 RS", None), ("5 R/W", None), ("6 E", None), ("17 RST", None), ("1 VSS", "GND"), ("2 VDD", "+5V"), ("19 BLA", "+5V"), ("20 BLK", "BL_K"), ("15 PSB", "PSB"), ("3 V0", "V0"), ("18 VOUT", "VOUT")], [])
+    s2, ys2, h2 = part(430, 80, 120, "J9", "PZ254R-11-20P", "C41413628", [], J9_R)
     b.append(s2)
-    for (a, bb) in [("3 1Y", "4 RS"), ("6 2Y", "5 R/W"), ("8 3Y", "6 E"), ("11 4Y", "17 RST")]:
-        y1, y2 = ys[("R", a)], ys2[("L", bb)]
-        b.append(ln([(330, y1), (560, y2)], CI) if y1 == y2 else "")
-    # rows are aligned by order: 1Y..4Y rows 0..3 and RS..RST rows 0..3
-    b.append(txt(350, 86, "RS / R/W / E / RST at 5 V", "pin"))
-    yb = 60 + h2 + 40
+    yb = 80 + h2 + 40
     b.append(txt(14, yb - 14, "Backlight switch, contrast trimmer and serial-mode jumper", "ref"))
-    b.append(mosfet(130, yb, "Q3") + ln([(160, yb), (160, yb - 8)], CI) + pill(166, yb - 8, "BL_K", CI, "l"))
+    b.append(mosfet(130, yb, "Q3") + ln([(160, yb), (160, yb - 22)], CI) + pill(166, yb - 22, "BL_K", CI, "l"))
     b.append(ln([(130, yb + 45), (90, yb + 45)], CS) + dot(100, yb + 45, CS) + pill(90, yb + 45, "LCD_BL", CS, "r") + res_v(100, yb + 55, yb + 95, CG, "R20 100k") + gnd(100, yb + 95) + ln([(160, yb + 70), (160, yb + 95)], CG) + gnd(160, yb + 95))
-    b.append(txt(330, yb + 14, "RV2 10k trimmer (contrast)", "pin"))
+    b.append(txt(384, yb + 44, "RV2 10k trimmer", "pin") + txt(384, yb + 58, "(contrast)", "pin"))
     b.append(f'<rect x="352" y="{yb+30}" width="24" height="60" fill="var(--card)" stroke="{CI}" stroke-width="2"/>')
-    b.append(ln([(364, yb + 30), (364, yb + 14)], C5) + flag(364, yb + 6, "+5V", C5) + ln([(364, yb + 90), (364, yb + 106)], CI) + pill(374, yb + 106, "VOUT", CI, "l") + ln([(376, yb + 60), (410, yb + 60)], CI) + pill(414, yb + 60, "V0", CI, "l"))
-    b.append(txt(560, yb + 14, "SJ1 solder jumper (default bridged)", "pin") + pill(540, yb + 50, "PSB", CI, "r") + ln([(540, yb + 50), (600, yb + 50)], CI) + f'<rect x="600" y="{yb+40}" width="30" height="20" rx="3" fill="none" stroke="var(--fg)" stroke-width="2"/>' + ln([(630, yb + 50), (660, yb + 50)], CG) + gnd(660, yb + 50))
-    b.append(txt(14, yb + 140, "C14 100nF on U6 VCC, C19 100nF on the J9 +5V. PSB to GND = serial mode. Check contrast wiring and the backlight resistor on your own module's datasheet."))
+    b.append(ln([(364, yb + 30), (364, yb + 14)], C5) + flag(364, yb + 6, "+5V", C5) + ln([(364, yb + 90), (364, yb + 106)], CI) + pill(374, yb + 106, "VOUT", CI, "l") + ln([(376, yb + 76), (470, yb + 76)], CI) + pill(474, yb + 76, "V0", CI, "l"))
+    b.append(txt(540, yb + 14, "SJ1 solder jumper (default bridged)", "pin") + pill(520, yb + 50, "PSB", CI, "r") + ln([(520, yb + 50), (580, yb + 50)], CI) + f'<rect x="580" y="{yb+40}" width="30" height="20" rx="3" fill="none" stroke="var(--fg)" stroke-width="2"/>' + ln([(610, yb + 50), (640, yb + 50)], CG) + gnd(640, yb + 50))
+    b.append(txt(14, yb + 140, "C14 100nF on U6 VCC (pin 14) and C19 100nF on the J9 +5V. PSB to GND = serial mode. Check contrast wiring and the backlight resistor on your own module's datasheet."))
     return svg(yb + 160, "".join(b), "OPTION C: 12864 ST7920 through the 74AHCT125, backlight and contrast")
+
+
+def lcd12864_tables():
+    def rows(items, role):
+        r = ""
+        for lab, net in items:
+            pin, _, name = lab.partition("  ")
+            if role == "R":
+                a, bq = lab.rsplit("  ", 1)
+                pin, name = bq, a
+            r += f'<tr><td><b>{e(pin)}</b></td><td>{e(name)}</td><td>{"no connect" if net == "NC" else e(net)}</td></tr>'
+        return r
+    u6 = rows(U6_L, "L") + rows(U6_R, "R")
+    j9 = "".join(f'<tr><td><b>{e(l.split("  ")[0])}</b></td><td>{e(l.split("  ")[1]) if "  " in l else ""}</td><td>{"no connect" if n == "NC" else e(n)}</td></tr>' for l, n in J9_R[::-1])
+    return ('<div class="flexrow"><div class="scroll"><h3 style="font-size:.95rem">U6 SN74AHCT125DR: pin to net flag</h3><table class="pt"><thead><tr><th>Pin</th><th>Name</th><th>Net flag</th></tr></thead><tbody>' + u6 + '</tbody></table></div>'
+            '<div class="scroll"><h3 style="font-size:.95rem">J9 PZ254R-11-20P: pin to net flag</h3><table class="pt"><thead><tr><th>Pin</th><th>12864 name</th><th>Net flag</th></tr></thead><tbody>' + j9 + '</tbody></table></div></div>')
 
 
 VIEWS = {
@@ -334,5 +351,5 @@ def cards_for(sid):
     out = []
     for key, fn, desc, pts in VIEWS.get(sid, []):
         li = "".join(f"<li>{e(p)}</li>" for p in pts)
-        out.append(f'<section class="card" id="cv-{key}" style="--c:#2fbf71"><h3>Circuit view</h3><p class="mut">{e(desc)} Colours: orange = 5 V, yellow = 3.3 V, grey = GND, green = GPIO, pink = display / I2C, purple = USB, cyan = UART, red / blue = mains.</p><div class="scroll">{fn()}</div><ol class="how">{li}</ol></section>')
+        out.append(f'<section class="card" id="cv-{key}" style="--c:#2fbf71"><h3>Circuit view</h3><p class="mut">{e(desc)} Colours: orange = 5 V, yellow = 3.3 V, grey = GND, green = GPIO, pink = display / I2C, purple = USB, cyan = UART, red / blue = mains.</p><div class="scroll">{fn()}</div><ol class="how">{li}</ol>{lcd12864_tables() if key == "disp_c" else ""}</section>')
     return "".join(out)

@@ -162,7 +162,7 @@ h3{margin:0 0 6px;font-size:1.05rem;color:var(--c)}.cnt{font-weight:400;color:va
 svg.dia text,svg.cdia text{font-family:system-ui,Segoe UI,sans-serif;fill:var(--fg)}.ref{font-size:12px;font-weight:700}.role{font-size:10.5px;fill:var(--mut)!important}.lab{font-size:9.5px;fill:var(--mut)!important}
 .pin{font-size:11px}.net{font-size:11px;font-weight:700}.ext{font-size:10px;fill:var(--mut)!important}.flag{font-size:10px;font-weight:700;fill:#10151c!important}.pill{font-size:11px;font-weight:700;fill:#fff!important}
 .w{cursor:pointer;transition:opacity .15s}svg.hl .w{opacity:.15}svg.hl .w.on{opacity:1}.w.done line,.w.done polyline{stroke-dasharray:4 4}
-ol.how{font-size:13px;padding-left:20px}ol.how li{margin:5px 0}.flexrow{display:flex;flex-wrap:wrap;gap:14px}a{color:#3b82f6}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}progress{width:260px;height:14px;accent-color:#2fbf71}
+table.pt{border-collapse:collapse;font-size:13px;margin:6px 0}table.pt th,table.pt td{padding:3px 10px;border-bottom:1px solid var(--line);text-align:left}ol.how{font-size:13px;padding-left:20px}ol.how li{margin:5px 0}.flexrow{display:flex;flex-wrap:wrap;gap:14px}a{color:#3b82f6}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}progress{width:260px;height:14px;accent-color:#2fbf71}
 button{border:0;border-radius:8px;padding:7px 12px;background:#ff9f43;color:#1b1b1b;font-weight:700;cursor:pointer}.secck{cursor:pointer}.secck input{width:20px;height:20px;accent-color:var(--c);vertical-align:middle}
 .card.alldone{box-shadow:0 0 0 3px #2fbf71 inset}.card.alldone h3{text-decoration:line-through;opacity:.7}@media print{.legend{display:none}}"""
 
