@@ -12,7 +12,7 @@
 - ESP32-S3-WROOM-1-N8, Wi-Fi, ESPHome firmware with Home Assistant (same entities as [Smart-Submersible-Pump-Controller-ESPHome](https://github.com/ElectroIoT/Smart-Submersible-Pump-Controller-ESPHome)).
 - PZEM-004T v3 header: voltage, current, power, energy, frequency; dry-run and over-current protection.
 - 2 SPDT relays (Songle SRD-05VDC-SL-C), COM / NO / NC on 5.08 mm screw terminals for each.
-- Hi-Link HLK-5M05 5 V / 1 A module, 3.3 V LDO, fuse and varistor on the mains input.
+- Hi-Link HLK-5M05 5 V / 1 A module, 3.3 V LDO (no on-board fuse or varistor: protect upstream).
 - USB-C (LCSC C165948) for flashing and logging via native USB; no USB-UART chip.
 - Display options on one board: 16x2 I2C LCD, I2C OLED or 128x64 ST7920 LCD; START / STOP / MENU buttons, buzzer, status LEDs, 2 float-switch inputs.
 - Target PCB: 100 x 80 mm, 2 layers, mains/low-voltage isolation slot.

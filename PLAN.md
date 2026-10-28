@@ -40,9 +40,8 @@ Read from `packages/pump-controller.yaml` (ESPHome >= 2026.8.0, ESP8266 D1 Mini)
 ```mermaid
 flowchart LR
   subgraph MAINS["MAINS SIDE (hazardous)"]
-    ACIN["J2 AC in L,N"] --> F1["F1 0.5 A slow"] --> RV1["RV1 MOV 10D561K"]
-    RV1 --> U2["U2 HLK-5M05 AC-DC 5V 1A"]
-    RV1 --> ACT["J3 AC tap L,N to PZEM"]
+    ACIN["J2 AC in L,N"] --> U2["U2 HLK-5M05 AC-DC 5V 1A"]
+    ACIN --> ACT["J3 AC tap L,N to PZEM"]
     K1C["K1 contacts COM/NO/NC -> J4"]
     K2C["K2 contacts COM/NO/NC -> J5"]
   end
@@ -85,13 +84,13 @@ Rules used: avoid strapping pins GPIO0 (BOOT only), GPIO3, GPIO45, GPIO46; GPIO1
 | 1 | BTN_START | in | SW3 to GND, internal pull-up, firmware debounce |
 | 2 | BTN_STOP | in | SW4 |
 | 6 | BTN_MENU | in | SW5 |
-| 15 | BUZZER | out | Q4 gate (LEDC PWM), 100 k pull-down |
+| 15 | BUZZER (optional, DNP-able) | out | Q4 gate (LEDC PWM), 100 k pull-down |
 | 16 | LED_STATUS | out | LED2 green via 1 k |
-| 39 | IN1 | in | J10, float/level switch 1 (dry contact, internal pull-up) |
-| 40 | IN2 | in | J10, float/level switch 2 |
-| 41, 42 | SPARE1, SPARE2 | io | J10 |
+| 39 | IN1 | in | J10 (screw terminal), float/level switch 1 (dry contact, internal pull-up) |
+| 40 | IN2 | in | J11 (screw terminal), float/level switch 2 |
+| 41, 42 | SPARE1, SPARE2 | io | J12 |
 | 43 / 44 | TXD0 / RXD0 | out / in | two test pads (optional external UART logging) |
-| 21, 38, 47, 48 | - | - | unused, kept free; 47/48 reserved for a possible RGB LED |
+| 21, 38, 47, 48 | - | - | unused; 47/48 also on J12 |
 
 Relay LEDs LED3/LED4 are driven by the relay-coil rail (parallel with the coil through Q1/Q2), so they show the actual coil state, not the GPIO state. 3V3 pull-up on GPIO inputs is internal; add external 10 k only if testing shows noise.
 
@@ -127,7 +126,7 @@ USB path:
 ## 7. Mains side: isolation, creepage and safety design
 
 ### 7.1 Mains entry
-J2 (AC in, 2-way 5.08 mm) -> F1 (5x20, 0.5 A slow-blow, clips F1H) -> RV1 (10D561K MOV across L-N, after the fuse) -> HLK-5M05 AC pins and J3 (2-way tap terminal feeding the PZEM-004T's voltage input). Fuse and varistor are the minimum the HLK datasheet requires; the datasheet also lists a 0.1 uF/275 VAC X2 capacitor and a 10-15 mH common-mode choke that are **needed for EMC certification but are not placed** in v1 (open item). No protective earth is carried on the board: if the pump has an earth lead it goes to the enclosure/terminal block, not through the PCB (Q8).
+J2 (AC in, 2-way 5.08 mm) -> HLK-5M05 AC pins and J3 (2-way tap terminal feeding the PZEM-004T's voltage input). **Owner decision 2026-10-28: no on-board fuse and no varistor.** The HLK datasheet marks both as mandatory ("must be connected"), so protection must then come from the panel (MCB/fuse upstream of J2); this is a safety item for the engineer review. the datasheet also lists a 0.1 uF/275 VAC X2 capacitor and a 10-15 mH common-mode choke that are **needed for EMC certification but are not placed** in v1 (open item). No protective earth is carried on the board: if the pump has an earth lead it goes to the enclosure/terminal block, not through the PCB (Q8).
 
 ### 7.2 Isolation barrier
 - Zones: left/bottom "mains" zone (J2, F1, RV1, U2 AC pins, J3, relay contact pins, J4, J5), right/top "SELV" zone (everything else). The barrier is a **routed slot** of at least 1.0 mm width, with no copper and no silkscreen-only separation.
@@ -182,20 +181,17 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | Q1-Q4 | 4 | N-MOSFET low-side drivers (K1, K2, backlight, buzzer) | AO3400A | [C20917](https://www.lcsc.com/product-detail/C20917.html) | 587805 | 0.0897 (5+) | VERIFIED listing. Vgs(th) ~1 V works at 3.3 V gate (OpenRelay-8 datasheet notes) |
 | D1-D5 | 5 | Schottky 3 A 40 V: K1/K2/buzzer flyback (D1-D3) + 5 V OR-ing (D4 HLK, D5 USB) | UMW SS34B | [C2758511](https://www.lcsc.com/product-detail/C2758511.html) | 77840 | 0.0378 (20+) | LISTING ONLY. rating from name SS34; datasheet NOT read. Flyback alt 1N4148WS C3040699 |
 | J1 | 1 | USB Type-C 16-pin SMD receptacle (user-specified C165948) | TYPE-C-31-M-12 | [C165948](https://www.lcsc.com/product-detail/C165948.html) | 283620 | 0.1886 (5+) | VERIFIED + datasheet read. NOT micro-USB. Right-angle SMD, 16 pin, 5 A/20 V rated, 8.94 x 7.35 mm |
-| F1 | 1 | Fuse 0.5 A 250 V slow-blow, 5 x 20 glass (ships separately) | 0218.500MXP | [C142727](https://www.lcsc.com/product-detail/C142727.html) | 900 | 0.2257 (5+) | LISTING ONLY. matches HLK datasheet (0.5 A slow); check breaking capacity |
-| F1H | 2 | 5 x 20 PCB fuse clips (2 per fuse) | BLX-A XC-7 | [C3131](https://www.lcsc.com/product-detail/C3131.html) | 85140 | 0.0854 (5+) | LISTING ONLY. listing says 6.3 A bracket; confirm one clip per piece and 250 V rating |
-| RV1 | 1 | Varistor 560 V, 10 mm disc, across L-N | 10D561K | [C2839517](https://www.lcsc.com/product-detail/C2839517.html) | 38910 | 0.0494 (10+) | VERIFIED listing. value recommended by HLK datasheet; 07D471K C28756 is the 470 V alternative |
 | RV2 | 1 | 10 k trimmer (12864 V0 contrast; DNP if no 12864) | 3362P-1-103LF | [C58159](https://www.lcsc.com/product-detail/C58159.html) | 5000 | 0.2073 (1+) | LISTING ONLY. stock via other suppliers, 5-7 day lead time |
-| J2,J3 | 2 | Screw terminal 5.08 mm 2P: AC in, AC tap for PZEM | KF128-5.08-2P-AA | [C474952](https://www.lcsc.com/product-detail/C474952.html) | 57990 | 0.1944 (5+) | LISTING ONLY. voltage/current rating NOT read - must be >= 300 V / 10 A |
+| J2,J3,J10,J11 | 4 | Screw terminal 5.08 mm 2P: AC in, AC tap for PZEM, float input 1, float input 2 (IN + GND each) | KF128-5.08-2P-AA | [C474952](https://www.lcsc.com/product-detail/C474952.html) | 57990 | 0.1944 (5+) | LISTING ONLY. voltage/current rating NOT read - must be >= 300 V / 10 A |
 | J4,J5 | 2 | Screw terminal 5.08 mm 3P: relay 1 and relay 2 COM/NO/NC | KF128-5.08-3P-AA | [C474953](https://www.lcsc.com/product-detail/C474953.html) | 8510 | 0.3251 (5+) | LISTING ONLY. same rating caveat |
 | J6 | 1 | JST XH 4P vertical header: PZEM-004T (5V, TX, RX, GND) | B4B-XH-A-G | [C594232](https://www.lcsc.com/product-detail/C594232.html) | 23130 | 0.2533 (5+) | VERIFIED listing. mating housing + crimp contacts not yet selected |
 | J7,J8 | 2 | 1x4 2.54 header: 16x2 I2C LCD, I2C OLED | PZ254V-11-04P | [C2691448](https://www.lcsc.com/product-detail/C2691448.html) | 591680 | 0.0264 (20+) | VERIFIED listing.  |
 | J9 | 1 | 1x20 2.54 female header: 12864 LCD | PZ254R-11-20P | [C41413628](https://www.lcsc.com/product-detail/C41413628.html) | 400 | 0.1397 (5+) | VERIFIED listing. only 400 in stock; male alt PZ254V-11-20P not looked up |
-| J10 | 1 | 1x6 2.54 header: float inputs + spare GPIO | PZ254V-11-06P | [C492405](https://www.lcsc.com/product-detail/C492405.html) | TBD | TBD () | FROM DIMMER BOM. not re-checked today; price/stock TBD |
+| J12 | 1 | 1x6 2.54 header: 3V3, GND, GPIO41, GPIO42, GPIO47, GPIO48 (spare) | PZ254V-11-06P | [C492405](https://www.lcsc.com/product-detail/C492405.html) | TBD | TBD () | FROM DIMMER BOM. not re-checked today; price/stock TBD |
 | SW1-SW5 | 5 | Tact switches: EN, BOOT, START, STOP, MENU | TS-1187A-B-A-B | [C318884](https://www.lcsc.com/product-detail/C318884.html) | 887660 | 0.0208 (20+) | VERIFIED listing.  |
 | LED1,LED2 | 2 | 0603 green: power, Wi-Fi/status | 19-217/GHC-YR1S2/6T | [C2986059](https://www.lcsc.com/product-detail/C2986059.html) | 718400 | 0.0180 (50+) | LISTING ONLY. colour code not confirmed on datasheet |
 | LED3,LED4 | 2 | 0603 red: relay 1, relay 2 energised | XL-1608SURC-04 | [C965798](https://www.lcsc.com/product-detail/C965798.html) | 270700 | 0.0057 (100+) | LISTING ONLY. colour inferred from name |
-| BZ1 | 1 | Magnetic SMD buzzer 8.5 mm (passive, PWM driven) | MLT-8530 | [C94599](https://www.lcsc.com/product-detail/C94599.html) | 143625 | 0.2036 (5+) | LISTING ONLY. drive voltage / current not read |
+| BZ1 | 1 | OPTIONAL (DNP-able) magnetic SMD buzzer 8.5 mm, passive, PWM driven, with Q4 + D3 | MLT-8530 | [C94599](https://www.lcsc.com/product-detail/C94599.html) | 143625 | 0.2036 (5+) | LISTING ONLY. drive voltage / current not read |
 | C1 | 1 | 470 uF 16 V electrolytic, 8x12 (5 V bulk) | ERG16V470M8X12 | [C47344174](https://www.lcsc.com/product-detail/C47344174.html) | 64670 | 0.0579 (10+) | LISTING ONLY. HLK datasheet wants 100-220 uF, low ESR; 470 uF covers Wi-Fi bursts |
 | C2-C7 | 6 | 10 uF 0805 (LDO in/out, rails) | CL21A106KAYNNNE | [C15850](https://www.lcsc.com/product-detail/C15850.html) | 1905240 | 0.0441 (20+) | VERIFIED listing. estimated count |
 | C8-C19 | 12 | 100 nF 0603 decoupling | CL10B104KB8NNNC | [C1591](https://www.lcsc.com/product-detail/C1591.html) | 120100 | 0.0078 (100+) | VERIFIED listing. estimated count |
@@ -205,12 +201,13 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | R12-R17 | 6 | 4.7 k 0603 (I2C pull-ups 3V3/5V sides, PZEM divider) | 0603WAF4701T5E | [C23162](https://www.lcsc.com/product-detail/C23162.html) | 3779700 | 0.0028 (100+) | VERIFIED listing. estimated count |
 | R18-R21 | 4 | 100 k 0603 (MOSFET gate pull-downs: relays off during boot) | RC0603FR-07100KL | [C14675](https://www.lcsc.com/product-detail/C14675.html) | 8065000 | 0.0023 (100+) | VERIFIED listing.  |
 
-Rough parts total at the listed tier prices: **about USD 14.3** (excluding J10, PCB, PZEM-004T module, display modules, enclosure, mains wiring).
+Rough parts total at the listed tier prices: **about USD 13.6** (excluding J12, PCB, PZEM-004T module, display modules, enclosure, mains wiring).
 
 External modules (not LCSC, not selected here): PZEM-004T v3 with CT, one of 16x2 I2C LCD / 0.96" SSD1306 OLED / 12864B ST7920 module. Not placed in v1: X2 capacitor and common-mode choke for EMC certification (HLK datasheet), RGB LED, per-channel optocouplers.
 
 Notes:
 - Several assembled parts are tagged "SMT Extended" on LCSC (C165948, C35449, C209907, KF128 terminals, ...). If JLCPCB assembly is used, each unique extended part adds a feeder fee. THT parts (HLK, relays, terminals, fuse clips, electrolytic) are normally hand-soldered.
+- Removed on owner request (2026-10-28): F1 fuse + clips (C142727, C3131) and RV1 varistor (C2839517).
 - Rejected: AP2112K-3.3 C51118 (SOT-23-5 thermal), HLK-PM01 C209903 (700 mA), Uni-Royal 10 k C25804 (0 stock).
 
 ## 10. PCB size and layer stack (proposal)
@@ -271,25 +268,25 @@ Planned test sequence (to be written as test/hardware-test-plan.md): 0 inspectio
 | Q9 | Mains voltage and region: 230 V only (India) or 120 V as well? | 230 V; HLK range is 90-265 VAC but the MOV 10D561K and spacing target 250 V |
 | Q10 | Create a private GitHub repo `ElectroIoT/ESP32-S3-Pump-Controller` and push? | stays local, nothing pushed |
 | Q11 | JLCPCB assembly or hand-built? (affects extended-part count and THT choices) | hand-built prototype |
-| Q12 | Buzzer and RGB LED needed? | buzzer yes, RGB no |
+| Q12 | **ANSWERED 2026-10-28: buzzer as an optional (DNP-able) part.** RGB LED still open. | buzzer optional, RGB no |
 
 ## 14. Unverified items and safety items for an engineer
 
 ### Not verified in this session
-- Datasheets **not read** for: SGM2212-3.3 (current/dropout assumed), PCA9306, SS34B (ratings from the name), MLT-8530, KF128-5.08 terminals (voltage/current rating unknown), Littelfuse 0218.500MXP breaking capacity, BLX-A clip count/rating, 10D561K, ESP32-S3-WROOM-1 (power figures assumed), SN74AHCT125 (reused from the dimmer), ST7920, PZEM-004T v3.
+- Datasheets **not read** for: SGM2212-3.3 (current/dropout assumed), PCA9306, SS34B (ratings from the name), MLT-8530, KF128-5.08 terminals (voltage/current rating unknown), ESP32-S3-WROOM-1 (power figures assumed), SN74AHCT125 (reused from the dimmer), ST7920, PZEM-004T v3.
 - PZEM-004T v3 TTL levels (TX assumed 5 V, divider added), isolation claim, supply current, pin order of the module header.
 - ST7920 serial-mode behaviour on the specific 12864B module (PSB pin, V0/VOUT contrast wiring, backlight series resistor and polarity, 3.3 V vs 5 V supply).
 - OLED and LCD backpack pin orders and I2C pull-up locations vary by module.
 - LED colours of C2986059 (green) and C965798 (red) are inferred from names.
-- Stock and prices are from 2026-10-28 page views; some parts (C58159, C3131) come from "other suppliers" with lead times; J10 header C492405 was not re-checked.
+- Stock and prices are from 2026-10-28 page views; some parts (C58159, C3131) come from "other suppliers" with lead times; J12 header C492405 was not re-checked.
 - C165948 footprint/pad dimensions are read from the manufacturer drawing but **no EasyEDA footprint has been compared yet**.
 - LCSC API credentials were not available, so all lookups were manual page reads; the lcsc-parts rule "search by exact MPN" was followed.
 
 ### Safety items for an engineer review (mandatory before mains power)
 1. Creepage/clearance values in 7.2 are proposals, not a calculation or a certified rule check.
 2. Relay coil-to-contact 1500 VAC is not reinforced insulation; user-touchable SELV parts (USB, buttons, display headers, USB shield) sit on the same isolated rail. Decide: enclosure interlock, or reinforced-rated relays/barrier.
-3. HLK-5M05: datasheet-mandatory fuse and varistor are included; X2 capacitor, CM choke, EMC and surge testing are not.
-4. Fuse breaking capacity, fuse-clip rating, MOV energy rating (10D561K, 10 mm), and terminal-block ratings need to be read from datasheets.
+3. HLK-5M05: the datasheet-mandatory fuse and varistor are **removed by owner decision**; upstream protection is required; X2 capacitor, CM choke, EMC and surge testing are not.
+4. Terminal-block ratings (KF128) need to be read from the datasheet.
 5. Contact ratings versus inductive pump/contactor loads (7.4); no snubber on relay contacts yet (RC snubber or varistor across the contactor coil may be needed to protect contacts and EMI).
 6. USB plugged in while mains is connected (section 6).
 7. PZEM CT and mains wiring are off-board and are the installer's responsibility.
