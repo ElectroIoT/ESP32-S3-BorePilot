@@ -32,6 +32,15 @@ def gndL(x, y):
             + f'<text x="{x-26}" y="{y+4}" text-anchor="end" class="net" fill="{CG}">GND</text>')
 
 
+def gndR(x, y):
+    """Ground symbol on a right-side pin, label on the same row."""
+    return (ln([(x, y), (x + 12, y)], CG)
+            + f'<line x1="{x+12}" y1="{y-7}" x2="{x+12}" y2="{y+7}" stroke="{CG}" stroke-width="2"/>'
+            + f'<line x1="{x+16}" y1="{y-4}" x2="{x+16}" y2="{y+4}" stroke="{CG}" stroke-width="2"/>'
+            + f'<line x1="{x+20}" y1="{y-2}" x2="{x+20}" y2="{y+2}" stroke="{CG}" stroke-width="2"/>'
+            + f'<text x="{x+26}" y="{y+4}" class="net" fill="{CG}">GND</text>')
+
+
 def net_end(x, y, name, side):
     """Flag at the end of a wire. side 'l': flag sits left of x; 'r': right of x."""
     c = net_col(name)
@@ -61,7 +70,7 @@ def part(x, y, w, ref, name, code, L, R, minrows=0):
             if net == "NC":
                 o.append(f'<line x1="{ex+ox*4}" y1="{py-4}" x2="{ex+ox*10}" y2="{py+4}" stroke="#9aa5b5" stroke-width="2"/><line x1="{ex+ox*10}" y1="{py-4}" x2="{ex+ox*4}" y2="{py+4}" stroke="#9aa5b5" stroke-width="2"/>')
             elif net == "GND":
-                o.append(gndL(ex, py) if side == "L" else ln([(ex, py), (ex + 14, py)], CG) + gnd(ex + 14, py))
+                o.append(gndL(ex, py) if side == "L" else gndR(ex, py))
             elif net:
                 c = net_col(net)
                 o.append(ln([(ex, py), (ex + ox * 40, py)], c) + dot(ex, py, c) + net_end(ex + ox * 40, py, net, "l" if side == "L" else "r"))
@@ -286,9 +295,18 @@ def v_lcd16():
     b.append(ln([(290, ysd), (350, ysd), (350, ysda), (520, ysda)], CI) + dot(290, ysd, CI) + dot(520, ysda, CI))
     b.append(ln([(290, ysc), (370, ysc), (370, yscl), (520, yscl)], CI) + dot(290, ysc, CI) + dot(520, yscl, CI))
     b.append(txt(300, ysd + 16, "SDA_5V", "net") + txt(380, ysc - 6, "SCL_5V", "net"))
-    b.append(txt(14, 340, "R14 / R15 (4.7k from SDA_5V / SCL_5V to +5V): fit ONLY if the LCD backpack has no pull-ups. C12 100nF on VREF1, C13 100nF on VREF2."))
-    b.append(txt(14, 358, "The 5 V I2C of the backpack never reaches the ESP32: the PCA9306 separates the two sides."))
-    return svg(380, "".join(b), "OPTION A: 16x2 I2C LCD through the PCA9306 level shifter")
+    ya = 360
+    b.append(txt(14, ya - 22, "R14, R15, C12, C13: where they connect", "ref"))
+    b.append(pill(30, ya + 20, "SDA_5V", CI, "l") + ln([(110, ya + 20), (140, ya + 20)], CI) + res_v(140, ya + 20, ya + 70, C5, "R14 4.7k") + flag(140, ya + 80, "+5V", C5))
+    b.append(txt(30, ya + 100, "R14: SDA_5V to +5V", "pin") + txt(30, ya + 114, "(DNP if backpack has pull-ups)", "lab"))
+    b.append(pill(230, ya + 20, "SCL_5V", CI, "l") + ln([(310, ya + 20), (340, ya + 20)], CI) + res_v(340, ya + 20, ya + 70, C5, "R15 4.7k") + flag(340, ya + 80, "+5V", C5))
+    b.append(txt(230, ya + 100, "R15: SCL_5V to +5V", "pin") + txt(230, ya + 114, "(DNP if backpack has pull-ups)", "lab"))
+    b.append(flag(460, ya + 6, "+3V3", C3) + ln([(460, ya + 14), (460, ya + 20)], C3) + cap_v(460, ya + 20, ya + 80, C3, "C12 100nF") + gnd(460, ya + 80))
+    b.append(txt(410, ya + 112, "C12: U5 pin 2 (VREF1, +3V3)", "pin") + txt(410, ya + 126, "to GND", "pin"))
+    b.append(flag(630, ya + 6, "+5V", C5) + ln([(630, ya + 14), (630, ya + 20)], C5) + cap_v(630, ya + 20, ya + 80, C5, "C13 100nF") + gnd(630, ya + 80))
+    b.append(txt(590, ya + 112, "C13: U5 pin 7 (VREF2, +5V)", "pin") + txt(590, ya + 126, "to GND", "pin"))
+    b.append(txt(14, ya + 150, "The 5 V I2C of the backpack never reaches the ESP32: the PCA9306 separates the two sides. Place C12 and C13 close to U5 pins 2 and 7."))
+    return svg(540, "".join(b), "OPTION A: 16x2 I2C LCD through the PCA9306 level shifter")
 
 
 U6_L = [("1  1OE#", "GND"), ("2  1A", "LCD_CS"), ("3  1Y", "LCD_RS_5V"), ("4  2OE#", "GND"), ("5  2A", "LCD_MOSI"), ("6  2Y", "LCD_RW_5V"), ("7  GND", "GND")]
@@ -314,8 +332,13 @@ def v_lcd12864():
     b.append(f'<rect x="352" y="{yb+30}" width="24" height="60" fill="var(--card)" stroke="{CI}" stroke-width="2"/>')
     b.append(ln([(364, yb + 30), (364, yb + 14)], C5) + flag(364, yb + 6, "+5V", C5) + ln([(364, yb + 90), (364, yb + 106)], CI) + pill(374, yb + 106, "VOUT", CI, "l") + ln([(376, yb + 76), (470, yb + 76)], CI) + pill(474, yb + 76, "V0", CI, "l"))
     b.append(txt(540, yb + 14, "SJ1 solder jumper (default bridged)", "pin") + pill(520, yb + 50, "PSB", CI, "r") + ln([(520, yb + 50), (580, yb + 50)], CI) + f'<rect x="580" y="{yb+40}" width="30" height="20" rx="3" fill="none" stroke="var(--fg)" stroke-width="2"/>' + ln([(610, yb + 50), (640, yb + 50)], CG) + gnd(640, yb + 50))
-    b.append(txt(14, yb + 140, "C14 100nF on U6 VCC (pin 14) and C19 100nF on the J9 +5V. PSB to GND = serial mode. Check contrast wiring and the backlight resistor on your own module's datasheet."))
-    return svg(yb + 160, "".join(b), "OPTION C: 12864 ST7920 through the 74AHCT125, backlight and contrast")
+    b.append(txt(14, yb + 140, "C14 and C19 (decoupling)", "ref"))
+    b.append(flag(60, yb + 168, "+5V", C5) + ln([(60, yb + 176), (60, yb + 186)], C5) + cap_v(60, yb + 186, yb + 246, C5, "C14 100nF") + gnd(60, yb + 246))
+    b.append(txt(14, yb + 276, "C14: U6 pin 14 (VCC) to pin 7 (GND). Place it next to U6.", "pin"))
+    b.append(flag(400, yb + 168, "+5V", C5) + ln([(400, yb + 176), (400, yb + 186)], C5) + cap_v(400, yb + 186, yb + 246, C5, "C19 100nF") + gnd(400, yb + 246))
+    b.append(txt(300, yb + 276, "C19: J9 pin 2 (VDD, +5V) to pin 1 (GND). Place it next to J9.", "pin"))
+    b.append(txt(14, yb + 300, "PSB to GND = serial mode. Check contrast wiring and the backlight resistor on your own module's datasheet."))
+    return svg(yb + 320, "".join(b), "OPTION C: 12864 ST7920 through the 74AHCT125, backlight and contrast")
 
 
 def lcd12864_tables():
