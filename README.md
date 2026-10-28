@@ -34,7 +34,8 @@
 | Plan: GPIO table, display design, isolation notes, power budget, BOM, phases, open questions | [PLAN.md](PLAN.md) |
 | LCSC bill of materials (draft) | [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-controller-bom-v0.csv) |
 | Tick-list BOM by section (colourful, with LCSC links) | [docs/bom-by-section.html](docs/bom-by-section.html) |
-| Connection map + wiring order + GPIO table | [docs/connection-diagram.html](docs/connection-diagram.html) |
+| BOM by schematic page (5 pages, tick-list) | [docs/bom-by-page.html](docs/bom-by-page.html), [docs/bom-by-page.md](docs/bom-by-page.md) |
+| Connection map + colour-coded wire table per section + GPIO table | [docs/connection-diagram.html](docs/connection-diagram.html) |
 | Safety | [docs/safety.md](docs/safety.md) |
 
 ## License

@@ -141,17 +141,18 @@ a{color:#3b82f6}.tag{display:inline-block;padding:0 7px;border-radius:6px;font-s
 @media print{.bar{display:none}}
 """
 
-def bom_page():
+def bom_page(groups=None, title='BorePilot - BOM by section', page_title='BorePilot BOM by Section', key='borepilot-bom-ticks', intro=''):
+    groups = groups or [(s[0], s[1], s[2], s[3], [s[0]]) for s in S]
     out = []
     a = out.append
-    a(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BorePilot BOM by Section</title><style>{CSS}</style></head><body><main>')
-    a('<div class="hero"><h1>BorePilot - BOM by section</h1><p>ESP32-S3 submersible pump controller. Tick each part as you add it to the EasyEDA schematic; progress is saved in this browser.</p></div>')
-    a(f'<div class="warn"><b>Plan stage, 2026-10-28.</b> {TOTAL} placed parts in {len(S)} sections. The connections column is the <b>planned</b> net list from PLAN.md, not a drawn schematic. Stock/price are LCSC page values from 2026-10-28 (quantity-1 tier); check before ordering. Mains is involved: engineer review first. Passive refs (R/C) and counts are planned and may change in the schematic.</div>')
+    a(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{page_title}</title><style>{CSS}</style></head><body><main>')
+    a('<div class="hero"><h1>{title}</h1><p>ESP32-S3 submersible pump controller. Tick each part as you add it to the EasyEDA schematic; progress is saved in this browser. {intro}</p></div>')
+    a(f'<div class="warn"><b>Plan stage, 2026-10-28.</b> {TOTAL} placed parts in {len(groups)} groups. The connections column is the <b>planned</b> net list from PLAN.md, not a drawn schematic. Stock/price are LCSC page values from 2026-10-28 (quantity-1 tier); check before ordering. Mains is involved: engineer review first. Passive refs (R/C) and counts are planned and may change in the schematic.</div>')
     a(f'<div class="bar"><input type="search" id="q" placeholder="Filter by ref, name, MPN, LCSC # ..."><progress id="pg" value="0" max="{TOTAL}"></progress><span id="pt" class="mut"></span><button id="rs">Reset ticks</button></div>')
-    a('<div class="chips">' + "".join(f'<a class="chip" style="background:{s[2]}" href="#{s[0]}">{e(s[1])}</a>' for s in S) + '</div>')
+    a('<div class="chips">' + "".join(f'<a class="chip" style="background:{s[2]}" href="#{s[0]}">{e(s[1])}</a>' for s in groups) + '</div>')
     gt = 0.0
-    for sid, name, col, desc in S:
-        parts = [p for p in P if p[0] == sid]
+    for sid, name, col, desc, secs in groups:
+        parts = [p for p in P if p[0] in secs]
         cost = 0.0
         for p in parts:
             r = LC.get(p[3])
@@ -170,7 +171,7 @@ def bom_page():
         a('</tbody></table></div></section>')
     a(f'<p class="mut">Rough parts total at quantity-1 prices: about ${gt:.2f} (antenna and external modules not included; PCB extra).</p>')
     a("""<script>
-const K='borepilot-bom-ticks';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+const K='%KEY%';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
 const cks=[...document.querySelectorAll('.ck')];
 function upd(){const n=cks.filter(c=>c.checked).length;document.getElementById('pg').value=n;document.getElementById('pt').textContent=n+' / '+cks.length+' placed';
 cks.forEach(c=>c.closest('tr').classList.toggle('done',c.checked));try{localStorage.setItem(K,JSON.stringify(Object.fromEntries(cks.filter(c=>c.checked).map(c=>[c.dataset.k,1]))))}catch(e){}}
@@ -178,8 +179,67 @@ cks.forEach(c=>{c.checked=!!st[c.dataset.k];c.addEventListener('change',upd)});
 document.getElementById('rs').onclick=()=>{cks.forEach(c=>c.checked=false);upd()};
 document.getElementById('q').oninput=ev=>{const v=ev.target.value.toLowerCase();document.querySelectorAll('tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(v)?'':'none')};
 upd();
-</script></main></body></html>""")
+</script></main></body></html>""".replace("%KEY%", key))
     return "".join(out)
+
+def page_md(groups):
+    o = ["# BorePilot - BOM by schematic page", "", "Planned refs and nets (no schematic yet). Page 6 = cover and notes, no parts.", ""]
+    for sid, name, col, desc, secs in groups:
+        ps = [p for p in P if p[0] in secs]
+        o += [f"## {name}", desc, "", "| Done | Ref | Part | LCSC | Qty |", "|---|---|---|---|---|"]
+        for _, ref, nm, c, q, conn in ps:
+            o.append(f"| [ ] | {ref} | {nm} | {c} | {q} |")
+        o += ["", f"Parts on this page: {sum(p[4] for p in ps)}", ""]
+    return chr(10).join(o)
+
+
+NET = {"L":("#e53935","L (mains live)"),"N":("#1e88e5","N (mains neutral)"),"GND":("#37474f","GND"),"5V":("#fb8c00","+5V"),"3V3":("#fdd835","+3V3"),
+       "SIG":("#2fbf71","GPIO signal"),"UART":("#00bcd4","UART"),"I2C":("#ec407a","I2C / display bus"),"USB":("#8e24aa","USB data"),"RLY":("#6d4c41","relay contact")}
+# (section id, from, to, net key, note)
+W = [
+ ("mains","J2.1","U2.AC(L) and J3.1","L","mains side only"),
+ ("mains","J2.2","U2.AC(N) and J3.2","N","mains side only"),
+ ("mains","U2.-Vo","GND","GND","crosses the isolation slot only through the module"),
+ ("mains","U2.+Vo","D4 anode (+5V_HLK)","5V",""),
+ ("power","D4 cathode","+5V rail","5V",""),
+ ("power","J1.VBUS","D5 anode; D5 cathode to +5V","5V",""),
+ ("power","+5V","C1, C2, C5, C6, U3.VIN","5V",""),
+ ("power","U3.VOUT","+3V3 rail, C3, C4","3V3",""),
+ ("power","U3.GND, C1-, C2-","GND plane","GND",""),
+ ("usb","J1.A5 (CC1)","R1 -> GND","GND","5.1 k"),
+ ("usb","J1.B5 (CC2)","R2 -> GND","GND","5.1 k"),
+ ("usb","J1.A6/B6 (D+)","U4 -> U1.GPIO20","USB",""),
+ ("usb","J1.A7/B7 (D-)","U4 -> U1.GPIO19","USB",""),
+ ("usb","J1 shield, A1/B12/A12/B1","GND","GND",""),
+ ("mcu","+3V3","U1.3V3, C4, C9, C10, R3","3V3",""),
+ ("mcu","R3 / C8 / SW1","U1.EN","SIG","reset"),
+ ("mcu","SW2","U1.GPIO0 and GND","SIG","BOOT"),
+ ("mcu","U1.GND","GND","GND",""),
+ ("mcu","U1.ANT (U.FL)","ANT1 pigtail -> ANT2 SMA antenna","SIG","RF, keep short"),
+ ("relay","+5V","K1.coil+, K2.coil+, LED3 R10, LED4 R11","5V",""),
+ ("relay","U1.GPIO4","Q1.G (R18 to GND)","SIG",""),
+ ("relay","U1.GPIO5","Q2.G (R19 to GND)","SIG",""),
+ ("relay","Q1.D / Q2.D","K1.coil- / K2.coil-, D1 / D2, LED3 / LED4 cathode","SIG","low-side switch"),
+ ("relay","Q1.S, Q2.S","GND","GND",""),
+ ("relay","K1.COM / NO / NC","J4.1 / J4.2 / J4.3","RLY","mains side"),
+ ("relay","K2.COM / NO / NC","J5.1 / J5.2 / J5.3","RLY","mains side"),
+ ("pzem","J6.+5V","+5V rail","5V",""),
+ ("pzem","J6.GND","GND","GND",""),
+ ("pzem","U1.GPIO17 (TX)","J6 PZEM RX","UART",""),
+ ("pzem","J6 PZEM TX","R16 4.7 k -> U1.GPIO18 (RX), R4 10 k to GND","UART","divider"),
+ ("ui","U1.GPIO1 / GPIO2 / GPIO6","SW3 / SW4 / SW5 -> GND","SIG","internal pull-ups"),
+ ("ui","U1.GPIO16","R9 -> LED2 -> GND","SIG",""),
+ ("ui","+3V3","R8 -> LED1 -> GND","3V3","power LED"),
+ ("ui","U1.GPIO39 / GPIO40","J10.1 / J11.1 (pin 2 to GND)","SIG","float switches"),
+ ("ui","U1.GPIO15","Q4.G -> BZ1 (optional)","SIG",""),
+ ("disp","U1.GPIO8 (SDA), GPIO9 (SCL)","J8.SDA/SCL, R12/R13 to +3V3, U5 low side","I2C","OLED direct"),
+ ("disp","U5 high side","J7.SDA/SCL (5 V side)","I2C","16x2 backpack"),
+ ("disp","J7.2 / J8.2","+5V / +3V3","5V","J7 is 5 V, J8 is 3.3 V"),
+ ("disp","U1.GPIO10 / 11 / 12 / 14","U6 inputs -> J9.4 / J9.5 / J9.6 / J9.17","SIG","CS, MOSI, CLK, RST"),
+ ("disp","U1.GPIO13","Q3.G -> Q3.D to J9.20 (BLK)","SIG","backlight PWM"),
+ ("disp","J9.15 (PSB)","GND via SJ1","GND","serial mode"),
+ ("disp","J9.1 / J9.2","GND / +5V","GND","J9.2 is +5V"),
+]
 
 # ---------------------------------------------------------------- diagram
 def box(x, y, w, h, col, title, lines, dashed=False):
@@ -241,22 +301,41 @@ def diagram_page():
      ("Displays", "#ff4d94", ["J8 OLED: +3V3, GND, SDA GPIO8, SCL GPIO9, R12/R13 pull-ups.", "J7 16x2: GPIO8/9 -> U5 low side; U5 high side -> J7 SDA/SCL, +5V.", "J9 12864: GPIO10/11/12/14 -> U6 -> J9 pins 4, 5, 6, 17. SJ1 bridges J9 pin 15 to GND.", "Q3 gate GPIO13 + R20; drain -> J9 pin 20 (BLK). RV2 on V0/VOUT."]),
      ("UI / IO", "#f4c20d", ["SW3/SW4/SW5 from GPIO1/2/6 to GND (internal pull-ups).", "LED1 + R8 on +3V3; LED2 + R9 from GPIO16.", "J10/J11 pin 1 -> GPIO39/40, pin 2 -> GND.", "BZ1 + Q4 + D3 on GPIO15 (optional)."]),
     ]
+    wl = "".join(f'<span><i style="background:{c}"></i>{n}</span>' for c, n in NET.values())
+    wt = ""
+    for sid, name, col, desc in S:
+        rws = [w for w in W if w[0] == sid]
+        wt += f'<div class="card" style="--c:{col}"><h3>{e(name)}</h3><div class="scroll"><table><thead><tr><th>Wire</th><th>From</th><th>To</th><th>Net</th><th>Note</th></tr></thead><tbody>'
+        for _, a, b, k, note in rws:
+            c, n = NET[k]
+            wt += f'<tr><td><span class="wire" style="background:{c}"></span></td><td>{e(a)}</td><td>{e(b)}</td><td>{e(n)}</td><td class="mut">{e(note)}</td></tr>'
+        wt += '</tbody></table></div></div>'
     ctab = "".join(f'<div class="stepcard" style="--c:{c}"><h3>{n}</h3><ol>' + "".join(f"<li>{e(i)}</li>" for i in l) + "</ol></div>" for n, c, l in steps)
     extra = """
 h2{font-size:1.15rem;margin:26px 0 8px}.wrap{overflow-x:auto;background:var(--card);border-radius:12px;padding:8px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
 svg{display:block;margin:auto}.legend span{display:inline-block;margin-right:16px;font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:22px;height:4px;margin-right:5px;vertical-align:middle}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}.stepcard{background:var(--card);border-radius:12px;padding:8px 14px;border-left:8px solid var(--c);box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.stepcard h3{margin:4px 0;color:var(--c)}.stepcard li{font-size:13px;margin:3px 0}
+.wire{display:inline-block;width:46px;height:7px;border-radius:4px;vertical-align:middle}.card h3{margin:2px 0 6px;color:var(--c)}.stepcard h3{margin:4px 0;color:var(--c)}.stepcard li{font-size:13px;margin:3px 0}
 """
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BorePilot Connection Map</title><style>{CSS}{extra}</style></head><body><main>'
             '<div class="hero"><h1>BorePilot - connection map</h1><p>ESP32-S3 pump controller: mains and USB power, relays with COM/NO/NC, PZEM link, three display options, wireless tank unit. Grouped in the same eight sections as the BOM page.</p></div>'
             '<div class="warn"><b>Plan stage.</b> This is a block-level map of the <u>planned</u> design from PLAN.md. No schematic or PCB exists and nothing has been built or tested. Mains is involved: engineer review before any mains power.</div>'
             f'<p class="legend">{leg}</p><div class="wrap">{"".join(svg)}</div>'
+            f'<h2>Wire-by-wire connections, section by section</h2><p class="legend">{wl}</p>{wt}'
             f'<h2>Wiring order, section by section</h2><div class="grid">{ctab}</div>'
             f'<h2>GPIO assignment (ESP32-S3-WROOM-1U-N16R8)</h2><div class="scroll"><table><thead><tr><th>GPIO</th><th>Function</th><th>Goes to</th></tr></thead><tbody>{gtab}</tbody></table></div>'
             '<p class="mut">See <a href="bom-by-section.html">bom-by-section.html</a> for the tick-list of every part, with LCSC numbers.</p></main></body></html>')
 
+PAGES = [
+ ("pg1", "SCHEMATIC PAGE 1 - Power and USB", "#ff9f43", "Mains in, HLK-5M05, 5 V OR-ing, 3.3 V LDO, USB-C and ESD. Mains parts J2, J3, U2 stay in the upper-left of the page, away from low-voltage sheets.", ["mains", "power", "usb"]),
+ ("pg2", "SCHEMATIC PAGE 2 - ESP32-S3 core", "#a66cff", "Module, antenna pigtail, EN/BOOT buttons, decoupling.", ["mcu"]),
+ ("pg3", "SCHEMATIC PAGE 3 - Relays and mains contacts", "#2fbf71", "K1, K2 with drivers, flyback diodes, LEDs and COM/NO/NC terminals.", ["relay"]),
+ ("pg4", "SCHEMATIC PAGE 4 - PZEM link and I/O", "#00bcd4", "PZEM header with divider, buttons, LEDs, optional buzzer, float inputs, spare header.", ["pzem", "ui"]),
+ ("pg5", "SCHEMATIC PAGE 5 - Display options", "#ff4d94", "16x2 I2C LCD, I2C OLED, 12864 ST7920 with level shifters.", ["disp"]),
+]
 os.makedirs(os.path.join(ROOT, "docs"), exist_ok=True)
+open(os.path.join(ROOT, "docs/bom-by-page.html"), "w", encoding="utf-8").write(bom_page(PAGES, "BorePilot - BOM by schematic page", "BorePilot BOM by Schematic Page", "borepilot-bom-page-ticks", "Page 6 (cover and notes) has no parts."))
+open(os.path.join(ROOT, "docs/bom-by-page.md"), "w", encoding="utf-8").write(page_md(PAGES))
 open(os.path.join(ROOT, "docs/bom-by-section.html"), "w", encoding="utf-8").write(bom_page())
 open(os.path.join(ROOT, "docs/connection-diagram.html"), "w", encoding="utf-8").write(diagram_page())
 print("parts", TOTAL, "BOM csv lines", sum(int(r["Qty"]) for r in rows))
