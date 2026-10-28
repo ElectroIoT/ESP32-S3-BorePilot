@@ -260,8 +260,8 @@ Planned test sequence (to be written as test/hardware-test-plan.md): 0 inspectio
 
 | # | Question | Default if unanswered |
 |---|---|---|
-| Q1 | C165948 is **USB-C**, not micro-USB. Keep USB-C (with 5.1 k CC resistors), or do you want a real micro-B part? | keep USB-C |
-| Q2 | Do the relays only pulse a contactor/starter (as in the old project), or must one relay switch the pump directly (what motor rating)? | contactor pulses only |
+| Q1 | **ANSWERED 2026-10-28: keep C165948 as USB-C with 5.1 k CC resistors.** | decided |
+| Q2 | **ANSWERED 2026-10-28: relays only pulse a contactor/starter (as in the old project); no direct motor switching.** | decided |
 | Q3 | Which of the three displays do you fit first? Mounted on the board or on the enclosure front via cable? (decides header orientation: vertical male vs female plug-in) | cable to front panel, male vertical headers except 12864 female |
 | Q4 | PZEM-004T v3 as an external module (as before) - or do you want an on-board metering chip (more work, certification burden)? | external module |
 | Q5 | OK to rewrite the dry-run logic (section 2.1) and add over-current/voltage cut-out and start-up grace? Which defaults? | yes, defaults as in 2.1 |
