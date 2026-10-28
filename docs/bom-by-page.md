@@ -95,9 +95,8 @@ PZEM header with divider, buttons, LEDs, optional buzzer, float inputs, spare he
 | [ ] | J12 | 1x6 spare header | C492405 | 1 |
 | [ ] | R6 | 10 k optional pull-up IN1 (DNP) | C17902 | 1 |
 | [ ] | R7 | 10 k optional pull-up IN2 (DNP) | C17902 | 1 |
-| [ ] | R17 | 4.7 k spare | C17936 | 1 |
 
-Parts on this page: 21
+Parts on this page: 20
 
 ## SCHEMATIC PAGE 5 - Display options
 16x2 I2C LCD, I2C OLED, 12864 ST7920 with level shifters.

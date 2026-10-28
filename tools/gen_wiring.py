@@ -49,7 +49,7 @@ D = {
  "LED1":"A=LED1_A,K=GND","R8":"1=+3V3,2=LED1_A","LED2":"A=LED2_A,K=GND","R9":"1=LED_ST,2=LED2_A",
  "BZ1":"+=+5V,-=BUZ_D","Q4":"G=BUZZ,D=BUZ_D,S=GND","D3":"A=BUZ_D,K=+5V","R21":"1=BUZZ,2=GND",
  "J10":"1=IN1,2=GND","J11":"1=IN2,2=GND","J12":"1=+3V3,2=GND,3=SP1,4=SP2,5=SP3,6=SP4",
- "R6":"1=IN1,2=+3V3","R7":"1=IN2,2=+3V3","R17":"1=-,2=-",
+ "R6":"1=IN1,2=+3V3","R7":"1=IN2,2=+3V3",
 }
 EXTRA = {"SJ1": ("disp", "Solder jumper: PSB to GND (default bridged = serial mode)", "no BOM")}
 

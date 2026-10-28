@@ -66,7 +66,7 @@ PAGES = [
    ("LED1 (red) with R8: +3V3 -> R8 -> LED1 -> GND. LED2 (red) with R9: <b>LED_ST</b> -> R9 -> LED2 -> GND.", "ui"),
    ("J10 and J11 (screw terminals): pin 1 to <b>IN1</b> / <b>IN2</b>, pin 2 to GND. Optional pull-ups R6 and R7 (10 k to +3V3) marked DNP.", "ui"),
    ("Optional buzzer: BZ1 + to +5V, - to Q4 drain; Q4 gate to <b>BUZZ</b> and R21 (100 k) to GND; D3 across BZ1 (cathode +5V). Mark Q4, D3, BZ1, R21 as optional.", "ui"),
-   ("J12 header: pin 1 +3V3, pin 2 GND, pins 3-6 to <b>SP1</b>, <b>SP2</b>, <b>SP3</b>, <b>SP4</b>. R17 spare, leave out if not needed.", "ui"),
+   ("J12 header: pin 1 +3V3, pin 2 GND, pins 3-6 to <b>SP1</b>, <b>SP2</b>, <b>SP3</b>, <b>SP4</b>.", "ui"),
   ],
   ["PZEM TX is assumed to be 5 V logic: the divider protects GPIO18. If your PZEM measures 3.3 V on TX, R16 can be 0 ohm and R4 removed.",
    "Mark optional parts in the BOM column 'Not placed' so the assembly BOM leaves them out."]),
@@ -105,7 +105,7 @@ SETUP = [
 FINAL = [
  "Every net label has at least two uses (one on the page that drives it, one that receives it). Single-use labels are typos.",
  "Run ERC with no errors. Check there is exactly one GND net, one +5V, one +3V3. L and N never touch low-voltage nets.",
- "Compare the part count with the BOM: 82 placed parts (incl. optional buzzer parts).",
+ "Compare the part count with the BOM: 81 placed parts (incl. optional buzzer parts).",
  "Open each footprint and compare it with the datasheet drawing before layout: USB-C C165948 (shield pegs/slots), relays, HLK-5M05 pin pitch, KF128 terminals, 1x20 header.",
  "Check the PZEM pin order against your actual module and the 12864/OLED/16x2 pin orders against your actual display modules.",
  "Export the schematic PDF and compare it with the connection-diagram page.",

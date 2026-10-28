@@ -247,7 +247,7 @@ def v_ui():
     b.append(s)
     s, ys, h = part(500, 170, 140, "J11", "2P screw terminal", "C474952", [("1", "IN2"), ("2", "GND")], [])
     b.append(s)
-    b.append(txt(400, 276, "R6 / R7: 10k pull-ups to +3V3, not fitted (DNP). R17 spare.", "lab"))
+    b.append(txt(400, 276, "R6 / R7: 10k pull-ups to +3V3, not fitted (DNP).", "lab"))
     b.append(txt(14, 380, "OPTIONAL buzzer: BZ1 + Q4 + D3 + R21 (leave all four off if not wanted)", "ref"))
     b.append(flag(70, 410, "+5V", C5) + ln([(100, 410), (300, 410)], C5))
     b.append(dot(160, 410, C5) + ln([(160, 410), (160, 440)], C5) + f'<rect x="130" y="440" width="60" height="30" rx="5" fill="var(--card)" stroke="var(--fg)" stroke-width="2"/><text x="160" y="459" text-anchor="middle" class="pin">BZ1</text>' + ln([(160, 470), (160, 500)], CS) + dot(160, 500, CS))

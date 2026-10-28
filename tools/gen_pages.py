@@ -105,7 +105,6 @@ P = [
  ("ui","J12","1x6 spare header","C492405",1,"+3V3 ; GND ; GPIO41 ; GPIO42 ; GPIO47 ; GPIO48"),
  ("ui","R6","10 k optional pull-up IN1 (DNP)","C17902",1,"GPIO39 -> +3V3"),
  ("ui","R7","10 k optional pull-up IN2 (DNP)","C17902",1,"GPIO40 -> +3V3"),
- ("ui","R17","4.7 k spare","C17936",1,"free"),
 ]
 # the CSV only knows the MPN by C# (TBD for the antenna)
 TOTAL = sum(p[4] for p in P)
