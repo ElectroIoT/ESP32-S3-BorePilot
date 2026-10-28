@@ -1,6 +1,6 @@
 <div align="center">
 
-# ESP32-S3 Pump Controller (planning draft)
+# BorePilot - ESP32-S3 Pump Controller (planning draft)
 
 **Single-phase submersible pump controller board: ESP32-S3, 2 relays with NO + NC terminals, PZEM-004T energy sensing, HLK 5 V supply, USB-C, and a choice of 16x2 LCD / OLED / 128x64 LCD.**
 

@@ -1,4 +1,4 @@
-# ESP32-S3 Pump Controller - project plan (v0, planning only)
+# BorePilot (ESP32-S3 Pump Controller) - project plan (v0, planning only)
 
 Date: 2026-10-28. Author of plan: Claude session for ElectroIoT. **Nothing here is drawn, built or tested.** No schematic, PCB or firmware exists yet. All GPIO numbers, part choices and distances are proposals for the owner to approve.
 
@@ -263,7 +263,7 @@ Planned test sequence (to be written as test/hardware-test-plan.md): 0 inspectio
 | Q4 | PZEM-004T v3 as an external module (as before) - or do you want an on-board metering chip (more work, certification burden)? | external module |
 | Q5 | OK to rewrite the dry-run logic (section 2.1) and add over-current/voltage cut-out and start-up grace? Which defaults? | yes, defaults as in 2.1 |
 | Q6 | 2 float/level inputs (J10) wanted? Any 12 V/24 V sensor inputs? | 2 dry-contact inputs, 3.3 V only |
-| Q7 | Product and repo name. The folder is ESP32-S3-Pump-Controller. A name/trademark/Play-Store-style collision check has **not** been done. | working title |
+| Q7 | **ANSWERED 2026-10-28: product name BorePilot** (owner choice). Collision check (Play Store, web, trademark) still **not done**. Local folder keeps its name until a repo is created. | BorePilot |
 | Q8 | Is a PE (earth) terminal wanted on the board? | no, earth stays off-board |
 | Q9 | Mains voltage and region: 230 V only (India) or 120 V as well? | 230 V; HLK range is 90-265 VAC but spacing targets 250 V |
 | Q10 | Create a private GitHub repo `ElectroIoT/ESP32-S3-Pump-Controller` and push? | stays local, nothing pushed |
