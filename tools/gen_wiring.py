@@ -25,7 +25,7 @@ D = {
  "U3":"VIN=+5V,GND=GND,VOUT=+3V3",
  "C2":"1=+5V,2=GND","C3":"1=+3V3,2=GND","C5":"1=+5V,2=GND","C6":"1=+5V,2=GND","C15":"1=+5V_HLK,2=GND",
  "J1":"A1B12 GND=GND,B1A12 GND=GND,A4B9 VBUS=VBUS,B4A9 VBUS=VBUS,A5 CC1=CC1,B5 CC2=CC2,A6 DP1=USB_DP_J1,B6 DP2=USB_DP_J1,A7 DN1=USB_DN_J1,B7 DN2=USB_DN_J1,A8 SBU1=-,B8 SBU2=-,EH1 shell=GND,EH2 shell=GND,EH3 shell=GND,EH4 shell=GND",
- "U4":"1 I/O1 in=USB_DP_J1,6 I/O1 out=USB_DP,3 I/O2 in=USB_DN_J1,4 I/O2 out=USB_DN,5 VBUS=VBUS,2 GND=GND",
+ "U4":"1 I/O1 (J1 side)=USB_DP_J1,6 I/O1 (MCU side)=USB_DP,3 I/O2 (J1 side)=USB_DN_J1,4 I/O2 (MCU side)=USB_DN,5 VBUS=VBUS,2 GND=GND",
  "R1":"1=CC1,2=GND","R2":"1=CC2,2=GND","C7":"1=VBUS,2=GND","C11":"1=VBUS,2=GND",
  "U1":"3V3=+3V3,GND=GND,EN=EN,IO0=IO0_BOOT,IO19=USB_DN,IO20=USB_DP,IO4=RLY1,IO5=RLY2,IO8=SDA,IO9=SCL,IO10=LCD_CS,IO11=LCD_MOSI,IO12=LCD_CLK,IO13=LCD_BL,IO14=LCD_RST,IO15=BUZZ,IO16=LED_ST,IO17=PZEM_TXD,IO18=PZEM_RXD,IO1=BTN_START,IO2=BTN_STOP,IO6=BTN_MENU,IO39=IN1,IO40=IN2,IO41=SP1,IO42=SP2,IO47=SP3,IO48=SP4,TXD0=TXD0,RXD0=RXD0",
  "ANT1":"U.FL=ANT_RF,SMA=ANT_SMA","ANT2":"SMA=ANT_SMA",
@@ -108,9 +108,9 @@ def section_svg(sid):
     for ref, pin, net, py in pin_pos:
         if net and net != "-" and net not in SYM and net not in lanes:
             lanes.append(net)
-    laneX = {n: 350 + 24 * i for i, n in enumerate(lanes)}
-    W = 350 + 24 * len(lanes) + 40
-    H = y + 150
+    laneX = {n: 520 + 24 * i for i, n in enumerate(lanes)}
+    W = 520 + 24 * len(lanes) + 30
+    H = y + 20
     o = [f'<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" class="dia">']
     for ref, nm, c, pl, by, bh in boxes:
         o.append(f'<g class="box"><rect x="{PX0}" y="{by}" width="{PXR-PX0}" height="{bh}" rx="7" fill="var(--card)" stroke="var(--line)"/>')
@@ -129,7 +129,10 @@ def section_svg(sid):
             o.append(f'<g class="w" data-net="{e(net)}"><line x1="{PXR}" y1="{py}" x2="{PXR+14}" y2="{py}" stroke="{c}" stroke-width="3"/><rect x="{PXR+14}" y="{py-8}" width="{wd}" height="16" rx="4" fill="{c}"/><text x="{PXR+19}" y="{py+3.5}" class="flag">{e(net)}</text></g>')
         else:
             lx = laneX[net]
-            o.append(f'<g class="w" data-net="{e(net)}"><line x1="{PXR}" y1="{py}" x2="{lx}" y2="{py}" stroke="{c}" stroke-width="2"/><circle cx="{PXR}" cy="{py}" r="3" fill="{c}"/><circle cx="{lx}" cy="{py}" r="2.6" fill="{c}"/></g>')
+            others = sorted(sec_of_net[net] - {sid}, key=lambda s: page_of[s])
+            lab = net + ("  → p" + ",p".join(str(page_of[s]) for s in others) if others else "")
+            pw = 6.6 * len(lab) + 14
+            o.append(f'<g class="w" data-net="{e(net)}"><line x1="{PXR}" y1="{py}" x2="{lx}" y2="{py}" stroke="{c}" stroke-width="2"/><circle cx="{PXR}" cy="{py}" r="3" fill="{c}"/><circle cx="{lx}" cy="{py}" r="2.6" fill="{c}"/><rect x="{PXR+14}" y="{py-9}" width="{pw:.0f}" height="18" rx="9" fill="{c}"/><text x="{PXR+22}" y="{py+4}" class="pill">{e(lab)}</text></g>')
     for net in lanes:
         ys = [py for _, _, n, py in pin_pos if n == net]
         lx = laneX[net]
@@ -140,9 +143,6 @@ def section_svg(sid):
             ext = " -> " + ", ".join(f"p{page_of[s]}" for s in others)
         if len(ys) > 1:
             o.append(f'<g class="w" data-net="{e(net)}"><line x1="{lx}" y1="{min(ys)}" x2="{lx}" y2="{max(ys)}" stroke="{c}" stroke-width="2"/></g>')
-        o.append(f'<text x="{lx+3}" y="{max(ys)+12}" class="net" fill="{c}" transform="rotate(70 {lx+3} {max(ys)+12})">{e(net)}</text>')
-        if ext:
-            o.append(f'<text x="{lx+3}" y="{max(ys)+12}" class="ext" transform="translate({7*len(net)+8} 0) rotate(70 {lx+3} {max(ys)+12})">{e(ext)}</text>')
     o.append("</svg>")
     return "".join(o)
 
@@ -158,7 +158,7 @@ CSS = """:root{--bg:#f3f1fb;--fg:#1c2330;--mut:#5b6677;--card:#fff;--line:#c9d1d
 .card{background:var(--card);border-radius:14px;padding:12px;margin:12px 0;border-left:8px solid var(--c);box-shadow:0 2px 10px rgba(0,0,0,.08)}
 h3{margin:0 0 6px;font-size:1.05rem;color:var(--c)}.cnt{font-weight:400;color:var(--mut);font-size:13px;margin-left:8px}.mut{color:var(--mut);font-size:13px}.scroll{overflow-x:auto}
 svg.dia text{font-family:system-ui,Segoe UI,sans-serif;fill:var(--fg)}.ref{font-size:12px;font-weight:700}.role{font-size:10.5px;fill:var(--mut)!important}.lab{font-size:9.5px;fill:var(--mut)!important}
-.pin{font-size:11px}.net{font-size:11px;font-weight:700}.ext{font-size:10px;fill:var(--mut)!important}.flag{font-size:10px;font-weight:700;fill:#10151c!important}
+.pin{font-size:11px}.net{font-size:11px;font-weight:700}.ext{font-size:10px;fill:var(--mut)!important}.flag{font-size:10px;font-weight:700;fill:#10151c!important}.pill{font-size:11px;font-weight:700;fill:#fff!important}
 .w{cursor:pointer;transition:opacity .15s}svg.hl .w{opacity:.15}svg.hl .w.on{opacity:1}.w.done line,.w.done polyline{stroke-dasharray:4 4}
 a{color:#3b82f6}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}progress{width:260px;height:14px;accent-color:#2fbf71}
 button{border:0;border-radius:8px;padding:7px 12px;background:#ff9f43;color:#1b1b1b;font-weight:700;cursor:pointer}.secck{cursor:pointer}.secck input{width:20px;height:20px;accent-color:var(--c);vertical-align:middle}
