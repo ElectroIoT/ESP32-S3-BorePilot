@@ -15,6 +15,7 @@
 - Hi-Link HLK-5M05 5 V / 1 A module, 3.3 V LDO (no on-board fuse or varistor: protect upstream).
 - USB-C (LCSC C165948) for flashing and logging via native USB; no USB-UART chip.
 - Display options on one board: 16x2 I2C LCD, I2C OLED or 128x64 ST7920 LCD; START / STOP / MENU buttons, buzzer, status LEDs, 2 float-switch inputs.
+- Optional wireless tank-level node (second ESP32, ESP-NOW) that starts/stops the pump by tank level.
 - Target PCB: 100 x 80 mm, 2 layers, mains/low-voltage isolation slot.
 
 ## Repository map

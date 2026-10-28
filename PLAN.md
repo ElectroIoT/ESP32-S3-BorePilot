@@ -15,6 +15,7 @@ In scope for v1:
 - Hi-Link HLK-5M05 5 V module powers everything; 3.3 V LDO for the ESP32-S3.
 - USB (part C165948) for flashing, logging and 5 V bench power.
 - Three selectable display options on one board: 16x2 I2C LCD, I2C OLED, 128x64 ST7920 LCD.
+- **Wireless tank-level unit (owner decision 2026-10-28):** a separate battery or USB-powered ESP32 node at the water tank sends level data to BorePilot over ESP-NOW (section 5A). No extra radio on the BorePilot PCB.
 - 3 front-panel buttons (START, STOP, MENU), EN/BOOT, buzzer, status LEDs, 2 dry-contact inputs (float switches) and spare GPIO header.
 
 Out of scope for v1: switching a motor directly through the PCB (see 7.4), 3-phase, battery backup, Ethernet, custom enclosure design (enclosure is a later phase), measuring AC on the PCB (PZEM does that).
@@ -110,6 +111,18 @@ All three headers are on the board. Choose by **fitting only the header you need
 Why level shifting: a PCF8574 backpack pulls SDA/SCL to its 5 V rail, and an ST7920 on 5 V needs about 3.5 V for a logic high (0.7 x VDD), more than the ESP32-S3's 3.3 V. The old PUMP-SENTRY-S3 review flagged the backpack pull-up problem as unverified; this design removes it instead of relying on it. The ST7920 serial-mode and PSB-to-GND details, plus the V0/VOUT contrast wiring, **must be confirmed against the actual 12864B module and the ST7920 datasheet** (not read in this session). A mixed fit (OLED + 16x2 together) works because the addresses differ, but only one of them should be configured in firmware per device.
 
 Optional later: firmware I2C scan that picks the display automatically.
+
+## 5A. Wireless tank unit over ESP-NOW (new, firmware + separate small board)
+
+Idea: a second ESP32 at the tank reads a level sensor and sends it to BorePilot, which starts the pump on LOW and stops it on FULL (and ignores the wired floats J10/J11 or uses them as a backup). BorePilot's ESP32-S3 already has the radio, so **the BorePilot PCB does not change**.
+
+- **Link:** ESP-NOW (peer-to-peer, no router). Range is claimed to be tens to 100+ m in open air; **not measured for your site**. ESP-NOW and Wi-Fi share the radio, so both ends must use the same Wi-Fi channel as BorePilot's router connection; the tank node learns it by pairing (button) or a fixed channel setting.
+- **Tank node hardware options** (none selected, no LCSC lookups done): ESP32-C3 or ESP32 board; sensor = float switch (simplest), ultrasonic (JSN-SR04T waterproof) or submersible pressure transducer; power = USB adapter, 18650 + solar, or deep-sleep on 2 x AA (wakes every 30-60 s, sends, sleeps).
+- **Messages:** tank to BorePilot every N seconds: level %, state (LOW/MID/FULL), battery V, sequence number. BorePilot to tank: ack. Packet carries a shared key / MAC allow-list (ESP-NOW encryption for unicast).
+- **Safety logic in BorePilot firmware:** if no tank message for `tank_timeout` (default 120 s) the controller falls back to the wired floats or to manual mode and raises an alert; it never starts the pump from a stale reading; overflow guard stops the pump on FULL even if the link is lost mid-run (timer cap on run time).
+- **ESPHome:** ESPHome has no built-in ESP-NOW node in the version assumed here (needs checking against 2026.8+); likely options are an external component or small custom code. **Unverified.**
+- **GPIO:** none needed on BorePilot.
+- **New work items:** tank-node firmware, pairing procedure, run-time cap, HA entities (tank level, tank battery, link OK), test in the real tank at real distance.
 
 ## 6. USB: C165948 is USB-C, not micro-USB
 
@@ -245,7 +258,7 @@ No `android/` folder (the old project is HA-only). Name of the product/repo is s
 | 2 Schematic (EasyEDA) | Pages: power/USB, MCU, relays+mains, displays, I/O. Use C# in EasyEDA search so symbol/footprint/3D tie to LCSC parts | schematic PDF, ERC clean | ERC 0, reviewer-approved netlist |
 | 3 Footprint check | Compare every footprint with datasheet drawings, especially C165948, relays, HLK, terminals, 1x20 | check list | signed off |
 | 4 Layout | Zones, slot, creepage rules, antenna keep-out, silkscreen; DRC | board-v1 files | DRC 0 + creepage check by second person |
-| 5 Firmware (ESPHome) | `esp32-s3` package: relays (pulse mode), PZEM, display_type substitution, buttons, buzzer, dry-run/over-current/voltage logic, HA dashboard | firmware/esphome/*.yaml, `esphome config` passes | compiles; logic unit-tested with mock sensors |
+| 5 Firmware (ESPHome) | `esp32-s3` package (plus ESP-NOW tank-level receiver and a separate tank-node sketch/YAML, section 5A): relays (pulse mode), PZEM, display_type substitution, buttons, buzzer, dry-run/over-current/voltage logic, HA dashboard | firmware/esphome/*.yaml, `esphome config` passes | compiles; logic unit-tested with mock sensors |
 | 6 Docs | README with images, wiring, BOM.md, safety.md, display guide | docs/ | complete |
 | 7 3D / render | EasyEDA 3D export, top/bottom/iso JPEGs, cover image | docs/images | done |
 | 8 Review | Engineer review of mains side and isolation | review notes | all safety items closed or accepted |
@@ -268,6 +281,7 @@ Planned test sequence (to be written as test/hardware-test-plan.md): 0 inspectio
 | Q9 | Mains voltage and region: 230 V only (India) or 120 V as well? | 230 V; HLK range is 90-265 VAC but spacing targets 250 V |
 | Q10 | Create a private GitHub repo `ElectroIoT/ESP32-S3-Pump-Controller` and push? | stays local, nothing pushed |
 | Q11 | JLCPCB assembly or hand-built? (affects extended-part count and THT choices) | hand-built prototype |
+| Q13 | Tank sensor type (float / ultrasonic / pressure), tank node power (mains USB / solar / battery), and distance tank-to-controller? | float switch, USB power, under 30 m |
 | Q12 | **ANSWERED 2026-10-28: buzzer as an optional (DNP-able) part.** RGB LED still open. | buzzer optional, RGB no |
 
 ## 14. Unverified items and safety items for an engineer
