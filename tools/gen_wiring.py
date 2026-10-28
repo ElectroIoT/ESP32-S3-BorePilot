@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gen_pages as G
 import gen_schematic_guide as GG
 from relay_view import relay_view_card
+from circuit_views import cards_for
 
 e = html.escape
 ROOT = G.ROOT
@@ -180,8 +181,7 @@ def build():
         for sid in pg[2]:
             sc = next(s for s in G.S if s[0] == sid)
             cnt = len(sec_parts[sid])
-            if sid == "relay":
-                o.append(relay_view_card())
+            o.append(relay_view_card() if sid == "relay" else cards_for(sid))
             o.append(f'<section class="card" id="sec-{sid}" data-sec="{sid}" style="--c:{sc[2]}"><h3><label class="secck"><input type="checkbox" class="seccb" data-sec="{sid}"> {e(sc[1])}</label><span class="cnt">{cnt} parts, page {n}</span><span class="cnt secprog" data-sec="{sid}"></span></h3><p class="mut">{e(sc[3])}</p><div class="scroll">{section_svg(sid).replace("<svg ", f"<svg data-sec=\"{sid}\" ", 1)}</div></section>')
     o.append("""<script>
 const K='borepilot-wiring-ticks';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
@@ -234,7 +234,7 @@ for i, sc in enumerate(allsec):
             f'<div class="hero"><h1>{e(sc[1])}</h1><p>Schematic page {pg}. {e(sc[3])}</p></div>'
             f'<div class="chips" style="margin-top:12px">{nav}</div>'
             f'<p class="mut">Back to <a href="../wiring-by-section.html">all sections</a> &middot; <a href="../schematic-guide.html">schematic guide</a> &middot; hover a wire = highlight net, click = mark done. Planned nets; check pin names against the EasyEDA symbols.</p>'
-            f'{relay_view_card() if sid == "relay" else ""}<section class="card" style="--c:{sc[2]}"><div class="scroll">{section_svg(sid)}</div></section>'
+            f'{relay_view_card() if sid == "relay" else cards_for(sid)}<section class="card" style="--c:{sc[2]}"><div class="scroll">{section_svg(sid)}</div></section>'
             f'<section class="card" style="--c:{sc[2]}"><h3>Parts in this section ({len(sec_parts[sid])})</h3><table><thead><tr><th>Ref</th><th>Part</th><th>LCSC</th></tr></thead><tbody>{rows}</tbody></table></section>{JS}</main></body></html>')
     open(os.path.join(ROOT, f"docs/wiring/{sid}.html"), "w", encoding="utf-8").write(page)
 print("wiring-by-section.html written; sections:", len(sec_parts), "parts incl. SJ1:", sum(len(v) for v in sec_parts.values()))
