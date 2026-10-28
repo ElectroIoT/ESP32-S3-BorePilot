@@ -7,6 +7,7 @@ import os, sys, html
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gen_pages as G
 import gen_schematic_guide as GG
+from relay_view import relay_view_card
 
 e = html.escape
 ROOT = G.ROOT
@@ -157,10 +158,10 @@ CSS = """:root{--bg:#f3f1fb;--fg:#1c2330;--mut:#5b6677;--card:#fff;--line:#c9d1d
 .pagehead{display:flex;align-items:center;gap:10px;margin:26px 0 4px}.pagehead h2{margin:0;color:var(--c);font-size:1.25rem}.pn{width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:800}
 .card{background:var(--card);border-radius:14px;padding:12px;margin:12px 0;border-left:8px solid var(--c);box-shadow:0 2px 10px rgba(0,0,0,.08)}
 h3{margin:0 0 6px;font-size:1.05rem;color:var(--c)}.cnt{font-weight:400;color:var(--mut);font-size:13px;margin-left:8px}.mut{color:var(--mut);font-size:13px}.scroll{overflow-x:auto}
-svg.dia text{font-family:system-ui,Segoe UI,sans-serif;fill:var(--fg)}.ref{font-size:12px;font-weight:700}.role{font-size:10.5px;fill:var(--mut)!important}.lab{font-size:9.5px;fill:var(--mut)!important}
+svg.dia text,svg.cdia text{font-family:system-ui,Segoe UI,sans-serif;fill:var(--fg)}.ref{font-size:12px;font-weight:700}.role{font-size:10.5px;fill:var(--mut)!important}.lab{font-size:9.5px;fill:var(--mut)!important}
 .pin{font-size:11px}.net{font-size:11px;font-weight:700}.ext{font-size:10px;fill:var(--mut)!important}.flag{font-size:10px;font-weight:700;fill:#10151c!important}.pill{font-size:11px;font-weight:700;fill:#fff!important}
 .w{cursor:pointer;transition:opacity .15s}svg.hl .w{opacity:.15}svg.hl .w.on{opacity:1}.w.done line,.w.done polyline{stroke-dasharray:4 4}
-a{color:#3b82f6}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}progress{width:260px;height:14px;accent-color:#2fbf71}
+ol.how{font-size:13px;padding-left:20px}ol.how li{margin:5px 0}.flexrow{display:flex;flex-wrap:wrap;gap:14px}a{color:#3b82f6}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}progress{width:260px;height:14px;accent-color:#2fbf71}
 button{border:0;border-radius:8px;padding:7px 12px;background:#ff9f43;color:#1b1b1b;font-weight:700;cursor:pointer}.secck{cursor:pointer}.secck input{width:20px;height:20px;accent-color:var(--c);vertical-align:middle}
 .card.alldone{box-shadow:0 0 0 3px #2fbf71 inset}.card.alldone h3{text-decoration:line-through;opacity:.7}@media print{.legend{display:none}}"""
 
@@ -179,6 +180,8 @@ def build():
         for sid in pg[2]:
             sc = next(s for s in G.S if s[0] == sid)
             cnt = len(sec_parts[sid])
+            if sid == "relay":
+                o.append(relay_view_card())
             o.append(f'<section class="card" id="sec-{sid}" data-sec="{sid}" style="--c:{sc[2]}"><h3><label class="secck"><input type="checkbox" class="seccb" data-sec="{sid}"> {e(sc[1])}</label><span class="cnt">{cnt} parts, page {n}</span><span class="cnt secprog" data-sec="{sid}"></span></h3><p class="mut">{e(sc[3])}</p><div class="scroll">{section_svg(sid).replace("<svg ", f"<svg data-sec=\"{sid}\" ", 1)}</div></section>')
     o.append("""<script>
 const K='borepilot-wiring-ticks';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
@@ -231,7 +234,7 @@ for i, sc in enumerate(allsec):
             f'<div class="hero"><h1>{e(sc[1])}</h1><p>Schematic page {pg}. {e(sc[3])}</p></div>'
             f'<div class="chips" style="margin-top:12px">{nav}</div>'
             f'<p class="mut">Back to <a href="../wiring-by-section.html">all sections</a> &middot; <a href="../schematic-guide.html">schematic guide</a> &middot; hover a wire = highlight net, click = mark done. Planned nets; check pin names against the EasyEDA symbols.</p>'
-            f'<section class="card" style="--c:{sc[2]}"><div class="scroll">{section_svg(sid)}</div></section>'
+            f'{relay_view_card() if sid == "relay" else ""}<section class="card" style="--c:{sc[2]}"><div class="scroll">{section_svg(sid)}</div></section>'
             f'<section class="card" style="--c:{sc[2]}"><h3>Parts in this section ({len(sec_parts[sid])})</h3><table><thead><tr><th>Ref</th><th>Part</th><th>LCSC</th></tr></thead><tbody>{rows}</tbody></table></section>{JS}</main></body></html>')
     open(os.path.join(ROOT, f"docs/wiring/{sid}.html"), "w", encoding="utf-8").write(page)
 print("wiring-by-section.html written; sections:", len(sec_parts), "parts incl. SJ1:", sum(len(v) for v in sec_parts.values()))
