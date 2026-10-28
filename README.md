@@ -9,7 +9,7 @@
 > **Status (2026-10-28): plan only.** There is no schematic, PCB or firmware yet. Part numbers were looked up on LCSC today; datasheets for most parts are not read yet. The board involves 230 V AC: read [docs/safety.md](docs/safety.md) and the safety section of [PLAN.md](PLAN.md) first.
 
 ## Planned features
-- ESP32-S3-WROOM-1-N8, Wi-Fi, ESPHome firmware with Home Assistant (same entities as [Smart-Submersible-Pump-Controller-ESPHome](https://github.com/ElectroIoT/Smart-Submersible-Pump-Controller-ESPHome)).
+- ESP32-S3-WROOM-1U-N16R8 (external antenna), Wi-Fi, ESPHome firmware with Home Assistant (same entities as [Smart-Submersible-Pump-Controller-ESPHome](https://github.com/ElectroIoT/Smart-Submersible-Pump-Controller-ESPHome)).
 - PZEM-004T v3 header: voltage, current, power, energy, frequency; dry-run and over-current protection.
 - 2 SPDT relays (Songle SRD-05VDC-SL-C), COM / NO / NC on 5.08 mm screw terminals for each.
 - Hi-Link HLK-5M05 5 V / 1 A module, 3.3 V LDO (no on-board fuse or varistor: protect upstream).
@@ -33,6 +33,8 @@
 |---|---|
 | Plan: GPIO table, display design, isolation notes, power budget, BOM, phases, open questions | [PLAN.md](PLAN.md) |
 | LCSC bill of materials (draft) | [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-controller-bom-v0.csv) |
+| Tick-list BOM by section (colourful, with LCSC links) | [docs/bom-by-section.html](docs/bom-by-section.html) |
+| Connection map + wiring order + GPIO table | [docs/connection-diagram.html](docs/connection-diagram.html) |
 | Safety | [docs/safety.md](docs/safety.md) |
 
 ## License

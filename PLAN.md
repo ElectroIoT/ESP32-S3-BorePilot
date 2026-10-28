@@ -9,7 +9,7 @@ Date: 2026-10-28. Author of plan: Claude session for ElectroIoT. **Nothing here 
 Build a new ESP32-S3 pump controller board that replaces the Wemos D1 Mini + relay module + loose HLK-PM01 stack of [Smart-Submersible-Pump-Controller-ESPHome](https://github.com/ElectroIoT/Smart-Submersible-Pump-Controller-ESPHome) with one PCB, and succeeds the earlier [PUMP-SENTRY-S3](../PUMP-SENTRY-S3) attempt (reviewed 2026-10-17; fresh start requested).
 
 In scope for v1:
-- ESP32-S3-WROOM-1 module, Wi-Fi, ESPHome firmware (same entities as the old package, plus extra protection).
+- ESP32-S3-WROOM-1U-N16R8 module (U.FL, external antenna; owner choice 2026-10-28), Wi-Fi, ESPHome firmware (same entities as the old package, plus extra protection).
 - PZEM-004T v3 energy meter on a 4-pin header (external module, as in the old project).
 - 2 relays (SPDT), **each with COM / NO / NC on its own screw terminal**.
 - Hi-Link HLK-5M05 5 V module powers everything; 3.3 V LDO for the ESP32-S3.
@@ -52,7 +52,7 @@ flowchart LR
     USB -->|VBUS| OR
     OR --> V5["+5V rail, C1 470uF"]
     V5 --> LDO["U3 3.3V LDO"] --> V33["+3V3"]
-    V33 --> MCU["U1 ESP32-S3-WROOM-1-N8"]
+    V33 --> MCU["U1 ESP32-S3-WROOM-1U-N16R8"]
     MCU -->|GPIO4,5 via Q1,Q2| COILS["K1,K2 coils (5V) + LEDs"]
     MCU -->|UART1 GPIO17/18| PZ["J6 PZEM-004T header"]
     MCU -->|I2C GPIO8/9| OLED["J8 I2C OLED (3V3)"]
@@ -64,7 +64,7 @@ flowchart LR
   COILS -.- K2C
 ```
 
-## 4. GPIO assignment (ESP32-S3-WROOM-1-N8)
+## 4. GPIO assignment (ESP32-S3-WROOM-1U-N16R8)
 
 Rules used: avoid strapping pins GPIO0 (BOOT only), GPIO3, GPIO45, GPIO46; GPIO19/20 reserved for native USB; GPIO26-32 are the module's flash (not available); GPIO33-37 are **left unused** so an R8 (octal PSRAM) module could be dropped in later; GPIO43/44 (UART0) go to a test-pad pair only. Display pins reuse the numbers from the Wattglint/PayDisplay 12864 projects so existing U8g2/ESPHome knowledge carries over (CS 10, MOSI 11, CLK 12, RST 14; backlight moved to 13).
 
@@ -184,7 +184,9 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 
 | Ref | Qty | Function | MPN | LCSC | Stock | Unit $ (tier) | Status / notes |
 |---|---|---|---|---|---|---|---|
-| U1 | 1 | MCU module (8 MB flash, no PSRAM) | ESP32-S3-WROOM-1-N8 | [C2913198](https://www.lcsc.com/product-detail/C2913198.html) | 1762 | 4.9100 (1+) | VERIFIED 2026-10-28. N8R8 variant C2913201 shows 0 stock; N8 keeps GPIO33-37 usable |
+| U1 | 1 | MCU module, U.FL connector for external antenna (16 MB flash, 8 MB octal PSRAM) | ESP32-S3-WROOM-1U-N16R8 | [C3013946](https://www.lcsc.com/product-detail/C3013946.html) | 24259 | 5.2308 (1+) | VERIFIED 2026-10-28. owner choice over WROOM-1-N8 C2913198; octal PSRAM uses GPIO33-37 (kept free in the GPIO map) |
+| ANT1 | 1 | U.FL/IPEX to SMA pigtail 200 mm (to external antenna) | KH-IPEX-SMA-W-200 | [C2683345](https://www.lcsc.com/product-detail/C2683345.html) | 80 | 1.2677 (1+) | LISTING ONLY. only 80 in stock; check bulkhead vs plug SMA type and that it mates with U.FL; 100/150/180 mm variants showed 0 stock |
+| ANT2 | 1 | 2.4 GHz SMA antenna for the pigtail | TBD | [TBD](https://www.lcsc.com/product-detail/TBD.html) | TBD | TBD () | NOT LOOKED UP. choose an SMA 2.4 GHz rubber-duck or panel antenna (about 2-3 dBi) |
 | U2 | 1 | AC-DC 5 V / 1 A / 5 W module | HLK-5M05 | [C209907](https://www.lcsc.com/product-detail/C209907.html) | 3052 | 2.9474 (1+) | VERIFIED + datasheet read. 38 x 23 x 18 mm; 90-265 VAC; 3000 VAC isolation; datasheet asks for 0.5 A slow fuse + varistor 10D561K. Alt HLK-PM01 C209903 (700 mA, 34x20) too small for peak budget |
 | U3 | 1 | 3.3 V LDO, SOT-223 (selected 2026-10-28 over AP2112K) | SGM2212-3.3XKC3G/TR | [C3294699](https://www.lcsc.com/product-detail/C3294699.html) | 9071 | 0.5739 (1+) | LISTING ONLY. datasheet NOT read (1 A-class rating assumed); used in PUMP-SENTRY-S3. Alts: AMS1117-3.3 C6186, AP2112K-3.3 C51118 (600 mA, SOT-23-5, marginal) |
 | U4 | 1 | USB ESD protection (D+/D-) | USBLC6-2SC6 | [C7519](https://www.lcsc.com/product-detail/C7519.html) | 39325 | 0.1814 (5+) | VERIFIED listing. same part as LED dimmer |
@@ -214,7 +216,7 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | R12-R17 | 6 | 4.7 k 1206 (I2C pull-ups 3V3/5V sides, PZEM divider) | 1206W4F4701T5E | [C17936](https://www.lcsc.com/product-detail/C17936.html) | 1476000 | 0.0077 (100+) | VERIFIED listing. estimated count |
 | R18-R21 | 4 | 100 k 1206 (MOSFET gate pull-downs: relays off during boot) | 1206W4F1003T5E | [C17900](https://www.lcsc.com/product-detail/C17900.html) | 360650 | 0.0096 (50+) | VERIFIED listing.  |
 
-Rough parts total at the listed tier prices: **about USD 14.6** (excluding PCB, PZEM-004T module, display modules, enclosure, mains wiring).
+Rough parts total at the listed tier prices: **about USD 16.2 (antenna not priced)** (excluding PCB, PZEM-004T module, display modules, enclosure, mains wiring).
 
 External modules (not LCSC, not selected here): PZEM-004T v3 with CT, one of 16x2 I2C LCD / 0.96" SSD1306 OLED / 12864B ST7920 module. Not placed in v1: X2 capacitor and common-mode choke for EMC certification (HLK datasheet), RGB LED, per-channel optocouplers.
 
@@ -227,7 +229,7 @@ Notes:
 
 - **100 x 80 mm, 2 layers, 1.6 mm FR-4, 1 oz copper** (2 oz only if the engineer approves higher contact currents), HASL or ENIG, green mask, white silkscreen. Fits the largest items: HLK-5M05 38 x 23, two relays 19 x 15.5, 1x20 header 51 mm long (along the top edge), five screw terminals along the bottom edge.
 - 4 x M3 mounting holes with 6.4 mm pads (as the dimmer), corners R3.
-- ESP32 antenna end overhangs the board or sits at an edge with a **no-copper keep-out** in all layers (Espressif guideline), USB-C on the left edge, buttons and display headers on the right/top edge.
+- The 1U module has no PCB antenna, so no overhang is needed; keep the U.FL connector near a board edge and route the pigtail out of the enclosure to an SMA bulkhead antenna. Leave the module's recommended clearance around its RF pad, USB-C on the left edge, buttons and display headers on the right/top edge.
 - Layer plan: top = signals + short pours, bottom = continuous GND on the SELV side; mains side has no GND pour.
 - Track widths (starting values): 5 V 0.8 mm, relay contact path 2 mm, signals 0.25 mm, USB 0.2 mm diff pair with 90 ohm if the fab stack allows, mains 1.0 mm minimum and spaced per 7.2.
 - 4 layers are not needed.
