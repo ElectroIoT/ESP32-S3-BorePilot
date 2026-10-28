@@ -36,6 +36,7 @@
 | Tick-list BOM by section (colourful, with LCSC links) | [docs/bom-by-section.html](docs/bom-by-section.html) |
 | **Schematic build guide for EasyEDA Pro web** (page by page, tick-list, LCSC search numbers, net names) | [docs/schematic-guide.html](docs/schematic-guide.html) |
 | **Wiring by section** (pin-to-net diagram per section, hover/click, same 5 pages as the guide) | [docs/wiring-by-section.html](docs/wiring-by-section.html) |
+| One wiring file per section | [docs/wiring/](docs/wiring/) (mains, power, usb, mcu, relay, pzem, disp, ui) |
 | BOM by schematic page (5 pages, tick-list) | [docs/bom-by-page.html](docs/bom-by-page.html), [docs/bom-by-page.md](docs/bom-by-page.md) |
 | Connection map + colour-coded wire table per section + GPIO table | [docs/connection-diagram.html](docs/connection-diagram.html) |
 | Safety | [docs/safety.md](docs/safety.md) |

@@ -189,4 +189,28 @@ document.querySelectorAll('svg.dia').forEach(svg=>{
     return "".join(o)
 
 open(os.path.join(ROOT, "docs/wiring-by-section.html"), "w", encoding="utf-8").write(build())
+
+JS = """<script>
+document.querySelectorAll('svg.dia').forEach(svg=>{
+ svg.querySelectorAll('.w[data-net]').forEach(w=>{
+  w.addEventListener('mouseenter',()=>{svg.classList.add('hl');svg.querySelectorAll('.w[data-net="'+w.dataset.net+'"]').forEach(x=>x.classList.add('on'))});
+  w.addEventListener('mouseleave',()=>{svg.classList.remove('hl');svg.querySelectorAll('.w.on').forEach(x=>x.classList.remove('on'))});
+  w.addEventListener('click',()=>{svg.querySelectorAll('.w[data-net="'+w.dataset.net+'"]').forEach(x=>x.classList.toggle('done'))});
+ });
+});
+</script>"""
+os.makedirs(os.path.join(ROOT, "docs/wiring"), exist_ok=True)
+allsec = [s for s in G.S]
+for i, sc in enumerate(allsec):
+    sid = sc[0]
+    nav = "".join(f'<a class="chip" style="background:{s[2]};opacity:{1 if s[0]==sid else .55}" href="{s[0]}.html">{e(s[1])}</a>' for s in allsec)
+    rows = "".join(f'<tr><td><b>{e(r)}</b></td><td>{e(nm)}</td><td>{e(c)}</td></tr>' for r, nm, c in sec_parts[sid])
+    pg = page_of[sid]
+    page = (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BorePilot wiring - {e(sc[1])}</title><style>{CSS}table{{border-collapse:collapse;width:100%;font-size:13px}}td,th{{padding:4px 8px;border-bottom:1px solid var(--line);text-align:left}}</style></head><body><main>'
+            f'<div class="hero"><h1>{e(sc[1])}</h1><p>Schematic page {pg}. {e(sc[3])}</p></div>'
+            f'<div class="chips" style="margin-top:12px">{nav}</div>'
+            f'<p class="mut">Back to <a href="../wiring-by-section.html">all sections</a> &middot; <a href="../schematic-guide.html">schematic guide</a> &middot; hover a wire = highlight net, click = mark done. Planned nets; check pin names against the EasyEDA symbols.</p>'
+            f'<section class="card" style="--c:{sc[2]}"><div class="scroll">{section_svg(sid)}</div></section>'
+            f'<section class="card" style="--c:{sc[2]}"><h3>Parts in this section ({len(sec_parts[sid])})</h3><table><thead><tr><th>Ref</th><th>Part</th><th>LCSC</th></tr></thead><tbody>{rows}</tbody></table></section>{JS}</main></body></html>')
+    open(os.path.join(ROOT, f"docs/wiring/{sid}.html"), "w", encoding="utf-8").write(page)
 print("wiring-by-section.html written; sections:", len(sec_parts), "parts incl. SJ1:", sum(len(v) for v in sec_parts.values()))
