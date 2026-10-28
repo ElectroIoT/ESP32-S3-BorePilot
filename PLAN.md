@@ -85,7 +85,7 @@ Rules used: avoid strapping pins GPIO0 (BOOT only), GPIO3, GPIO45, GPIO46; GPIO1
 | 2 | BTN_STOP | in | SW4 |
 | 6 | BTN_MENU | in | SW5 |
 | 15 | BUZZER (optional, DNP-able) | out | Q4 gate (LEDC PWM), 100 k pull-down |
-| 16 | LED_STATUS | out | LED2 green via 1 k |
+| 16 | LED_STATUS | out | LED2 red via 1 k |
 | 39 | IN1 | in | J10 (screw terminal), float/level switch 1 (dry contact, internal pull-up) |
 | 40 | IN2 | in | J11 (screw terminal), float/level switch 2 |
 | 41, 42 | SPARE1, SPARE2 | io | J12 |
@@ -167,7 +167,7 @@ Result: worst case 75 % of the HLK-5M05 rating, with 470 uF bulk covering the Wi
 
 ## 9. BOM (LCSC, looked up 2026-10-28)
 
-Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-controller-bom-v0.csv). Prices are the lowest tier shown on the LCSC page in USD (tier in brackets) and change daily. "VERIFIED" = the listed C# and MPN matched on the LCSC page today; "datasheet read" = I opened the PDF; "LISTING ONLY" = page only. Parts that LCSC lists as "other suppliers" carry a lead time. Resistor/cap counts are estimates until the schematic exists.
+Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-controller-bom-v0.csv). Prices are the lowest tier shown on the LCSC page in USD (tier in brackets) and change daily. "VERIFIED" = the listed C# and MPN matched on the LCSC page today; "datasheet read" = I opened the PDF; "LISTING ONLY" = page only. Parts that LCSC lists as "other suppliers" carry a lead time. All resistors and capacitors are 1206 (owner choice 2026-10-28). Resistor/cap counts are estimates until the schematic exists.
 
 | Ref | Qty | Function | MPN | LCSC | Stock | Unit $ (tier) | Status / notes |
 |---|---|---|---|---|---|---|---|
@@ -187,21 +187,21 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | J6 | 1 | JST XH 4P vertical header: PZEM-004T (5V, TX, RX, GND) | B4B-XH-A-G | [C594232](https://www.lcsc.com/product-detail/C594232.html) | 23130 | 0.2533 (5+) | VERIFIED listing. mating housing + crimp contacts not yet selected |
 | J7,J8 | 2 | 1x4 2.54 header: 16x2 I2C LCD, I2C OLED | PZ254V-11-04P | [C2691448](https://www.lcsc.com/product-detail/C2691448.html) | 591680 | 0.0264 (20+) | VERIFIED listing.  |
 | J9 | 1 | 1x20 2.54 female header: 12864 LCD | PZ254R-11-20P | [C41413628](https://www.lcsc.com/product-detail/C41413628.html) | 400 | 0.1397 (5+) | VERIFIED listing. only 400 in stock; male alt PZ254V-11-20P not looked up |
-| J12 | 1 | 1x6 2.54 header: 3V3, GND, GPIO41, GPIO42, GPIO47, GPIO48 (spare) | PZ254V-11-06P | [C492405](https://www.lcsc.com/product-detail/C492405.html) | TBD | TBD () | FROM DIMMER BOM. not re-checked today; price/stock TBD |
+| J12 | 1 | 1x6 2.54 header: 3V3, GND, GPIO41, GPIO42, GPIO47, GPIO48 (spare) | PZ254V-11-06P | [C492405](https://www.lcsc.com/product-detail/C492405.html) | 70720 | 0.0410 (20+) | VERIFIED 2026-10-28.  |
 | SW1-SW5 | 5 | Tact switches: EN, BOOT, START, STOP, MENU | TS-1187A-B-A-B | [C318884](https://www.lcsc.com/product-detail/C318884.html) | 887660 | 0.0208 (20+) | VERIFIED listing.  |
-| LED1,LED2 | 2 | 0603 green: power, Wi-Fi/status | 19-217/GHC-YR1S2/6T | [C2986059](https://www.lcsc.com/product-detail/C2986059.html) | 718400 | 0.0180 (50+) | LISTING ONLY. colour code not confirmed on datasheet |
-| LED3,LED4 | 2 | 0603 red: relay 1, relay 2 energised | XL-1608SURC-04 | [C965798](https://www.lcsc.com/product-detail/C965798.html) | 270700 | 0.0057 (100+) | LISTING ONLY. colour inferred from name |
+| LED1,LED2 | 2 | 0603 RED: power (LED1), Wi-Fi/status (LED2) | XL-1608SURC-04 | [C965798](https://www.lcsc.com/product-detail/C965798.html) | 270700 | 0.0057 (100+) | LISTING ONLY. colour inferred from name; owner choice red = power |
+| LED3,LED4 | 2 | 0603 GREEN: relay 1, relay 2 energised | 19-217/GHC-YR1S2/6T | [C2986059](https://www.lcsc.com/product-detail/C2986059.html) | 718400 | 0.0180 (50+) | LISTING ONLY. colour code not confirmed on datasheet; owner choice green = relays |
 | BZ1 | 1 | OPTIONAL (DNP-able) magnetic SMD buzzer 8.5 mm, passive, PWM driven, with Q4 + D3 | MLT-8530 | [C94599](https://www.lcsc.com/product-detail/C94599.html) | 143625 | 0.2036 (5+) | LISTING ONLY. drive voltage / current not read |
 | C1 | 1 | 470 uF 16 V electrolytic, 8x12 (5 V bulk) | ERG16V470M8X12 | [C47344174](https://www.lcsc.com/product-detail/C47344174.html) | 64670 | 0.0579 (10+) | LISTING ONLY. HLK datasheet wants 100-220 uF, low ESR; 470 uF covers Wi-Fi bursts |
-| C2-C7 | 6 | 10 uF 0805 (LDO in/out, rails) | CL21A106KAYNNNE | [C15850](https://www.lcsc.com/product-detail/C15850.html) | 1905240 | 0.0441 (20+) | VERIFIED listing. estimated count |
-| C8-C19 | 12 | 100 nF 0603 decoupling | CL10B104KB8NNNC | [C1591](https://www.lcsc.com/product-detail/C1591.html) | 120100 | 0.0078 (100+) | VERIFIED listing. estimated count |
-| R1,R2 | 2 | 5.1 k 0603 (USB-C CC1, CC2 pull-downs) | 0603WAF5101T5E | [C23186](https://www.lcsc.com/product-detail/C23186.html) | 16664200 | 0.0016 (100+) | VERIFIED listing.  |
-| R3-R7 | 5 | 10 k 0603 (EN pull-up, PZEM divider, spare) | RC0603FR-0710KL | [C98220](https://www.lcsc.com/product-detail/C98220.html) | 3747700 | 0.0027 (100+) | VERIFIED listing. Uni-Royal 10 k C25804 showed 0 stock on 2026-10-28 |
-| R8-R11 | 4 | 1 k 0603 (LED series) | 0603WAF1001T5E | [C21190](https://www.lcsc.com/product-detail/C21190.html) | 7326600 | 0.0017 (100+) | VERIFIED listing.  |
-| R12-R17 | 6 | 4.7 k 0603 (I2C pull-ups 3V3/5V sides, PZEM divider) | 0603WAF4701T5E | [C23162](https://www.lcsc.com/product-detail/C23162.html) | 3779700 | 0.0028 (100+) | VERIFIED listing. estimated count |
-| R18-R21 | 4 | 100 k 0603 (MOSFET gate pull-downs: relays off during boot) | RC0603FR-07100KL | [C14675](https://www.lcsc.com/product-detail/C14675.html) | 8065000 | 0.0023 (100+) | VERIFIED listing.  |
+| C2-C7 | 6 | 10 uF 1206 (LDO in/out, rails) | CL31A106KAHNNNE | [C9807](https://www.lcsc.com/product-detail/C9807.html) | 493250 | 0.0530 (10+) | VERIFIED listing. estimated count; CL31A106KBHNNNE C13585 has 0 stock |
+| C8-C19 | 12 | 100 nF 1206 decoupling | CL31B104KBCNNNC | [C24497](https://www.lcsc.com/product-detail/C24497.html) | 125980 | 0.0222 (20+) | VERIFIED listing. estimated count |
+| R1,R2 | 2 | 5.1 k 1206 (USB-C CC1, CC2 pull-downs) | 1206W4F5101T5E | [C26033](https://www.lcsc.com/product-detail/C26033.html) | 166000 | 0.0050 (100+) | VERIFIED listing.  |
+| R3-R7 | 5 | 10 k 1206 (EN pull-up, PZEM divider, spare) | 1206W4F1002T5E | [C17902](https://www.lcsc.com/product-detail/C17902.html) | 1059900 | 0.0079 (100+) | VERIFIED listing.  |
+| R8-R11 | 4 | 1 k 1206 (LED series) | 1206W4F1001T5E | [C4410](https://www.lcsc.com/product-detail/C4410.html) | 655650 | 0.0086 (50+) | VERIFIED listing.  |
+| R12-R17 | 6 | 4.7 k 1206 (I2C pull-ups 3V3/5V sides, PZEM divider) | 1206W4F4701T5E | [C17936](https://www.lcsc.com/product-detail/C17936.html) | 1476000 | 0.0077 (100+) | VERIFIED listing. estimated count |
+| R18-R21 | 4 | 100 k 1206 (MOSFET gate pull-downs: relays off during boot) | 1206W4F1003T5E | [C17900](https://www.lcsc.com/product-detail/C17900.html) | 360650 | 0.0096 (50+) | VERIFIED listing.  |
 
-Rough parts total at the listed tier prices: **about USD 14.2** (excluding J12, PCB, PZEM-004T module, display modules, enclosure, mains wiring).
+Rough parts total at the listed tier prices: **about USD 14.3** (excluding PCB, PZEM-004T module, display modules, enclosure, mains wiring).
 
 External modules (not LCSC, not selected here): PZEM-004T v3 with CT, one of 16x2 I2C LCD / 0.96" SSD1306 OLED / 12864B ST7920 module. Not placed in v1: X2 capacitor and common-mode choke for EMC certification (HLK datasheet), RGB LED, per-channel optocouplers.
 
@@ -277,8 +277,8 @@ Planned test sequence (to be written as test/hardware-test-plan.md): 0 inspectio
 - PZEM-004T v3 TTL levels (TX assumed 5 V, divider added), isolation claim, supply current, pin order of the module header.
 - ST7920 serial-mode behaviour on the specific 12864B module (PSB pin, V0/VOUT contrast wiring, backlight series resistor and polarity, 3.3 V vs 5 V supply).
 - OLED and LCD backpack pin orders and I2C pull-up locations vary by module.
-- LED colours of C2986059 (green) and C965798 (red) are inferred from names.
-- Stock and prices are from 2026-10-28 page views; some parts (C58159, C3131) come from "other suppliers" with lead times; J12 header C492405 was not re-checked.
+- LED colours of C965798 (red: power, status) and C2986059 (green: relay 1, relay 2) are inferred from names.
+- Stock and prices are from 2026-10-28 page views; some parts (C58159, C3131) come from "other suppliers" with lead times; 
 - C165948 footprint/pad dimensions are read from the manufacturer drawing but **no EasyEDA footprint has been compared yet**.
 - LCSC API credentials were not available, so all lookups were manual page reads; the lcsc-parts rule "search by exact MPN" was followed.
 
