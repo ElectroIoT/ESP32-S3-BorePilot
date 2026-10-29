@@ -16,7 +16,7 @@
 - USB-C (LCSC C165948) for flashing and logging via native USB; no USB-UART chip.
 - Display options on one board: 16x2 I2C LCD, I2C OLED or 128x64 ST7920 LCD; START / STOP / MENU buttons, buzzer, status LEDs, 2 float-switch inputs.
 - Optional wireless tank-level node (second ESP32, ESP-NOW) that starts/stops the pump by tank level.
-- Target PCB: 100 x 80 mm, 2 layers, mains/low-voltage isolation slot.
+- Target PCB: 100 x 90 mm, 2 layers, mains/low-voltage isolation slot.
 
 ## Repository map
 ```
@@ -39,7 +39,7 @@
 | One wiring file per section | [docs/wiring/](docs/wiring/) (mains, power, usb, mcu, relay, pzem, disp, ui) |
 | BOM by schematic page (5 pages, tick-list) | [docs/bom-by-page.html](docs/bom-by-page.html), [docs/bom-by-page.md](docs/bom-by-page.md) |
 | Connection map + colour-coded wire table per section + GPIO table | [docs/connection-diagram.html](docs/connection-diagram.html) |
-| **PCB layout guide by section** (100 x 80 mm, X/Y of every part, tick-list, trace widths) | [docs/pcb-section-guide.html](docs/pcb-section-guide.html), image [docs/images/pcb-floorplan.png](docs/images/pcb-floorplan.png) |
+| **PCB layout guide by section** (100 x 90 mm, X/Y of every part, tick-list, trace widths) | [docs/pcb-section-guide.html](docs/pcb-section-guide.html), image [docs/images/pcb-floorplan.png](docs/images/pcb-floorplan.png) |
 | Schematic review (8 errors found and fixed) | [docs/schematic-review-2026-10-28.md](docs/schematic-review-2026-10-28.md) |
 | Safety | [docs/safety.md](docs/safety.md) |
 

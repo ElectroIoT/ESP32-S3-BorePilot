@@ -54,8 +54,8 @@ def board_svg(active=None, interactive=True, standalone=False):
     # mains zone tint
     zx = PL.SLOT["x"]
     o.append(f'<rect x="{M+1}" y="{M+1}" width="{zx*SC-1:.0f}" height="{BH*SC-2:.0f}" rx="21" fill="#e53935" fill-opacity=".07"/>')
-    o.append(f'<text x="{X(zx/2):.0f}" y="{Y(BH-1.2):.0f}" text-anchor="middle" font-size="10" font-weight="700" fill="#e53935">MAINS ZONE 230 V</text>')
-    o.append(f'<text x="{X((zx+BW)/2):.0f}" y="{Y(BH-1.2):.0f}" text-anchor="middle" font-size="10" font-weight="700" fill="#2fbf71">LOW VOLTAGE ZONE (isolated 5 V / 3.3 V)</text>')
+    o.append(f'<text x="{X(zx/2):.0f}" y="{M+BH*SC+40:.0f}" text-anchor="middle" font-size="10" font-weight="700" fill="#e53935">MAINS ZONE 230 V</text>')
+    o.append(f'<text x="{X((zx+BW)/2):.0f}" y="{M+BH*SC+40:.0f}" text-anchor="middle" font-size="10" font-weight="700" fill="#2fbf71">LOW VOLTAGE ZONE (isolated 5 V / 3.3 V)</text>')
     s = PL.SLOT
     o.append(f'<rect x="{X(s["x"]):.1f}" y="{Y(s["y1"]):.1f}" width="{s["w"]*SC:.1f}" height="{(s["y1"]-s["y0"])*SC:.1f}" fill="#b71c1c" stroke="#b71c1c"/>')
     o.append(f'<text x="{X(s["x"]+s["w"]/2):.1f}" y="{Y(s["y0"]-2):.1f}" text-anchor="middle" font-size="8" fill="#b71c1c">SLOT 1.3 mm</text>')
@@ -86,7 +86,7 @@ def board_svg(active=None, interactive=True, standalone=False):
         elif ref in ("J4", "J5"):
             o.append(f'<text x="{X(x+w/2)+4:.1f}" y="{Y(y-h/2)+2:.1f}" font-size="8" fill="{fg}">{cap}</text>')
         elif ref in ("U1",):
-            o.append(f'<text x="{X(x):.1f}" y="{Y(y+h/2)-4:.1f}" text-anchor="middle" font-size="8" fill="#a66cff">U.FL here: antenna edge to the top</text>')
+            o.append(f'<text x="{X(x):.1f}" y="{Y(y)+18:.1f}" text-anchor="middle" font-size="8" fill="{fg}">U.FL connector: antenna edge up</text>')
         else:
             o.append(f'<text x="{X(x):.1f}" y="{ty:.1f}" text-anchor="middle" font-size="8" fill="{fg}">{cap}</text>')
     o.append("</svg>")
@@ -127,7 +127,7 @@ SEC_NOTES = {
            "Keep 6.4 mm (8 mm better) between any mains copper and low-voltage copper, 2 mm from mains copper to the board edge. No pour or vias across the slot."],
  "power": ["Put D4, D5 and C1 right next to the HLK +5V pin so the 5 V path is short. U3 and its caps sit beside C1.", "C15 100 nF goes directly across the HLK output pins."],
  "usb": ["J1 sits on the bottom edge, shield tabs to the board edge. Route D+ / D- as a pair, short, 90 ohm if the fab stack allows, straight through U4 to the ESP32.", "R1 / R2 (5.1 k) right at the J1 CC pins."],
- "mcu": ["U1 at the top right. The module has a U.FL connector, so no PCB antenna and no overhang is needed: keep the U.FL connector near the top edge and nothing tall right next to it.", "Decoupling caps C4, C9, C10 directly under the module's 3V3 pin side; SW1 / SW2 within reach of a finger on the edge."],
+ "mcu": ["J13 (UART / boot header) sits on the top edge next to J12: unpopulated by default.", "U1 at the top right. The module has a U.FL connector, so no PCB antenna and no overhang is needed: keep the U.FL connector near the top edge and nothing tall right next to it.", "Decoupling caps C4, C9, C10 directly under the module's 3V3 pin side; SW1 / SW2 within reach of a finger on the edge."],
  "relay": ["K1 and K2 straddle the slot: contact pins on the mains side (left), coil pins on the low-voltage side (right).", "Q1, Q2, D1, D2 and the LED parts sit just right of each relay. J4 and J5 are on the left edge, cable entry to the left.", "Contact tracks: 1.5 mm and short; they must never come within 6.4 mm of low-voltage copper."],
  "pzem": ["J6 on the bottom edge. R16 / R4 divider next to the header.", "Mains does not reach this section: the PZEM module has its own mains terminals (fed from J3)."],
  "disp": ["J9 (1x20) runs down the right edge so the 12864 plugs in or cables out at the edge. J7 / J8 are on the top edge.", "U6, Q3, RV2 and the passives cluster between J9 and the ESP32. U5 (PCA9306) is near J7/J8 and the I2C lines."],
@@ -147,8 +147,8 @@ NETS = [
 ]
 
 STEPS = [
- "In EasyEDA PCB, set the board outline to 100 x 80 mm with 3 mm corners and place the four M3 pads (4, 4), (96, 4), (4, 76), (96, 76) mm.",
- "Draw the isolation slot (x 28.1 to 29.4 mm, y 7 to 69 mm) on the board-outline layer as a routed slot. Add keep-out rectangles 3.2 mm around it on both copper layers.",
+ "In EasyEDA PCB, set the board outline to 100 x 90 mm with 3 mm corners and place the four M3 pads (4, 4), (96, 4), (4, 86), (96, 86) mm.",
+ "Draw the isolation slot (x 28.1 to 29.4 mm, y 7 to 77 mm) on the board-outline layer as a routed slot. Add keep-out rectangles 3.2 mm around it on both copper layers.",
  "Import the schematic (Design > Update/Convert Schematic to PCB). Check every footprint against its datasheet first: J1 USB-C, K1/K2 relays, U2 HLK, KF128 terminals, J9 1x20.",
  "Place section by section in this order: mains, relays, power, USB, ESP32, displays, PZEM and I/O. Use the X / Y tables as a start, then tick each part here.",
  "Draw the net classes from the table above (widths and the USB pair), then pour GND on the low-voltage side only.",
@@ -161,22 +161,22 @@ STEPS = [
 def build():
     total = len(PL.L)
     o = [f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BorePilot PCB Layout Guide</title><style>{CSS}</style></head><body><main>']
-    o.append('<div class="hero"><h1>BorePilot - PCB layout guide by section</h1><p>100 x 80 mm, 2 layers. Where every part goes, section by section, with X / Y in mm (origin = lower-left corner, y up), a tick box per part and the trace width of every net. Click a part in a drawing or tick it in the table: both stay in sync and are saved in this browser.</p></div>')
+    o.append('<div class="hero"><h1>BorePilot - PCB layout guide by section</h1><p>100 x 90 mm, 2 layers. Where every part goes, section by section, with X / Y in mm (origin = lower-left corner, y up), a tick box per part and the trace width of every net. Click a part in a drawing or tick it in the table: both stay in sync and are saved in this browser.</p></div>')
     o.append('<div class="warn"><b>Plan stage, not a finished layout.</b> Positions and sizes are estimates for a first placement (the checker found no overlaps and no clashes with the mounting holes or the slot band), but the real footprints from EasyEDA will differ: compare the courtyards, then adjust. Mains is on the left side of the slot: engineer review before any mains power.</div>')
     o.append('<nav>' + '<a style="background:#607d8b" href="#size">Board size</a><a style="background:#607d8b" href="#plan">Floor plan</a>' + "".join(f'<a style="background:{SEC[s][2]}" href="#{s}">{e(SEC_TITLE[s])}</a>' for s in ORDER) + f'<a style="background:#607d8b" href="#nets">Nets</a><a style="background:#607d8b" href="#steps">Steps</a><span class="mut">placed <b id="tot">0</b> / {total}</span><div class="bar"><div id="barfill"></div></div><button id="reset">Reset ticks</button></nav>')
     # size
     used = sum(w * h for (x, y, w, h, r) in PL.L.values())
     o.append('<section class="card" id="size"><h2>Best board size</h2>')
-    o.append(f'<div class="rec"><b>Selected: 100 x 80 mm, 2 layers, 1.6 mm FR-4, 1 oz copper.</b> The footprints add up to about {used:.0f} mm&sup2; of the 8000 mm&sup2; board ({used/80:.0f} %), but the real constraint is the shape: the HLK module is 38 x 23 mm and the 1x20 display header is 51 mm long, the two relays need 19 mm each, and the left column needs a 6.4 mm slot. A 90 x 70 mm board would not hold the relays, HLK and header with the 6.4 mm slot rule; 100 x 80 mm does, with room for routing and for a small enclosure rail.</div>')
+    o.append(f'<div class="rec"><b>Selected: 100 x 90 mm, 2 layers, 1.6 mm FR-4, 1 oz copper.</b> The footprints add up to about {used:.0f} mm&sup2; of the 9000 mm&sup2; board ({used/90:.0f} %), but the real constraint is the shape: the HLK module is 38 x 23 mm and the 1x20 display header is 51 mm long, the two relays need 19 mm each, and the left column needs a 6.4 mm slot. 100 x 100 mm or smaller was the limit set by the owner: 100 x 90 mm stays inside it and in the cheapest PCB price tier. A 100 x 80 mm board no longer fits once the J13 UART header, the 6.4 mm clearance to the AC terminals and the 51 mm display header are all kept; a 90 x 70 mm board would not hold even the relays and the HLK module.</div>')
     o.append('<h3>Board outline, mounting pads and slot</h3><div class="scroll"><table><thead><tr><th>Item</th><th>X mm</th><th>Y mm</th><th>Size</th><th>Net</th></tr></thead><tbody>')
-    o.append('<tr><td>Board outline</td><td class="num">0 - 100</td><td class="num">0 - 80</td><td>100 x 80, corner radius 3 mm</td><td>-</td></tr>')
+    o.append('<tr><td>Board outline</td><td class="num">0 - 100</td><td class="num">0 - 90</td><td>100 x 90, corner radius 3 mm</td><td>-</td></tr>')
     for i, (hx, hy) in enumerate(PL.HOLES, 1):
         o.append(f'<tr><td>MH{i} M3 mounting pad</td><td class="num">{hx:.1f}</td><td class="num">{hy:.1f}</td><td>pad 6.4 mm, hole 3.2 mm</td><td>GND (low-voltage side only: use NPTH on the mains-side pads)</td></tr>')
     o.append(f'<tr><td>Isolation slot</td><td class="num">{PL.SLOT["x"]:.1f} - {PL.SLOT["x"]+PL.SLOT["w"]:.1f}</td><td class="num">{PL.SLOT["y0"]:.0f} - {PL.SLOT["y1"]:.0f}</td><td>{PL.SLOT["w"]} mm wide, routed</td><td>none</td></tr></tbody></table></div>')
-    o.append('<h3>Edge plan</h3><ul class="rules"><li><b>Top edge:</b> J2 and J3 (mains, left), J8 / J7 (OLED / 16x2), J12 spare, U.FL end of the ESP32 module.</li><li><b>Left edge:</b> J4 and J5 relay terminals (COM / NO / NC).</li><li><b>Bottom edge:</b> J6 (PZEM), J10 / J11 (float inputs), J1 (USB-C).</li><li><b>Right edge:</b> J9 (12864 LCD, 1x20).</li></ul>')
+    o.append('<h3>Edge plan</h3><ul class="rules"><li><b>Top edge:</b> J2 and J3 (mains, left), J8 / J7 (OLED / 16x2), J12 spare, J13 UART / boot header, U.FL end of the ESP32 module.</li><li><b>Left edge:</b> J4 and J5 relay terminals (COM / NO / NC).</li><li><b>Bottom edge:</b> J6 (PZEM), J10 / J11 (float inputs), J1 (USB-C).</li><li><b>Right edge:</b> J9 (12864 LCD, 1x20).</li></ul>')
     o.append('<p class="mut">Not on the board: ANT1 (U.FL to SMA pigtail) and ANT2 (SMA antenna). The ESP32 module has no PCB antenna; the pigtail goes to a bulkhead outside the enclosure.</p></section>')
     # plan
-    o.append('<section class="card" id="plan"><h2>Floor plan: 100 x 80 mm<span class="cnt">grid 10 mm; click a part to tick it</span></h2><p class="legend">' + "".join(f'<span><i style="background:{SEC[s][2]}"></i>{e(SEC_TITLE[s])}</span>' for s in ORDER) + '</p><div class="scroll">' + board_svg() + '</div></section>')
+    o.append('<section class="card" id="plan"><h2>Floor plan: 100 x 90 mm<span class="cnt">grid 10 mm; click a part to tick it</span></h2><p class="legend">' + "".join(f'<span><i style="background:{SEC[s][2]}"></i>{e(SEC_TITLE[s])}</span>' for s in ORDER) + '</p><div class="scroll">' + board_svg() + '</div></section>')
     # sections
     for s in ORDER:
         tb, n = parts_table(s)
@@ -204,7 +204,7 @@ open(os.path.join(ROOT, "docs/pcb-section-guide.html"), "w", encoding="utf-8").w
 svg = board_svg(standalone=True)
 leg = "".join(f'<rect x="{M + i*150}" y="{VH+6:.0f}" width="12" height="12" rx="3" fill="{SEC[s][2]}"/><text x="{M + i*150 + 17}" y="{VH+16:.0f}" font-size="10" fill="#1c2330">{e(SEC_TITLE[s])}</text>' for i, s in enumerate(ORDER[:5]))
 leg2 = "".join(f'<rect x="{M + i*150}" y="{VH+24:.0f}" width="12" height="12" rx="3" fill="{SEC[s][2]}"/><text x="{M + i*150 + 17}" y="{VH+34:.0f}" font-size="10" fill="#1c2330">{e(SEC_TITLE[s])}</text>' for i, s in enumerate(ORDER[5:]))
-title = f'<text x="{M}" y="14" font-size="13" font-weight="700" fill="#1c2330">BorePilot PCB floor plan - 100 x 80 mm, 2 layers (planning estimate)</text>'
+title = f'<text x="{M}" y="14" font-size="13" font-weight="700" fill="#1c2330">BorePilot PCB floor plan - 100 x 90 mm, 2 layers (planning estimate)</text>'
 full = svg.replace(f'viewBox="0 0 {VW:.0f} {VH:.0f}" width="{VW:.0f}" height="{VH:.0f}"', f'viewBox="0 0 {VW:.0f} {VH+44:.0f}" width="{VW:.0f}" height="{VH+44:.0f}"').replace("</svg>", leg + leg2 + title + "</svg>")
 full = full.replace('<rect x="24" y="24"', f'<rect x="0" y="0" width="{VW:.0f}" height="{VH+44:.0f}" fill="#ffffff"/><rect x="24" y="24"', 1)
 open(os.path.join(ROOT, "docs/images/pcb-floorplan.svg"), "w", encoding="utf-8").write(full)

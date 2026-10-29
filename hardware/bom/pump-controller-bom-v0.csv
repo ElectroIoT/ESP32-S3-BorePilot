@@ -17,6 +17,7 @@ RV2,1,10 k trimmer (12864 V0 contrast; DNP if no 12864),3362P-1-103LF,Bourns,C58
 J6,1,"JST XH 4P vertical header: PZEM-004T (5V, TX, RX, GND)",B4B-XH-A-G,JST,C594232,23130,0.2533,5+,VERIFIED listing,mating housing + crimp contacts not yet selected
 "J7,J8",2,"1x4 2.54 header: 16x2 I2C LCD, I2C OLED",PZ254V-11-04P,XFCN,C2691448,591680,0.0264,20+,VERIFIED listing,
 J9,1,1x20 2.54 female header: 12864 LCD,PZ254R-11-20P,XFCN,C41413628,400,0.1397,5+,VERIFIED listing,only 400 in stock; male alt PZ254V-11-20P not looked up
+J13,1,"1x6 2.54 header: UART / BOOT (3V3, GND, TXD0, RXD0, EN, IO0); not fitted by default",PZ254V-11-06P,XFCN,C492405,70720,0.041,20+,VERIFIED 2026-10-28,same part as J12
 J12,1,"1x6 2.54 header: 3V3, GND, GPIO41, GPIO42, GPIO47, GPIO48 (spare)",PZ254V-11-06P,XFCN,C492405,70720,0.041,20+,VERIFIED 2026-10-28,
 SW1-SW5,5,"Tact switches: EN, BOOT, START, STOP, MENU",TS-1187A-B-A-B,XKB,C318884,887660,0.0208,20+,VERIFIED listing,
 "LED1,LED2",2,"0603 RED: power (LED1), Wi-Fi/status (LED2)",XL-1608SURC-04,Xinglight,C965798,270700,0.0057,100+,LISTING ONLY,colour inferred from name; owner choice red = power

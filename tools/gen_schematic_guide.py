@@ -36,7 +36,7 @@ PAGES = [
    ("IO0 pin: SW2 to GND (BOOT). Nothing else on IO0.", "mcu"),
    ("IO19 to net label <b>USB_DN</b>, IO20 to net label <b>USB_DP</b> (from page 1).", "mcu"),
    ("Put net labels on the GPIO pins: IO4 <b>RLY1</b>, IO5 <b>RLY2</b>, IO8 <b>SDA</b>, IO9 <b>SCL</b>, IO10 <b>LCD_CS</b>, IO11 <b>LCD_MOSI</b>, IO12 <b>LCD_CLK</b>, IO13 <b>LCD_BL</b>, IO14 <b>LCD_RST</b>, IO15 <b>BUZZ</b>, IO16 <b>LED_ST</b>, IO17 <b>PZEM_TXD</b>, IO18 <b>PZEM_RXD</b>, IO1 <b>BTN_START</b>, IO2 <b>BTN_STOP</b>, IO6 <b>BTN_MENU</b>, IO39 <b>IN1</b>, IO40 <b>IN2</b>, IO41 <b>SP1</b>, IO42 <b>SP2</b>, IO47 <b>SP3</b>, IO48 <b>SP4</b>.", "mcu"),
-   ("TXD0 (IO43) and RXD0 (IO44): connect each to a 1-pin test pad, net labels <b>TXD0</b> and <b>RXD0</b>.", "mcu"),
+   ("TXD0 (IO43) and RXD0 (IO44): connect to <b>J13</b> pins 3 and 4 (net flags <b>TXD0</b>, <b>RXD0</b>). J13 pins: 1 +3V3, 2 GND, 3 TXD0, 4 RXD0, 5 EN, 6 IO0_BOOT (a standard UART flasher header, leave unpopulated if unused).", "mcu"),
    ("Leave IO3, IO45, IO46 and IO33-IO37 with No-Connect flags. IO3/45/46 are strapping pins.", "mcu"),
    ("Place ANT1 and ANT2 on the sheet as notes (no wires): the pigtail connects to the module's U.FL connector. Give them BOM entries only.", "mcu"),
   ],
@@ -105,7 +105,7 @@ SETUP = [
 FINAL = [
  "Every net label has at least two uses (one on the page that drives it, one that receives it). Single-use labels are typos.",
  "Run ERC with no errors. Check there is exactly one GND net, one +5V, one +3V3. L and N never touch low-voltage nets.",
- "Compare the part count with the BOM: 82 placed parts (incl. optional buzzer parts).",
+ "Compare the part count with the BOM: 83 placed parts (incl. optional buzzer parts).",
  "Open each footprint and compare it with the datasheet drawing before layout: USB-C C165948 (shield pegs/slots), relays, HLK-5M05 pin pitch, KF128 terminals, 1x20 header.",
  "Check the PZEM pin order against your actual module and the 12864/OLED/16x2 pin orders against your actual display modules.",
  "Export the schematic PDF and compare it with the connection-diagram page.",

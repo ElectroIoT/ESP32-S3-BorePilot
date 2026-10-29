@@ -36,6 +36,7 @@ Module, antenna pigtail, EN/BOOT buttons, decoupling.
 | [ ] | U1 | ESP32-S3-WROOM-1U-N16R8 module | C3013946 | 1 |
 | [ ] | ANT1 | U.FL to SMA pigtail 200 mm | C2683345 | 1 |
 | [ ] | ANT2 | 2.4 GHz SMA antenna (NOT CHOSEN YET) | TBD | 1 |
+| [ ] | J13 | UART / BOOT header 1x6 (not fitted by default) | C492405 | 1 |
 | [ ] | SW1 | Reset button (EN) | C318884 | 1 |
 | [ ] | SW2 | BOOT button (GPIO0) | C318884 | 1 |
 | [ ] | R3 | 10 k, EN pull-up | C17902 | 1 |
@@ -44,7 +45,7 @@ Module, antenna pigtail, EN/BOOT buttons, decoupling.
 | [ ] | C9 | 100 nF 1206, module 3V3 | C24497 | 1 |
 | [ ] | C10 | 100 nF 1206, module 3V3 | C24497 | 1 |
 
-Parts on this page: 10
+Parts on this page: 11
 
 ## SCHEMATIC PAGE 3 - Relays and mains contacts
 K1, K2 with drivers, flyback diodes, LEDs and COM/NO/NC terminals.

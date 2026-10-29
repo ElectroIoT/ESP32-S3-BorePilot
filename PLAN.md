@@ -90,7 +90,7 @@ Rules used: avoid strapping pins GPIO0 (BOOT only), GPIO3, GPIO45, GPIO46; GPIO1
 | 39 | IN1 | in | J10 (screw terminal), float/level switch 1 (dry contact, internal pull-up) |
 | 40 | IN2 | in | J11 (screw terminal), float/level switch 2 |
 | 41, 42 | SPARE1, SPARE2 | io | J12 |
-| 43 / 44 | TXD0 / RXD0 | out / in | two test pads (optional external UART logging) |
+| 43 / 44 | TXD0 / RXD0 | out / in | J13 UART / boot header (pins 3, 4; not fitted by default) |
 | 21, 38, 47, 48 | - | - | unused; 47/48 also on J12 |
 
 Relay LEDs LED3/LED4 are driven by the relay-coil rail (parallel with the coil through Q1/Q2), so they show the actual coil state, not the GPIO state. 3V3 pull-up on GPIO inputs is internal; add external 10 k only if testing shows noise.
@@ -202,6 +202,7 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | J6 | 1 | JST XH 4P vertical header: PZEM-004T (5V, TX, RX, GND) | B4B-XH-A-G | [C594232](https://www.lcsc.com/product-detail/C594232.html) | 23130 | 0.2533 (5+) | VERIFIED listing. mating housing + crimp contacts not yet selected |
 | J7,J8 | 2 | 1x4 2.54 header: 16x2 I2C LCD, I2C OLED | PZ254V-11-04P | [C2691448](https://www.lcsc.com/product-detail/C2691448.html) | 591680 | 0.0264 (20+) | VERIFIED listing.  |
 | J9 | 1 | 1x20 2.54 female header: 12864 LCD | PZ254R-11-20P | [C41413628](https://www.lcsc.com/product-detail/C41413628.html) | 400 | 0.1397 (5+) | VERIFIED listing. only 400 in stock; male alt PZ254V-11-20P not looked up |
+| J13 | 1 | 1x6 2.54 header: UART / BOOT (3V3, GND, TXD0, RXD0, EN, IO0); not fitted by default | PZ254V-11-06P | [C492405](https://www.lcsc.com/product-detail/C492405.html) | 70720 | 0.0410 (20+) | VERIFIED 2026-10-28. same part as J12 |
 | J12 | 1 | 1x6 2.54 header: 3V3, GND, GPIO41, GPIO42, GPIO47, GPIO48 (spare) | PZ254V-11-06P | [C492405](https://www.lcsc.com/product-detail/C492405.html) | 70720 | 0.0410 (20+) | VERIFIED 2026-10-28.  |
 | SW1-SW5 | 5 | Tact switches: EN, BOOT, START, STOP, MENU | TS-1187A-B-A-B | [C318884](https://www.lcsc.com/product-detail/C318884.html) | 887660 | 0.0208 (20+) | VERIFIED listing.  |
 | LED1,LED2 | 2 | 0603 RED: power (LED1), Wi-Fi/status (LED2) | XL-1608SURC-04 | [C965798](https://www.lcsc.com/product-detail/C965798.html) | 270700 | 0.0057 (100+) | LISTING ONLY. colour inferred from name; owner choice red = power |
@@ -228,7 +229,7 @@ Notes:
 
 ## 10. PCB size and layer stack (proposal)
 
-- **100 x 80 mm, 2 layers, 1.6 mm FR-4, 1 oz copper** (2 oz only if the engineer approves higher contact currents), HASL or ENIG, green mask, white silkscreen. Fits the largest items: HLK-5M05 38 x 23, two relays 19 x 15.5, 1x20 header 51 mm long (along the top edge), five screw terminals along the bottom edge.
+- **100 x 90 mm, 2 layers, 1.6 mm FR-4, 1 oz copper** (owner limit: 100 x 100 mm or smaller; 100 x 80 no longer fits with J13 and the 6.4 mm clearance) (2 oz only if the engineer approves higher contact currents), HASL or ENIG, green mask, white silkscreen. Fits the largest items: HLK-5M05 38 x 23, two relays 19 x 15.5, 1x20 header 51 mm long (along the top edge), five screw terminals along the bottom edge.
 - 4 x M3 mounting holes with 6.4 mm pads (as the dimmer), corners R3.
 - The 1U module has no PCB antenna, so no overhang is needed; keep the U.FL connector near a board edge and route the pigtail out of the enclosure to an SMA bulkhead antenna. Leave the module's recommended clearance around its RF pad, USB-C on the left edge, buttons and display headers on the right/top edge.
 - Layer plan: top = signals + short pours, bottom = continuous GND on the SELV side; mains side has no GND pour.

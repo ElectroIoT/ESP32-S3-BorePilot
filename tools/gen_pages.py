@@ -45,6 +45,7 @@ P = [
  ("mcu","U1","ESP32-S3-WROOM-1U-N16R8 module","C3013946",1,"3V3 -> +3V3 ; GND -> GND ; EN -> EN ; IO0 -> BOOT ; IO19/IO20 -> USB ; IO4/IO5 -> RLY1/RLY2 ; IO8/IO9 -> I2C ; IO17/IO18 -> PZEM ; IO10-14 -> LCD ; IO1/2/6 -> buttons ; IO15 -> buzzer ; IO16 -> LED ; IO39/IO40 -> floats"),
  ("mcu","ANT1","U.FL to SMA pigtail 200 mm","C2683345",1,"U.FL -> U1 ANT ; SMA -> enclosure bulkhead"),
  ("mcu","ANT2","2.4 GHz SMA antenna (NOT CHOSEN YET)","TBD",1,"SMA -> ANT1"),
+ ("mcu","J13","UART / BOOT header 1x6 (not fitted by default)","C492405",1,"1 -> +3V3 ; 2 -> GND ; 3 -> TXD0 (GPIO43) ; 4 -> RXD0 (GPIO44) ; 5 -> EN ; 6 -> IO0_BOOT"),
  ("mcu","SW1","Reset button (EN)","C318884",1,"1 -> EN ; 2 -> GND"),
  ("mcu","SW2","BOOT button (GPIO0)","C318884",1,"1 -> IO0 ; 2 -> GND"),
  ("mcu","R3","10 k, EN pull-up","C17902",1,"EN -> +3V3"),

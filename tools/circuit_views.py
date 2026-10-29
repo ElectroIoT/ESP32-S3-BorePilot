@@ -225,6 +225,13 @@ def v_mcu():
     for i, (ref, val) in enumerate([("C4", "10uF"), ("C9", "100nF"), ("C10", "100nF")]):
         x = 400 + 100 * i
         b.append(dot(x, yd, C3) + cap_v(x, yd, yd + 56, C3, f"{ref} {val}") + gnd(x, yd + 56))
+    yj = yd + 100
+    b.append(txt(300, yj - 12, "UART / BOOT header J13 (leave unpopulated if not needed)", "ref"))
+    sj, ysj, hj = part(330, yj, 190, "J13", "1x6 header", "C492405",
+                       [("1  +3V3", "+3V3"), ("2  GND", "GND"), ("3  TXD0", "TXD0"), ("4  RXD0", "RXD0"), ("5  EN", "EN"), ("6  IO0", "IO0_BOOT")], [])
+    b.append(sj)
+    b.append(txt(14, yj + hj + 24, "Use a 3.3 V USB-UART adapter: adapter TX to J13 pin 4 (RXD0), adapter RX to pin 3 (TXD0), GND to pin 2. Do not connect 5 V."))
+    yd = yj + hj + 24
     b.append(txt(14, yd + 100, "Nothing except SW2 on IO0. IO3, IO45, IO46, IO7, IO21, IO35 to IO38: no-connect. Antenna = U.FL pigtail ANT1 to ANT2 (not drawn as wires)."))
     return svg(yd + 120, "".join(b), "ESP32-S3 CORE: reset, boot, decoupling and the signals leaving the page")
 
