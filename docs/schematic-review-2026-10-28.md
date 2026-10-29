@@ -19,7 +19,9 @@ Page 1 mains / HLK / diodes / USB-C / ESD, page 2 all U1 pins vs the GPIO table,
 After the fixes the project netlist shows 79 parts all connected, `+3V3` joining U3, U1, R3 and the other 3.3 V pins, and `+5V` joining 31 pins including D3 cathode.
 
 ## Still open
-- BZ1 pins 3 and 4 and the J1 SBU pins are floating (DRC warnings only). Check the BZ1 symbol pin numbers against the MLT-8530 pad drawing.
+- BZ1 (MLT-8530, datasheet read 2026-10-29): 4 corner pads = `+` lead, `-` lead and **two dummy pads** (mechanical only, no electrical function). Symbol pins 3 and 4 are the dummy pads: put No-Connect flags on them, solder them for strength. Pins 1 (+) and 2 (-) are wired correctly.
+- BZ1 voltage: datasheet rated 3.6 V, operating 2.5 to 4.5 V (square wave, resonance 2700 Hz), coil 16 ohm, max 95 mA measured at 5 V. The board drives it from +5V, slightly above the 4.5 V operating limit: add about 10 ohm in series (or limit the PWM duty in firmware, or use +3V3).
+- J1 SBU pins are floating (DRC warning only, intended).
 - TXD0 / RXD0 flags are single-pin nets (no test pad or header). Add a 2-pin header or test pads if you want serial console on those pins.
 - J6 pin order must match the printed order on your PZEM module; J8 pin order must match your OLED module.
 - No footprint was compared with its datasheet: relay pad numbers, USB-C, HLK pin pitch, KF128 terminals, 1x20 header.
