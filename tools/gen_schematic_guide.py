@@ -105,7 +105,7 @@ SETUP = [
 FINAL = [
  "Every net label has at least two uses (one on the page that drives it, one that receives it). Single-use labels are typos.",
  "Run ERC with no errors. Check there is exactly one GND net, one +5V, one +3V3. L and N never touch low-voltage nets.",
- "Compare the part count with the BOM: 81 placed parts (incl. optional buzzer parts).",
+ "Compare the part count with the BOM: 82 placed parts (incl. optional buzzer parts).",
  "Open each footprint and compare it with the datasheet drawing before layout: USB-C C165948 (shield pegs/slots), relays, HLK-5M05 pin pitch, KF128 terminals, 1x20 header.",
  "Check the PZEM pin order against your actual module and the 12864/OLED/16x2 pin orders against your actual display modules.",
  "Export the schematic PDF and compare it with the connection-diagram page.",

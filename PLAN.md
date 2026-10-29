@@ -214,6 +214,7 @@ Source file: [hardware/bom/pump-controller-bom-v0.csv](hardware/bom/pump-control
 | R3-R7 | 5 | 10 k 1206 (EN pull-up, PZEM divider, spare) | 1206W4F1002T5E | [C17902](https://www.lcsc.com/product-detail/C17902.html) | 1059900 | 0.0079 (100+) | VERIFIED listing.  |
 | R8-R11 | 4 | 1 k 1206 (LED series) | 1206W4F1001T5E | [C4410](https://www.lcsc.com/product-detail/C4410.html) | 655650 | 0.0086 (50+) | VERIFIED listing.  |
 | R12-R16 | 5 | 4.7 k 1206 (I2C pull-ups 3V3/5V sides, PZEM divider) | 1206W4F4701T5E | [C17936](https://www.lcsc.com/product-detail/C17936.html) | 1476000 | 0.0077 (100+) | VERIFIED listing. estimated count |
+| R22 | 1 | 10 ohm 1206, OPTIONAL series resistor for BZ1 (buzzer rated 3.6 V, 2.5-4.5 V operating) | 1206W4F100JT5E | [C17903](https://www.lcsc.com/product-detail/C17903.html) | 476200 | 0.0049 (100+) | VERIFIED listing. dummy-pad note: BZ1 pins 3, 4 are mechanical only |
 | R18-R21 | 4 | 100 k 1206 (MOSFET gate pull-downs: relays off during boot) | 1206W4F1003T5E | [C17900](https://www.lcsc.com/product-detail/C17900.html) | 360650 | 0.0096 (50+) | VERIFIED listing.  |
 
 Rough parts total at the listed tier prices: **about USD 16.2 (antenna not priced)** (excluding PCB, PZEM-004T module, display modules, enclosure, mains wiring).

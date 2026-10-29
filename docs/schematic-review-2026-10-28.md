@@ -26,3 +26,6 @@ After the fixes the project netlist shows 79 parts all connected, `+3V3` joining
 - J6 pin order must match the printed order on your PZEM module; J8 pin order must match your OLED module.
 - No footprint was compared with its datasheet: relay pad numbers, USB-C, HLK pin pitch, KF128 terminals, 1x20 header.
 - R6 / R7 (float pull-ups) are on the schematic but meant to be DNP.
+
+## Buzzer fix (2026-10-29)
+Add R22 = 10 ohm 1206 (C17903) between +5V and BZ1 pin 1. D3 stays across the branch (cathode +5V, anode on the Q4 drain). BZ1 pins 3 and 4 get No-Connect flags (done by the owner). Circuit view: docs/wiring/ui.html.

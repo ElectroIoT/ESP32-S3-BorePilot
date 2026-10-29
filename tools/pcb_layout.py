@@ -108,6 +108,7 @@ put("D3", 76.5, 21.5, 5.4, 4.4)
 small("R21", 66, 19.5)
 small("R6", 56, 17)
 small("R7", 56, 14)
+small("R22", 62, 17)
 
 # off board (listed in the tables, not drawn)
 OFFBOARD = {"ANT1": "U.FL pigtail to the module's U.FL connector, SMA bulkhead on the enclosure",

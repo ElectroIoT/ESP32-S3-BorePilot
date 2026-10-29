@@ -87,6 +87,7 @@ PZEM header with divider, buttons, LEDs, optional buzzer, float inputs, spare he
 | [ ] | R8 | 1 k, LED1 series | C4410 | 1 |
 | [ ] | R9 | 1 k, LED2 series | C4410 | 1 |
 | [ ] | BZ1 | OPTIONAL passive buzzer MLT-8530 | C94599 | 1 |
+| [ ] | R22 | OPTIONAL 10 ohm series resistor for BZ1 (limits buzzer voltage) | C17903 | 1 |
 | [ ] | Q4 | AO3400A buzzer driver (optional) | C20917 | 1 |
 | [ ] | D3 | Schottky flyback across buzzer (optional) | C2758511 | 1 |
 | [ ] | R21 | 100 k gate pull-down Q4 (optional) | C17900 | 1 |
@@ -96,7 +97,7 @@ PZEM header with divider, buttons, LEDs, optional buzzer, float inputs, spare he
 | [ ] | R6 | 10 k optional pull-up IN1 (DNP) | C17902 | 1 |
 | [ ] | R7 | 10 k optional pull-up IN2 (DNP) | C17902 | 1 |
 
-Parts on this page: 20
+Parts on this page: 21
 
 ## SCHEMATIC PAGE 5 - Display options
 16x2 I2C LCD, I2C OLED, 12864 ST7920 with level shifters.

@@ -257,14 +257,22 @@ def v_ui():
     s, ys, h = part(500, 170, 140, "J11", "2P screw terminal", "C474952", [("1", "IN2"), ("2", "GND")], [])
     b.append(s)
     b.append(txt(400, 276, "R6 / R7: 10k pull-ups to +3V3, not fitted (DNP).", "lab"))
-    b.append(txt(14, 380, "OPTIONAL buzzer: BZ1 + Q4 + D3 + R21 (leave all four off if not wanted)", "ref"))
-    b.append(flag(70, 410, "+5V", C5) + ln([(100, 410), (300, 410)], C5))
-    b.append(dot(160, 410, C5) + ln([(160, 410), (160, 440)], C5) + f'<rect x="130" y="440" width="60" height="30" rx="5" fill="var(--card)" stroke="var(--fg)" stroke-width="2"/><text x="160" y="459" text-anchor="middle" class="pin">BZ1</text>' + ln([(160, 470), (160, 500)], CS) + dot(160, 500, CS))
-    b.append(dot(260, 410, C5) + ln([(260, 410), (260, 500)], C5) + diode_h(160, 260, 500, CS, "D3", "left"))
-    b.append(txt(110, 490, "", "pin"))
-    b.append(ln([(160, 500), (160, 520)], CS) + mosfet(130, 520, "Q4"))
-    b.append(ln([(130, 565), (80, 565)], CS) + dot(100, 565, CS) + pill(80, 565, "BUZZ", CS, "r") + res_v(100, 575, 615, CG, "R21 100k") + gnd(100, 615) + ln([(160, 590), (160, 615)], CG) + gnd(160, 615))
-    return svg(660, "".join(b), "BUTTONS, LEDs, FLOAT INPUTS and OPTIONAL BUZZER")
+    b.append(txt(14, 380, "OPTIONAL buzzer: BZ1 + R22 + Q4 + D3 + R21 (leave all five off if not wanted)", "ref"))
+    b.append(flag(70, 410, "+5V", C5) + ln([(100, 410), (430, 410)], C5))
+    # buzzer branch: +5V -> R22 10 ohm -> BZ1 (+) ... BZ1 (-) -> node -> Q4 drain
+    b.append(dot(160, 410, C5) + res_v(160, 410, 450, C5, "R22 10 ohm") + txt(176, 455, "limits BZ1 to about 3.1 V", "lab"))
+    b.append(ln([(160, 450), (160, 462)], C5) + '<rect x="125" y="462" width="70" height="36" rx="5" fill="var(--card)" stroke="var(--fg)" stroke-width="2"/><text x="160" y="478" text-anchor="middle" class="pin">BZ1 MLT-8530</text><text x="130" y="493" class="lab">+ pin 1</text><text x="190" y="493" text-anchor="end" class="lab">- pin 2</text>')
+    b.append(ln([(160, 498), (160, 520)], CS) + dot(160, 515, CS))
+    b.append(txt(205, 480, "pins 3, 4 = dummy pads: No-Connect flags", "lab"))
+    # flyback diode D3 across the buzzer branch: cathode (bar) to +5V, anode to the node
+    b.append(dot(430, 410, C5) + ln([(430, 410), (430, 455)], C5))
+    b.append('<polygon points="420,500 440,500 430,470" fill="var(--card)" stroke="var(--fg)" stroke-width="2"/><line x1="419" y1="468" x2="441" y2="468" stroke="var(--fg)" stroke-width="3"/>')
+    b.append(ln([(430, 455), (430, 468)], C5) + ln([(430, 500), (430, 515), (160, 515)], CS) + dot(430, 515, CS))
+    b.append(txt(448, 488, "D3 SS34B: bar (cathode) to +5V", "pin"))
+    b.append(txt(448, 508, "node = BZ1 pin 2 + D3 anode + Q4 drain", "lab"))
+    b.append(ln([(160, 515), (160, 530)], CS) + mosfet(130, 530, "Q4"))
+    b.append(ln([(130, 575), (80, 575)], CS) + dot(100, 575, CS) + pill(80, 575, "BUZZ", CS, "r") + res_v(100, 585, 625, CG, "R21 100k") + gnd(100, 625) + ln([(160, 600), (160, 625)], CG) + gnd(160, 625))
+    return svg(680, "".join(b), "BUTTONS, LEDs, FLOAT INPUTS and OPTIONAL BUZZER")
 
 
 def v_oled():
