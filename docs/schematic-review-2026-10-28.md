@@ -29,3 +29,6 @@ After the fixes the project netlist shows 79 parts all connected, `+3V3` joining
 
 ## Buzzer fix (2026-10-29)
 Add R22 = 10 ohm 1206 (C17903) between +5V and BZ1 pin 1. D3 stays across the branch (cathode +5V, anode on the Q4 drain). BZ1 pins 3 and 4 get No-Connect flags (done by the owner). Circuit view: docs/wiring/ui.html.
+
+## PCB outline (2026-10-29)
+PCB1 in EasyEDA now has the 100 x 90 mm board outline (3 mm corners, origin at the lower-left corner, y up), the isolation slot (x 28.1 to 29.4 mm, y 7 to 77 mm) on the Board Outline layer, and four M3 mounting holes (3.2 mm, non-plated, no copper pad) at (4,4), (96,4), (4,86), (96,86) mm. Schematic not yet imported into the PCB.
