@@ -1,0 +1,82 @@
+Designator,Device,Footprint,Mid X,Mid Y,Ref X,Ref Y,Pad X,Pad Y,Pins,Layer,Rotation,SMD,Comment,Value,Type,Supplier,Datasheet
+BZ1,MLT-8530,BUZ-SMD_4P-L8.5-W8.5-P8.50-BR,58.928mm,30.734mm,58.928mm,30.734mm,55.328mm,27.134mm,4,T,0,Yes,2.7kHz,2.7kHz,,LCSC,https://item.szlcsc.com/datasheet/MLT-8530/95797.html
+C1,ERG16V470M8X12,CAP-TH_BD8.0-P3.50-D0.6-FD-2,44.704mm,71.247mm,44.704mm,71.247mm,44.704mm,69.497mm,2,T,90,No,470uF,470uF,,LCSC,https://item.szlcsc.com/datasheet/ERG16V470M8X12/49556615.html
+C2,CL31A106KAHNNNE,C1206,51.816mm,70.231mm,51.816mm,70.231mm,53.409mm,70.231mm,2,T,180,Yes,10uF,10uF,,LCSC,https://item.szlcsc.com/datasheet/CL31A106KAHNNNE/10337.html
+C3,CL31A106KAHNNNE,C1206,52.07mm,54.229mm,52.07mm,54.229mm,53.663mm,54.229mm,2,T,180,Yes,10uF,10uF,,LCSC,https://item.szlcsc.com/datasheet/CL31A106KAHNNNE/10337.html
+C4,CL31A106KAHNNNE,C1206,66.167mm,81.661mm,66.167mm,81.661mm,66.167mm,83.254mm,2,T,270,Yes,10uF,10uF,,LCSC,https://item.szlcsc.com/datasheet/CL31A106KAHNNNE/10337.html
+C5,CL31A106KAHNNNE,C1206,51.816mm,72.898mm,51.816mm,72.898mm,53.409mm,72.898mm,2,T,180,Yes,10uF,10uF,,LCSC,https://item.szlcsc.com/datasheet/CL31A106KAHNNNE/10337.html
+C6,CL31A106KAHNNNE,C1206,51.816mm,67.564mm,51.816mm,67.564mm,53.409mm,67.564mm,2,T,180,Yes,10uF,10uF,,LCSC,https://item.szlcsc.com/datasheet/CL31A106KAHNNNE/10337.html
+C7,CL31A106KAHNNNE,C1206,81.405mm,60.287mm,81.405mm,60.287mm,82.997mm,60.287mm,2,B,180,Yes,10uF,10uF,,LCSC,https://item.szlcsc.com/datasheet/CL31A106KAHNNNE/10337.html
+C8,CL31B104KBCNNNC,C1206,71.882mm,59.69mm,71.882mm,59.69mm,70.289mm,59.69mm,2,T,0,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C9,CL31B104KBCNNNC,C1206,63.5mm,81.661mm,63.5mm,81.661mm,63.5mm,83.254mm,2,T,270,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C10,CL31B104KBCNNNC,C1206,60.833mm,81.661mm,60.833mm,81.661mm,60.833mm,83.254mm,2,T,270,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C11,CL31B104KBCNNNC,C1206,81.405mm,57.62mm,81.405mm,57.62mm,82.997mm,57.62mm,2,B,180,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C12,CL31B104KBCNNNC,C1206,39.5mm,82mm,39.5mm,82mm,39.5mm,80.407mm,2,T,90,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C13,CL31B104KBCNNNC,C1206,56.007mm,81.661mm,56.007mm,81.661mm,56.007mm,83.254mm,2,T,270,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C14,CL31B104KBCNNNC,C1206,82.256mm,21.846mm,82.256mm,21.846mm,83.848mm,21.846mm,2,T,180,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C15,CL31B104KBCNNNC,C1206,46.228mm,54.229mm,46.228mm,54.229mm,44.635mm,54.229mm,2,T,0,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C16,CL31B104KBCNNNC,C1206,12.7mm,44.196mm,12.7mm,44.196mm,11.107mm,44.196mm,2,T,0,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C19,CL31B104KBCNNNC,C1206,82.296mm,24.384mm,82.296mm,24.384mm,83.889mm,24.384mm,2,T,180,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+D3,UMW SS34B,SMB_L4.3-W3.6-LS5.4-RD,60.071mm,23.241mm,60.071mm,23.241mm,57.48mm,23.241mm,2,T,0,Yes,UMW SS34B,,,LCSC,https://item.szlcsc.com/datasheet/UMW%2520SS34B/2877451.html
+D4,UMW SS34B,SMB_L4.3-W3.6-LS5.4-RD,45.466mm,58.674mm,45.466mm,58.674mm,42.875mm,58.674mm,2,T,0,Yes,UMW SS34B,,,LCSC,https://item.szlcsc.com/datasheet/UMW%2520SS34B/2877451.html
+D5,UMW SS34B,SMB_L4.3-W3.6-LS5.4-RD,45.466mm,63.373mm,45.466mm,63.373mm,42.875mm,63.373mm,2,T,0,Yes,UMW SS34B,,,LCSC,https://item.szlcsc.com/datasheet/UMW%2520SS34B/2877451.html
+J1,TYPE-C-31-M-12,USB-C_SMD-TYPE-C-31-M-12_1,93.978mm,62.446mm,93.978mm,62.446mm,92.272mm,58.121mm,16,B,270,No,TYPE-C-31-M-12,,,LCSC,https://item.szlcsc.com/datasheet/TYPE-C-31-M-12/177331.html
+J2,KF128-5.08-2P-AA,CONN-TH_P5.08_KF128-5.08-2P,11.557mm,83.312mm,11.557mm,83.312mm,14.097mm,83.312mm,2,T,180,No,KF128-5.08-2P-AA,,,LCSC,https://item.szlcsc.com/datasheet/KF128-5.08-2P-AA/481570.html
+J3,KF128-5.08-2P-AA,CONN-TH_P5.08_KF128-5.08-2P,22.733mm,83.185mm,22.733mm,83.185mm,25.273mm,83.185mm,2,T,180,No,KF128-5.08-2P-AA,,,LCSC,https://item.szlcsc.com/datasheet/KF128-5.08-2P-AA/481570.html
+J6,B4B-XH-A-G,CONN-TH_B4B-XH-A-G,4.445mm,44.45mm,4.445mm,44.45mm,4.445mm,40.7mm,4,T,90,No,B4B-XH-A-G,,,LCSC,https://atta.szlcsc.com/upload/public/pdf/source/20201120/C594232_DD5B967B853D5C0FE2944642B90E06D1.pdf
+J7,PZ254V-11-04P,HDR-TH_4P-P2.54-V-M,49.149mm,86.741mm,49.149mm,86.741mm,45.339mm,86.741mm,4,T,0,No,PZ254V-11-04P,,,LCSC,https://item.szlcsc.com/datasheet/PZ254V-11-04P/2801085.html
+J8,PZ254V-11-04P,HDR-TH_4P-P2.54-V-M,37.719mm,86.741mm,37.719mm,86.741mm,33.909mm,86.741mm,4,T,0,No,PZ254V-11-04P,,,LCSC,https://item.szlcsc.com/datasheet/PZ254V-11-04P/2801085.html
+J9,PZ254R-11-20P,HDR-TH_20P-P2.54-H-M-W9.7,89.027mm,31.369mm,89.027mm,31.369mm,89.027mm,7.239mm,20,T,90,No,PZ254R-11-20P,,,LCSC,https://item.szlcsc.com/datasheet/PZ254R-11-20P/43228502.html
+J10,KF128-5.08-2P-AA,CONN-TH_P5.08_KF128-5.08-2P,55.5mm,6.4mm,55.5mm,6.4mm,52.96mm,6.4mm,2,T,0,No,KF128-5.08-2P-AA,,,LCSC,https://item.szlcsc.com/datasheet/KF128-5.08-2P-AA/481570.html
+J11,KF128-5.08-2P-AA,CONN-TH_P5.08_KF128-5.08-2P,67.3mm,6.2mm,67.3mm,6.2mm,64.76mm,6.2mm,2,T,0,No,KF128-5.08-2P-AA,,,LCSC,https://item.szlcsc.com/datasheet/KF128-5.08-2P-AA/481570.html
+J12,PZ254V-11-06P,HDR-TH_6P-P2.54-V-M,84.709mm,86.741mm,84.709mm,86.741mm,78.359mm,86.741mm,6,T,0,No,PZ254V-11-06P,,,LCSC,https://item.szlcsc.com/datasheet/PZ254V-11-06P/502961.html
+J13,PZ254V-11-06P,HDR-TH_6P-P2.54-V-M,65.913mm,86.741mm,65.913mm,86.741mm,59.563mm,86.741mm,6,T,0,No,PZ254V-11-06P,,,LCSC,https://item.szlcsc.com/datasheet/PZ254V-11-06P/502961.html
+LED1,XL-1608SURC-04,LED0603-RD,59.563mm,72.771mm,59.563mm,72.771mm,58.814mm,72.771mm,2,T,0,Yes,XL-1608SURC-04,,,LCSC,https://item.szlcsc.com/datasheet/XL-1608SURC-04/1051407.html
+LED2,XL-1608SURC-04,LED0603-RD,59.69mm,67.437mm,59.69mm,67.437mm,58.941mm,67.437mm,2,T,0,Yes,XL-1608SURC-04,,,LCSC,https://item.szlcsc.com/datasheet/XL-1608SURC-04/1051407.html
+Q3,AO3400A_C20917,SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR,82.169mm,30.48mm,82.169mm,30.48mm,81.219mm,29.48mm,3,T,270,Yes,AO3400A,,N-Channel,LCSC,https://item.szlcsc.com/datasheet/AO3400A/21629.html
+Q4,AO3400A_C20917,SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR,66.675mm,26.325mm,66.675mm,26.325mm,65.725mm,25.325mm,3,T,270,Yes,AO3400A,,N-Channel,LCSC,https://item.szlcsc.com/datasheet/AO3400A/21629.html
+R1,1206W4F5101T5E,R1206,81.532mm,64.097mm,81.532mm,64.097mm,83.011mm,64.097mm,2,B,180,Yes,5.1kΩ,5.1kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F5101T5E/26776.html
+R2,1206W4F5101T5E,R1206,81.532mm,66.891mm,81.532mm,66.891mm,83.011mm,66.891mm,2,B,180,Yes,5.1kΩ,5.1kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F5101T5E/26776.html
+R3,1206W4F1002T5E,R1206,82.042mm,59.563mm,82.042mm,59.563mm,80.563mm,59.563mm,2,T,0,Yes,10kΩ,10kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1002T5E/18590.html
+R4,1206W4F1002T5E,R1206,12.7mm,46.863mm,12.7mm,46.863mm,14.179mm,46.863mm,2,T,180,Yes,10kΩ,10kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1002T5E/18590.html
+R5,1206W4F1002T5E,R1206,48.006mm,81.661mm,48.006mm,81.661mm,48.006mm,83.14mm,2,T,270,Yes,10kΩ,10kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1002T5E/18590.html
+R6,1206W4F1002T5E,R1206,54.3mm,13.7mm,54.3mm,13.7mm,55.779mm,13.7mm,2,T,180,Yes,10kΩ,10kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1002T5E/18590.html
+R7,1206W4F1002T5E,R1206,66.2mm,13.5mm,66.2mm,13.5mm,67.679mm,13.5mm,2,T,180,Yes,10kΩ,10kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1002T5E/18590.html
+R8,1206W4F1001T5E_C4410,R1206,64.262mm,72.898mm,64.262mm,72.898mm,65.741mm,72.898mm,2,T,180,Yes,1kΩ,1kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1001T5E/4817.html
+R9,1206W4F1001T5E_C4410,R1206,64.262mm,67.691mm,64.262mm,67.691mm,65.741mm,67.691mm,2,T,180,Yes,1kΩ,1kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1001T5E/4817.html
+R12,1206W4F4701T5E,R1206,37.2mm,81.8mm,37.2mm,81.8mm,37.2mm,83.279mm,2,T,270,Yes,4.7kΩ,4.7kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F4701T5E/18624.html
+R13,1206W4F4701T5E,R1206,34.4mm,81.8mm,34.4mm,81.8mm,34.4mm,83.279mm,2,T,270,Yes,4.7kΩ,4.7kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F4701T5E/18624.html
+R14,1206W4F4701T5E,R1206,50.673mm,81.661mm,50.673mm,81.661mm,50.673mm,83.14mm,2,T,270,Yes,4.7kΩ,4.7kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F4701T5E/18624.html
+R15,1206W4F4701T5E,R1206,53.213mm,81.661mm,53.213mm,81.661mm,53.213mm,83.14mm,2,T,270,Yes,4.7kΩ,4.7kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F4701T5E/18624.html
+R16,1206W4F4701T5E,R1206,12.7mm,49.403mm,12.7mm,49.403mm,14.179mm,49.403mm,2,T,180,Yes,4.7kΩ,4.7kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F4701T5E/18624.html
+R20,1206W4F1003T5E,R1206,82.296mm,27.178mm,82.296mm,27.178mm,83.775mm,27.178mm,2,T,180,Yes,100kΩ,100kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1003T5E/18588.html
+R21,1206W4F1003T5E,R1206,66.802mm,23.15mm,66.802mm,23.15mm,68.281mm,23.15mm,2,T,180,Yes,100kΩ,100kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1003T5E/18588.html
+R22,1206W4F100JT5E,R1206,54.864mm,22.987mm,54.864mm,22.987mm,54.864mm,21.508mm,2,T,90,Yes,10Ω,10Ω,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F100JT5E/18591.html
+RV2,3362P-1-103LF,RES-ADJ-TH_3362P,83.312mm,15.113mm,83.312mm,15.113mm,85.852mm,16.383mm,3,T,180,No,10kΩ,10kΩ,,LCSC,https://item.szlcsc.com/datasheet/3362P-1-103LF/59198.html
+SW1,TS-1187A-B-A-B,SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5,71.982mm,55.081mm,71.982mm,55.081mm,68.982mm,56.956mm,4,T,0,Yes,TS-1187A-B-A-B,,,LCSC,https://item.szlcsc.com/datasheet/TS-1187A-B-A-B/299976.html
+SW2,TS-1187A-B-A-B,SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5,81.915mm,54.991mm,81.915mm,54.991mm,78.915mm,56.866mm,4,T,0,Yes,TS-1187A-B-A-B,,,LCSC,https://item.szlcsc.com/datasheet/TS-1187A-B-A-B/299976.html
+SW3,TS-1187A-B-A-B,SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5,52.448mm,44.911mm,52.448mm,44.911mm,49.448mm,46.786mm,4,T,0,Yes,TS-1187A-B-A-B,,,LCSC,https://item.szlcsc.com/datasheet/TS-1187A-B-A-B/299976.html
+SW4,TS-1187A-B-A-B,SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5,59.948mm,44.911mm,59.948mm,44.911mm,56.948mm,46.786mm,4,T,0,Yes,TS-1187A-B-A-B,,,LCSC,https://item.szlcsc.com/datasheet/TS-1187A-B-A-B/299976.html
+SW5,TS-1187A-B-A-B,SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5,67.448mm,44.911mm,67.448mm,44.911mm,64.448mm,46.786mm,4,T,0,Yes,TS-1187A-B-A-B,,,LCSC,https://item.szlcsc.com/datasheet/TS-1187A-B-A-B/299976.html
+U1,ESP32-S3-WROOM-1U-N16R8,WIRELM-SMD_ESP32-S3-WROOM-1U,78.486mm,73.279mm,78.486mm,73.279mm,69.736mm,82.174mm,49,T,0,Yes,2.4GHz,2.4GHz,,LCSC,https://item.szlcsc.com/datasheet/ESP32-S3-WROOM-1U-N16R8/3522416.html
+U2,HLK-5M05_C209907,PWRM-TH_HLK-5M05,21.082mm,64.008mm,21.082mm,64.008mm,4.282mm,67.008mm,4,T,0,No,HLK-5M05,,-,LCSC,https://item.szlcsc.com/datasheet/HLK-5M05/210985.html
+U3,SGM2212-3.3XKC3G/TR_C3294699,SOT-223-3_L6.5-W3.4-P2.30-LS7.0-BR,53.086mm,60.706mm,53.086mm,60.706mm,50.786mm,57.736mm,4,T,270,Yes,SGM2212-3.3XKC3G/TR,,,LCSC,https://item.szlcsc.com/datasheet/SGM2212-3.3XKC3G%252FTR/3859121.html
+U4,USBLC6-2SC6_C7519,SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL,87.374mm,61.938mm,87.374mm,61.938mm,88.523mm,62.888mm,6,B,270,Yes,USBLC6-2SC6,,ESD,LCSC,https://item.szlcsc.com/datasheet/USBLC6-2SC6/7996.html
+U5,PCA9306DCUR,SSOP-8_L2.0-W2.3-P0.50-LS3.1-BR,42.545mm,81.788mm,42.545mm,81.788mm,41.195mm,82.538mm,8,T,180,Yes,PCA9306DCUR,,,LCSC,https://www.ti.com/cn/lit/ds/symlink/pca9306.pdf
+U6,SN74AHCT125DR,SOIC-14_L8.7-W3.9-P1.27-LS6.0-BL,82.55mm,36.703mm,82.55mm,36.703mm,78.74mm,34.084mm,14,T,0,Yes,SN74AHCT125DR,,,LCSC,https://www.ti.com/cn/lit/ds/symlink/sn74ahct125.pdf
+C17,CL31B104KBCNNNC,C1206,26.8mm,45.5mm,26.8mm,45.5mm,28.393mm,45.5mm,2,T,180,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+C18,CL31B104KBCNNNC,C1206,45.6mm,45.5mm,45.6mm,45.5mm,47.193mm,45.5mm,2,T,180,Yes,100nF,100nF,,LCSC,https://item.szlcsc.com/datasheet/CL31B104KBCNNNC/25237.html
+D1,UMW SS34B,SMB_L4.3-W3.6-LS5.4-RD,19.3mm,45.5mm,19.3mm,45.5mm,21.891mm,45.5mm,2,T,180,Yes,UMW SS34B,,,LCSC,https://item.szlcsc.com/datasheet/UMW%2520SS34B/2877451.html
+D2,UMW SS34B,SMB_L4.3-W3.6-LS5.4-RD,38.1mm,45.5mm,38.1mm,45.5mm,40.691mm,45.5mm,2,T,180,Yes,UMW SS34B,,,LCSC,https://item.szlcsc.com/datasheet/UMW%2520SS34B/2877451.html
+K1,SRD-05VDC-SL-C,RELAY-TH_SRD-XXVDC-XL-C,19.558mm,23.368mm,19.558mm,23.368mm,13.558mm,28.468mm,5,T,270,No,SRD-05VDC-SL-C,,,LCSC,https://item.szlcsc.com/datasheet/SRD-05VDC-SL-C/36422.html
+K2,SRD-05VDC-SL-C,RELAY-TH_SRD-XXVDC-XL-C,37.973mm,23.368mm,37.973mm,23.368mm,31.973mm,28.468mm,5,T,270,No,SRD-05VDC-SL-C,,,LCSC,https://item.szlcsc.com/datasheet/SRD-05VDC-SL-C/36422.html
+LED3,19-217/GHC-YR1S2/6T,LED0603-RD_GREEN,12.907mm,40.72mm,12.907mm,40.72mm,12.904mm,41.519mm,2,T,270,Yes,19-217/GHC-YR1S2/6T,,,LCSC,
+LED4,19-217/GHC-YR1S2/6T,LED0603-RD_GREEN,32.161mm,40.67mm,32.161mm,40.67mm,32.158mm,41.47mm,2,T,270,Yes,19-217/GHC-YR1S2/6T,,,LCSC,
+Q1,AO3400A_C20917,SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR,18.542mm,40.513mm,18.542mm,40.513mm,17.592mm,39.513mm,3,T,270,Yes,AO3400A,,N-Channel,LCSC,https://item.szlcsc.com/datasheet/AO3400A/21629.html
+Q2,AO3400A_C20917,SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR,37.465mm,40.259mm,37.465mm,40.259mm,36.515mm,39.259mm,3,T,270,Yes,AO3400A,,N-Channel,LCSC,https://item.szlcsc.com/datasheet/AO3400A/21629.html
+R10,1206W4F1001T5E_C4410,R1206,16mm,49.5mm,16mm,49.5mm,16mm,48.021mm,2,T,90,Yes,1kΩ,1kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1001T5E/4817.html
+R11,1206W4F1001T5E_C4410,R1206,32mm,48mm,32mm,48mm,32mm,46.521mm,2,T,90,Yes,1kΩ,1kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1001T5E/4817.html
+R18,1206W4F1003T5E,R1206,23.368mm,41.783mm,23.368mm,41.783mm,24.847mm,41.783mm,2,T,180,Yes,100kΩ,100kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1003T5E/18588.html
+R19,1206W4F1003T5E,R1206,42.418mm,41.67mm,42.418mm,41.67mm,43.897mm,41.67mm,2,T,180,Yes,100kΩ,100kΩ,Thick Film Resistor,LCSC,https://item.szlcsc.com/datasheet/1206W4F1003T5E/18588.html
+J4,KF128-5.08-3P-AA,CONN-TH_3P-P5.08_KF128-5.08-3P,19.558mm,6.604mm,19.558mm,6.604mm,14.478mm,6.604mm,3,T,0,No,KF128-5.08-3P-AA,,,LCSC,https://item.szlcsc.com/datasheet/KF128-5.08-3P-AA/481571.html
+J5,KF128-5.08-3P-AA,CONN-TH_3P-P5.08_KF128-5.08-3P,37.973mm,6.477mm,37.973mm,6.477mm,32.893mm,6.477mm,3,T,0,No,KF128-5.08-3P-AA,,,LCSC,https://item.szlcsc.com/datasheet/KF128-5.08-3P-AA/481571.html
