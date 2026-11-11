@@ -32,7 +32,7 @@ FIXED = [
     ("J2, J3, J10, J11", "KF128-5.08-2P", "Pad holes 1.60 mm -> 1.40 mm (datasheet 1.40 +0.10), now the same as the 3-way J4 / J5. Done in PCB1 on 2026-11-11 and saved."),
     ("J1 (pins 1, 4)", "TYPE-C-31-M-12", "Shell slots next to the signal row: 0.8 x 1.5 mm -> 0.6 x 1.7 mm (datasheet 0.60 x 1.70). Done and saved."),
     ("J1 (pins 2, 3)", "TYPE-C-31-M-12", "Shell slots at the rear: 0.8 x 1.2 mm -> 0.6 x 1.4 mm (datasheet 0.60 x 1.40). Done and saved."),
-    ("J4, J5, J14, J15", "KF128-5.08-2P", "Split relay terminals (decision 2026-11-11): the 3-way J4 / J5 were replaced by 2-way J4 / J5 (NO, NC) and new 2-way J14 / J15 (COM on both pins). Schematic page 3 changed, ERC clean, imported into PCB1 (83 parts), holes set to 1.40 mm."),
+    ("J4, J5", "KF128-5.08-3P", "Relay terminals are 3-way again, pin order NO / COM / NC, so COM sits in the middle and no track crosses. Final board: 81 parts, holes 1.40 mm."),
     ("Corner mounting holes", "-", "Already in PCB1: four M3 holes, 3.2 mm, no pad, at (4, 4), (96, 4), (4, 86) and (96, 86) mm. Checked 2026-11-11."),
 ]
 MANUAL = [
