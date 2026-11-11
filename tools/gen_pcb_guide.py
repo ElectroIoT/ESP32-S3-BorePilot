@@ -19,9 +19,9 @@ FG, BD, LN = "var(--fg)", "var(--board)", "var(--line)"
 NOTES = {
  "mains_in": ["AC IN (J2) and AC TAP (J3) sit on the top edge, cables enter from the top. Everything here is 230 V: keep 6.4 mm (8 mm better) to any low-voltage copper and 2 mm to the board edge.",
               "Silkscreen: draw the box with a thick line, add the text MAINS 230 V and L / N next to each terminal pin."],
- "power": ["U2 (HLK-5M05, 38 x 23 mm) lies across the slot: AC pins at the left end, 5 V pins at the right end. Check the real pin pitch on the HLK drawing before routing the slot.",
+ "power": ["U2 (HLK-5M05, 38 x 23 mm) lies across the shortened main slot (x 28.1 to 29.4, y 51 to 77 mm): AC pins at the left end, 5 V pins at the right end. Pin pitch checked against the datasheet (6 mm, 18 mm, 33.6 mm).",
            "D4, D5 and C1 go right next to the HLK +5V pin; U3 and its capacitors beside them. C15 across the HLK output pins."],
- "relay1": ["K1 straddles the slot: contact pins on the mains side (left), coil pins on the low-voltage side (right). J4 is on the left edge (COM / NO / NC).",
+ "relay1": ["K1 turned 270 degrees at (17.5, 27): COM and the coil pins face up, NO / NC face down. J14 (COM) and J4 (NO / NC) are the two 2-way terminals below the relay; two 8 x 1 mm slots between COM and the coil pins (see footprint-placement.html).",
             "Q1, D1, R18, R10, LED3, C17 sit just right of the relay. Contact tracks 1.5 mm, short, never within 6.4 mm of low-voltage copper."],
  "relay2": ["Same as relay 1, one box below it. J5 is on the left edge, cable entry to the left.", "Keep the two relay boxes identical so the second channel can be copied from the first."],
  "esp32": ["U1 at the top right: no PCB antenna, so keep the U.FL connector near the top edge and nothing tall next to it.",
@@ -40,14 +40,14 @@ NOTES = {
 }
 NETS = [
  ("L, N (mains)", "1.0 mm min", "Mains conductors: spacing and slot matter more than width. Keep short; 1 oz copper."),
- ("Relay contacts COMn / NOn / NCn", "1.5 mm", "Control-circuit currents only (contactor coil). Mains side, left of the slot."),
+ ("Relay contacts COMn / NOn / NCn", "1.5 mm", "Control-circuit currents only (contactor coil). Run only below the relay (J14 / J4 / J15 / J5)."),
  ("+5V_HLK, +5V", "0.8 mm", "Peak about 0.75 A in the plan; 0.8 mm on 1 oz is comfortable."),
  ("+3V3", "0.6 mm", "ESP32 bursts to about 0.45 A."),
  ("GND", "pour on both layers", "Low-voltage side only. No pour on the mains side or across the slot."),
  ("Relay coil nodes RLYn_D", "0.5 mm", "About 72 mA each."),
  ("USB_DP / USB_DN", "0.2 mm pair, 90 ohm diff", "Keep short, no stubs; U4 close to J1."),
  ("PZEM_TXD / PZEM_RXD, SDA, SCL, LCD_*, BTN_*, IN1/IN2, BUZZ, LED_ST", "0.25 mm", "Plain signals."),
- ("Isolation slot", "1.3 mm wide", "Routed slot; its ends reach 3.2 mm past the nearest mains copper so the creepage path around it stays above 6.4 mm."),
+ ("Isolation slot", "1.3 mm wide", "Routed slot, HLK area only (y 51 to 77 mm); its ends reach 3.2 mm past the nearest mains copper so the creepage path around it stays above 6.4 mm. Relays have their own slots."),
 ]
 STEPS = [
  "In EasyEDA PCB the board outline (100 x 90 mm, 3 mm corners), the isolation slot and the four 3.2 mm mounting holes (4, 4), (96, 4), (4, 86), (96, 86) mm already exist.",
@@ -110,7 +110,7 @@ def board_inner(view_full, active=None, standalone=False):
     for ref in PL.L:
         o.append(part_svg(ref, dim=(active is not None and REF_BLK[ref] != active)))
     if view_full:
-        o.append(f'<text x="{BW/2}" y="2.8" text-anchor="middle" font-size="1.5" font-weight="700" fill="#2fbf71">MAINS ZONE 230 V is left of the red slot | LOW VOLTAGE (isolated 5 V / 3.3 V) on the right</text>')
+        o.append(f'<text x="{BW/2}" y="2.8" text-anchor="middle" font-size="1.5" font-weight="700" fill="#2fbf71">MAINS ZONE 230 V is left of the red slot and in the relay terminal strip | LOW VOLTAGE (isolated 5 V / 3.3 V) on the right</text>')
     return "".join(o)
 
 

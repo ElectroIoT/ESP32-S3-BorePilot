@@ -64,12 +64,14 @@ K1, K2 with drivers, flyback diodes, LEDs and COM/NO/NC terminals.
 | [ ] | R11 | 1 k, LED4 series | C4410 | 1 |
 | [ ] | LED3 | Green LED: relay 1 energised | C2986059 | 1 |
 | [ ] | LED4 | Green LED: relay 2 energised | C2986059 | 1 |
-| [ ] | J4 | Relay 1 terminal 3P: COM/NO/NC | C474953 | 1 |
-| [ ] | J5 | Relay 2 terminal 3P: COM/NO/NC | C474953 | 1 |
+| [ ] | J4 | Relay 1 terminal 2P: NO / NC | C474952 | 1 |
+| [ ] | J14 | Relay 1 terminal 2P: COM (both pins on COM) | C474952 | 1 |
+| [ ] | J5 | Relay 2 terminal 2P: NO / NC | C474952 | 1 |
+| [ ] | J15 | Relay 2 terminal 2P: COM (both pins on COM) | C474952 | 1 |
 | [ ] | C17 | 100 nF 1206, +5V relay 1 | C24497 | 1 |
 | [ ] | C18 | 100 nF 1206, +5V relay 2 | C24497 | 1 |
 
-Parts on this page: 16
+Parts on this page: 18
 
 ## SCHEMATIC PAGE 4 - PZEM link and I/O
 PZEM header with divider, buttons, LEDs, optional buzzer, float inputs, spare header.

@@ -32,58 +32,60 @@ FIXED = [
     ("J2, J3, J10, J11", "KF128-5.08-2P", "Pad holes 1.60 mm -> 1.40 mm (datasheet 1.40 +0.10), now the same as the 3-way J4 / J5. Done in PCB1 on 2026-11-11 and saved."),
     ("J1 (pins 1, 4)", "TYPE-C-31-M-12", "Shell slots next to the signal row: 0.8 x 1.5 mm -> 0.6 x 1.7 mm (datasheet 0.60 x 1.70). Done and saved."),
     ("J1 (pins 2, 3)", "TYPE-C-31-M-12", "Shell slots at the rear: 0.8 x 1.2 mm -> 0.6 x 1.4 mm (datasheet 0.60 x 1.40). Done and saved."),
+    ("J4, J5, J14, J15", "KF128-5.08-2P", "Split relay terminals (decision 2026-11-11): the 3-way J4 / J5 were replaced by 2-way J4 / J5 (NO, NC) and new 2-way J14 / J15 (COM on both pins). Schematic page 3 changed, ERC clean, imported into PCB1 (83 parts), holes set to 1.40 mm."),
+    ("Corner mounting holes", "-", "Already in PCB1: four M3 holes, 3.2 mm, no pad, at (4, 4), (96, 4), (4, 86) and (96, 86) mm. Checked 2026-11-11."),
 ]
 MANUAL = [
     ("J1", "Add two 0.6 mm non-plated holes for the locating pegs (datasheet 2 x pin 0.50 mm at 5.78 mm). Relative to the J1 origin: (-2.89, +1.21) and (+2.89, +1.21) mm. "
            "Easiest after J1 is placed: place two mounting holes (0.6 mm, no pad) at the right spot and check them against the 3D view. Without them the connector still solders, but it can sit off by a few tenths of a mm.", "todo"),
     ("J1", "Optional: the four wide pads (A1/B12, A4/B9, B4/A9, B1/A12) each have a 0.36 mm hole that the datasheet does not show. It is harmless; remove it only if the board house flags the drill count.", "todo"),
-    ("K1, K2", "Draw the two 8 x 1 mm isolation slots per relay (coordinates below) on the Board Outline layer after the relay is placed, and keep copper 0.5 mm away from them.", "todo"),
+    ("Main slot", "Shorten the main isolation slot in PCB1: it now runs only from y = 51 to y = 77 mm at x = 28.1 to 29.4 mm (HLK-5M05 area). In the file it still runs from y = 7 to y = 77 mm: delete the lower part so it ends at y = 51 mm.", "todo"),
+    ("K1, K2", "Draw the two 8 x 1 mm isolation slots per relay (coordinates below, relay turned 270 degrees) on the Board Outline layer after the relay is placed, and keep copper 0.5 mm away from them.", "todo"),
     ("U2, K1, J1, J4", "After placing, switch to the 3D view and check body outline, pin 1 and the leg alignment on these four parts.", "todo"),
     ("U1, U3, U4, U5, U6, J9", "Still not compared with the datasheet drawings (see footprints.html). Do this before routing.", "todo"),
 ]
-RELAY_SLOTS = [("A (towards pin 1)", "-6.10, -3.00", "18.4 deg", "(-2.31, -1.74)", "(-9.89, -4.26)"),
-               ("B (towards pin 4)", "-6.10, +3.00", "-18.4 deg", "(-2.31, +1.74)", "(-9.89, +4.26)")]
+RELAY_SLOTS = [("A (between COM and pin 1, RLY_D)", "-3.00, +6.10", "108.4 deg", "(-1.74, +2.31)", "(-4.26, +9.89)"),
+               ("B (between COM and pin 4, +5V)", "+3.00, +6.10", "71.6 deg", "(+1.74, +2.31)", "(+4.26, +9.89)")]
+RELAY_PADS = [("5", "COM", "0.00, +7.10"), ("1", "RLY_D (coil)", "-6.00, +5.10"), ("4", "+5V (coil)", "+6.00, +5.10"), ("2", "NO", "-6.00, -7.10"), ("3", "NC", "+6.00, -7.10")]
 
 
 def build():
     o = [f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BorePilot Footprint and Placement</title><style>{CSS}</style></head><body><main>']
     o.append('<h1>BorePilot: footprints and PCB placement</h1><p class="mut">Work sheet for placing the parts by hand in EasyEDA PCB1 (board 100 x 90 mm, origin at the lower-left corner, y up, mm). '
              'Related pages: <a href="footprints.html">footprint check</a>, <a href="pcb-section-guide.html">floor plan by block</a>.</p>')
-    o.append('<nav><a href="#fixed">Footprints fixed</a><a href="#manual">Manual footprint steps</a><a href="#relay">Relay slots</a><a href="#conflict">Relay vs main slot</a><a href="#table">Placement table</a>'
+    o.append('<nav><a href="#fixed">Footprints fixed</a><a href="#manual">Still to do</a><a href="#relay">Relay placement</a><a href="#conflict">Main slot</a><a href="#table">Placement table</a>'
              '<span class="mut">placed <b id="tot">0</b> / ' + str(len(PL.L)) + '</span><div class="bar"><div id="barfill"></div></div></nav>')
     o.append('<section class="card" id="fixed"><h2>Footprints fixed in EasyEDA (PCB1, saved 2026-11-11)</h2><table><tr><th>Parts</th><th>Model</th><th>Change</th></tr>' +
              "".join(f'<tr><td><b>{e(a)}</b></td><td>{e(b)}</td><td><span class="tag done">DONE</span> {e(c)}</td></tr>' for a, b, c in FIXED) +
              '</table><p class="mut">Changed on the PCB copies of the footprints. If you use Update PCB from the schematic and EasyEDA offers to reset footprints, keep the PCB values, or the old sizes come back.</p></section>')
     o.append('<section class="card" id="manual"><h2>Still to do by hand</h2><table><tr><th>Parts</th><th>Step</th></tr>' +
              "".join(f'<tr><td><b>{e(a)}</b></td><td><span class="tag {t}">TODO</span> {e(b)}</td></tr>' for a, b, t in MANUAL) + '</table></section>')
-    o.append('<section class="card" id="relay"><h2>Relay K1 / K2 isolation slots</h2><p>Relay SRD-05VDC-SL-C: coil pins 1 (RLY_D) and 4 (+5V) at (-5.1, -6) and (-5.1, +6), COM pin 5 at (-7.1, 0), NO pin 2 at (+7.1, -6), NC pin 3 at (+7.1, +6) mm from the relay origin at rotation 0. '
-             'COM sits 3.5 mm (pad edge to pad edge) from each coil pad, so each relay gets two slots, 8 x 1 mm with round ends:</p>'
+    o.append('<section class="card" id="relay"><h2>Relay K1 / K2: how to place (decision 2026-11-11: split terminals, turned 270 degrees)</h2>'
+             '<p>Place each relay at <b>rotation 270</b>. The COM pin and the two coil pins then face up, NO / NC face down. '
+             'Pad positions from the relay origin at rotation 270 (x, y mm):</p>'
+             '<table><tr><th>Pin</th><th>Net</th><th>x, y mm</th></tr>' +
+             "".join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td></tr>' for a, b, c in RELAY_PADS) +
+             '</table><p>COM sits 3.5 mm (pad edge to pad edge) from each coil pad, so each relay gets two slots, 8 x 1 mm with round ends, drawn on the Board Outline layer:</p>'
              '<div class="scroll"><table><tr><th>Slot</th><th>Centre (x, y) mm</th><th>Angle</th><th>End 1</th><th>End 2</th></tr>' +
              "".join(f'<tr><td>{e(a)}</td><td>{e(b)}</td><td>{e(c)}</td><td>{e(d)}</td><td>{e(f)}</td></tr>' for a, b, c, d, f in RELAY_SLOTS) +
-             '</table></div><p>Creepage COM to coil pad around a slot end: 7.4 mm (goal 6.4 mm). Coordinates are relative to the relay origin at rotation 0; rotate them with the relay. '
-             'Layer: Board Outline, like the main isolation slot. Keep copper (and pours) 0.5 mm from every slot. COM leaves to the left between the slots, coil nets leave up (pin 4) and down (pin 1).</p></section>')
-    o.append('<section class="card" id="conflict"><h2><span class="tag warn">DECISION</span> Relay position vs the main isolation slot</h2>'
-             f'<p>The planned floor plan puts each relay across the long main slot (x {SLOT["x"]} to {SLOT["x"]+SLOT["w"]:.1f} mm, y {SLOT["y0"]} to {SLOT["y1"]} mm), contacts on the mains side and coil on the low-voltage side. '
-             'The real pin layout does not allow that: COM is on the coil side of the relay, and the coil column lies between COM and NO / NC. '
-             'With the relay at 180 degrees COM and the coil are both on the low-voltage side; at 0 degrees the coil is on the mains side. Either way a mains or coil net would have to cross the slot, which a continuous slot forbids.</p>'
-             '<h3>Options</h3><ol>'
-             '<li><b>Shorten the main slot</b> to the HLK-5M05 area only (y about 50 to 78 mm, so it still separates the AC and DC pin columns of U2), and give each relay its own two slots. '
-             'The relays then sit left of x about 40 mm with J4 / J5 on the left edge; the coil nets (RLY_D, +5V) reach them from the right and the NO / NC nets must pass round the coil end with 6.4 mm clearance.</li>'
-             '<li><b>Move J4 / J5</b> so COM and NO / NC come out on different sides (two terminals instead of one 3-way), which avoids routing round the coil. Needs a BOM change.</li>'
-             '<li><b>Change the relay</b> to one with COM and NO / NC on the same side and the coil on the other, then keep the long slot as planned. Needs a new footprint and a BOM change.</li></ol>'
-             '<h3>Check of option 1 (2026-11-11)</h3><p>Column order of the relay from left to right: COM, coil pins (up and down), NO / NC. Whatever the rotation, the coil column lies between COM and NO / NC. '
-             'With one 3-way terminal (J4 / J5) the NO and NC tracks must run round the end of the coil pins to reach it, and the +5V / RLY_D coil tracks then have to cross them, '
-             'so a mains track and a low-voltage track cross on two layers with only the 1.6 mm board between them. Slots do not fix a crossing.</p>'
-             '<p><b>Cleaner variant of option 2:</b> COM gets its own 2-way terminal on the COM side (left), NO and NC get a 2-way terminal on the right, and the coil tracks leave straight up and down. '
-             'No track crosses anything. Cost: one more KF128-5.08-2P per relay (C474952, 2 pieces more in total, 3-way J4 / J5 replaced by two 2-way terminals). The shortened main slot still applies.</p>'
-             '<p class="mut">Waiting for your decision: keep option 1 with the crossing (engineer review needed), or switch to the cleaner option 2 variant. The floor plan and the table below stay as they are until then.</p></section>')
+             '</table></div><p>Creepage COM to coil pad around a slot end: 7.4 mm (goal 6.4 mm). Keep copper (also pours) 0.5 mm from every slot.</p>'
+             '<h3>Routing rules for the relay</h3><ul>'
+             '<li><b>COM</b> leaves the pad downward, between the two slots and under the relay body, straight to J14 (2-way terminal, both pins COM).</li>'
+             '<li><b>NO / NC</b> go straight down to J4 (NO, NC), which sits below the relay body.</li>'
+             '<li><b>Coil</b>: pin 1 (RLY_D) and pin 4 (+5V) go up into the low-voltage strip above the relay (Q1 / D1 / R18 / R10 / LED3 / C17). Keep that strip at least 6.4 mm (7.8 mm centre to centre) above the COM pad.</li>'
+             '<li>No mains track may enter the strip, no low-voltage track may go below the relay: nothing crosses.</li></ul></section>')
+    o.append('<section class="card" id="conflict"><h2><span class="tag done">DECIDED</span> Main slot and relay position</h2>'
+             '<p>The long main slot is shortened to the HLK-5M05 area only: x = 28.1 to 29.4 mm, y = 51 to 77 mm. It separates the AC pin column of U2 from its DC column. '
+             'The relays sit below it (K1 at x = 17.5, K2 at x = 39.5, y = 27 mm) and are isolated by their own slots, so no slot crosses a relay. '
+             'Between the mains area (left, J2 / J3, U2 AC side, J14, J4, J15, J5) and the low-voltage area keep 6.4 mm by clearance where there is no slot.</p>'
+             '<p class="mut">Why split terminals: on the SRD relay the coil column lies between COM and NO / NC, so a single 3-way terminal forces a mains track to cross the coil tracks. With COM and NO / NC on separate terminals nothing crosses. The cost is two more KF128-5.08-2P pieces (8 in total).</p></section>')
     # placement table
     o.append('<section class="card" id="table"><h2>Placement table</h2><p class="mut">Centre of each part in mm, rotation in degrees. These come from the floor plan in <code>tools/pcb_layout.py</code> and are estimates: check each part against its real footprint size. '
-             'Relay K1, K2 and J4, J5 follow the old plan and change with the decision above. Tick a row when the part is placed (saved in this browser).</p><div class="scroll"><table><tr><th>Done</th><th>Block</th><th>Ref</th><th>Part</th><th>X mm</th><th>Y mm</th><th>Rot</th><th>Size mm</th></tr>')
+             'Relay layout updated 2026-11-11 (split terminals). Tick a row when the part is placed (saved in this browser).</p><div class="scroll"><table><tr><th>Done</th><th>Block</th><th>Ref</th><th>Part</th><th>X mm</th><th>Y mm</th><th>Rot</th><th>Size mm</th></tr>')
     for b in PL.BLOCKS:
         for ref in b[3]:
             x, y, w, h, rot = PL.L[ref]
-            hold = ' <span class="tag warn">RE-PLAN</span>' if ref in ("K1", "K2", "J4", "J5") else ""
+            hold = ' <span class="tag done">270 deg</span>' if ref in ("K1", "K2") else ""
             o.append(f'<tr data-ref="{e(ref)}"><td><input type="checkbox" class="ck" data-k="{e(ref)}"></td><td style="border-left:6px solid {b[2]}">{e(b[1])}</td><td><b>{e(ref)}</b>{hold}</td>'
                      f'<td>{e(NAME.get(ref, ""))}</td><td>{x:g}</td><td>{y:g}</td><td>{rot:g}</td><td>{w:g} x {h:g}</td></tr>')
     o.append('</table></div></section>')

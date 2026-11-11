@@ -176,7 +176,7 @@ def build():
              '<table><tr><th>Slot</th><th>Centre (x, y) mm</th><th>Angle</th><th>Size</th><th>Ends (x, y) mm</th><th>Creepage COM to coil pad</th></tr>'
              '<tr><td>A (towards pin 1)</td><td>-6.10, -3.00</td><td>18.4 deg</td><td>8.0 x 1.0, round ends</td><td>(-2.31, -1.74) and (-9.89, -4.26)</td><td>7.4 mm around the slot end</td></tr>'
              '<tr><td>B (towards pin 4)</td><td>-6.10, +3.00</td><td>-18.4 deg</td><td>8.0 x 1.0, round ends</td><td>(-2.31, +1.74) and (-9.89, +4.26)</td><td>7.4 mm around the slot end</td></tr></table>'
-             '<ul><li>Coordinates are relative to the relay origin with the relay at rotation 0 (y up, as in the EasyEDA PCB). Rotate the slots with the relay.</li>'
+             '<ul><li>Coordinates are relative to the relay origin with the relay at rotation 0 (y up, as in the EasyEDA PCB). The floor plan places both relays at rotation 270: use the rotated coordinates in footprint-placement.html.</li>'
              '<li>Creepage is measured pad edge to pad edge along the shortest path round the slot end: 7.4 mm against the 6.4 mm goal in PLAN.md (a 7 mm slot would give 6.6 mm, 6 mm only 5.9 mm).</li>'
              '<li>Slot edge to the nearest pad: 1.27 mm. The slots lie under the relay body, so the relay does not need extra board area.</li>'
              '<li>Routing rules: COM leaves to the left through the gap between the slots; coil pins leave up (pin 4) and down (pin 1), never across a slot. NO / NC are 12.2 mm from the coil, no slot needed.</li>'
