@@ -71,7 +71,12 @@ def build():
              'The relays then sit left of x about 40 mm with J4 / J5 on the left edge; the coil nets (RLY_D, +5V) reach them from the right and the NO / NC nets must pass round the coil end with 6.4 mm clearance.</li>'
              '<li><b>Move J4 / J5</b> so COM and NO / NC come out on different sides (two terminals instead of one 3-way), which avoids routing round the coil. Needs a BOM change.</li>'
              '<li><b>Change the relay</b> to one with COM and NO / NC on the same side and the coil on the other, then keep the long slot as planned. Needs a new footprint and a BOM change.</li></ol>'
-             '<p class="mut">Option 1 needs no part change and is what I would try first. Tell me which one you choose and I update the floor plan and the table below.</p></section>')
+             '<h3>Check of option 1 (2026-11-11)</h3><p>Column order of the relay from left to right: COM, coil pins (up and down), NO / NC. Whatever the rotation, the coil column lies between COM and NO / NC. '
+             'With one 3-way terminal (J4 / J5) the NO and NC tracks must run round the end of the coil pins to reach it, and the +5V / RLY_D coil tracks then have to cross them, '
+             'so a mains track and a low-voltage track cross on two layers with only the 1.6 mm board between them. Slots do not fix a crossing.</p>'
+             '<p><b>Cleaner variant of option 2:</b> COM gets its own 2-way terminal on the COM side (left), NO and NC get a 2-way terminal on the right, and the coil tracks leave straight up and down. '
+             'No track crosses anything. Cost: one more KF128-5.08-2P per relay (C474952, 2 pieces more in total, 3-way J4 / J5 replaced by two 2-way terminals). The shortened main slot still applies.</p>'
+             '<p class="mut">Waiting for your decision: keep option 1 with the crossing (engineer review needed), or switch to the cleaner option 2 variant. The floor plan and the table below stay as they are until then.</p></section>')
     # placement table
     o.append('<section class="card" id="table"><h2>Placement table</h2><p class="mut">Centre of each part in mm, rotation in degrees. These come from the floor plan in <code>tools/pcb_layout.py</code> and are estimates: check each part against its real footprint size. '
              'Relay K1, K2 and J4, J5 follow the old plan and change with the decision above. Tick a row when the part is placed (saved in this browser).</p><div class="scroll"><table><tr><th>Done</th><th>Block</th><th>Ref</th><th>Part</th><th>X mm</th><th>Y mm</th><th>Rot</th><th>Size mm</th></tr>')
