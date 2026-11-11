@@ -123,11 +123,11 @@ ROWS = [
   "AC pins 6 mm apart, DC pins 18 mm apart, 33.6 mm between the AC and DC columns, all equal to the datasheet (2.2 mm in from each end, pin 0.8 mm). Pad 2.0 mm, hole 1.2 mm. "
   "Pin 3 = -Vo (GND), pin 4 = +Vo (+5V_HLK): check orientation on the 3D view, the datasheet top view is mirrored against EasyEDA y-up."),
  ("J4, J5", "KF128-5.08-3P", "C474953", "OK", "5.08 mm pitch, hole 1.40 mm, pad 2.4 mm: equal to the datasheet PCB layout (hole 1.40 +0.10)."),
- ("J2, J3, J10, J11", "KF128-5.08-2P", "C474952", "CHECK",
-  "J2 has 1.60 mm holes (datasheet 1.40 +0.10), the 3-way J4 has 1.40. Works (pin 0.9 mm) but is not the drawn size. Read J3, J10 and J11 too and set all to 1.40 mm, or accept 1.60."),
+ ("J2, J3, J10, J11", "KF128-5.08-2P", "C474952", "OK",
+  "Holes were 1.60 mm, datasheet 1.40 +0.10. Fixed in PCB1 on 2026-11-11 (all four now 1.40, same as J4 / J5)."),
  ("J1", "TYPE-C-31-M-12", "C165948", "CHECK",
   "Equal to the drawing: 0.5 mm signal pitch, 3.5 mm B8 to B5 span, power pads 4.8 apart, GND pads 6.4 apart, shell slots 8.65 apart and 4.18 mm front to rear. "
-  "Differences to confirm in the footprint editor: shell slots are 1.5 / 1.2 mm long and 0.8 wide, the drawing gives 1.70 / 1.40; the datasheet shows two 0.50 mm locating pegs 5.78 mm apart while the footprint has four 0.36 mm holes at the power and GND pads."),
+  "Shell slots fixed on 2026-11-11 to the drawing (0.6 wide, 1.70 near / 1.40 rear; were 0.8 x 1.5 / 1.2). Still open: the two 0.6 mm locating-peg holes (5.78 mm apart) are missing and the four wide pads carry a 0.36 mm hole the drawing does not show (see footprint-placement.html)."),
  ("BZ1", "MLT-8530", "C94599", "OK",
   "Datasheet gives body 8.5 x 8.5 mm and corner pads (+ lead, - lead, two dummy) but no land pattern. Footprint: 2.4 mm square pads at 7.2 mm centres, 0.55 mm beyond the body: fine for hand or reflow solder."),
  ("U1", "ESP32-S3-WROOM-1U-N16R8", "C3013946", "NOT COMPARED",
@@ -184,8 +184,7 @@ def build():
              '<li>This is a board-level measure. The relay itself still needs its own coil-to-contact rating checked, and the whole mains section needs the engineer review in PLAN.md section 14.</li></ul></div>')
     o.append('<div class="card"><h2>Open items before routing</h2><ol>'
              '<li>Relay K1 / K2: slots decided (see above). Update the floor plan and the main isolation slot position in PLAN.md section 14, since the relays no longer straddle the slot.</li>'
-             '<li>Set the 2-way KF128 holes (J2, J3, J10, J11) to 1.40 mm or accept 1.60 mm.</li>'
-             '<li>Open the J1 footprint in EasyEDA and confirm the shell slots and the pegs against the drawing.</li>'
+                          '<li>J1: add the two locating-peg holes (see footprint-placement.html).</li>'
              '<li>Read the remaining datasheet drawings: U1, U3, U4, U5, U6, J9 and the SOT-23 / SMB parts.</li>'
              '<li>Look at the 3D view of U2, K1, J1 and J4 once placed.</li></ol></div>')
     o.append('</main></body></html>')
