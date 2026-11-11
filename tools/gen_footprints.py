@@ -60,7 +60,12 @@ def k1_svg():
     # COM to coil gap
     b += f'<line x1="{-7.1*s+0.95*s*0.3}" y1="{-0}" x2="{-5.1*s}" y2="{-6*s+13}" stroke="#d62a2a" stroke-width="1.6" stroke-dasharray="3 2"/>'
     b += f'<text x="{-7.1*s-110}" y="-28" font-size="9" fill="#d62a2a" font-weight="700">COM to coil pad:</text><text x="{-7.1*s-110}" y="-17" font-size="9" fill="#d62a2a" font-weight="700">3.5 mm edge to edge</text>'
-    return svg(40, 18, b)
+    for cy, ang in ((-3.0, 18.4), (3.0, -18.4)):
+        # y up in EasyEDA: SVG y is flipped, so the rotation sign flips too
+        b += (f'<g transform="translate({-6.1*s},{-cy*s}) rotate({-ang})"><rect x="{-4.0*s}" y="{-0.5*s}" width="{8.0*s}" height="{1.0*s}" rx="{0.5*s}" '
+              f'fill="#d62a2a" fill-opacity=".25" stroke="#d62a2a" stroke-width="1.4"/></g>')
+    b += f'<text x="{-4.9*s}" y="{-9.2*s}" font-size="9" fill="#d62a2a" font-weight="700">proposed slots 8 x 1 mm</text>'
+    return svg(40, 20, b)
 
 
 def u2_svg():
@@ -113,7 +118,7 @@ ROWS = [
  ("K1, K2", "SRD-05VDC-SL-C", "C35449", "ACTION",
   "Pin grid matches the datasheet (12.2 mm coil column to contact column, 12 mm coil spacing, COM 2 mm outside the coil column). Hole 1.52 mm vs 1.3 mm drawn (loose, fine). "
   "<b>But COM (pin 5) sits only 3.5 mm edge to edge from each coil pad</b> and the coil column lies between COM and NO / NC, so one straight slot cannot separate mains from the 5 V coil. "
-  "Plan: milled slots between COM and each coil pin, or two relays rotated so the COM side faces the board edge. Needs your decision before placement."),
+  "Decision 2026-11-11: two 8 x 1 mm slots per relay between COM and the coil pins (details below), creepage 7.4 mm."),
  ("U2", "HLK-5M05", "C209907", "OK",
   "AC pins 6 mm apart, DC pins 18 mm apart, 33.6 mm between the AC and DC columns, all equal to the datasheet (2.2 mm in from each end, pin 0.8 mm). Pad 2.0 mm, hole 1.2 mm. "
   "Pin 3 = -Vo (GND), pin 4 = +Vo (+5V_HLK): check orientation on the 3D view, the datasheet top view is mirrored against EasyEDA y-up."),
@@ -166,8 +171,19 @@ def build():
             ("BZ1 MLT-8530 buzzer", bz_svg(), "Pads 1 and 2 are the + and - leads, 3 and 4 are mechanical dummy pads (no-connect flags set in the schematic).")]
     for t, s, n in figs:
         o.append(f'<div class="card"><h2>{e(t)}</h2><div class="fig">{s}</div><p class="mut">{e(n)}</p></div>')
+    o.append('<div class="card"><h2>Relay K1 / K2: slots around the coil pins</h2>'
+             '<p>Decision 2026-11-11: cut two slots in each relay footprint, one between COM (pin 5) and each coil pin (pins 1 and 4), so the mains pin and the 5 V coil are separated by a longer path through the board.</p>'
+             '<table><tr><th>Slot</th><th>Centre (x, y) mm</th><th>Angle</th><th>Size</th><th>Ends (x, y) mm</th><th>Creepage COM to coil pad</th></tr>'
+             '<tr><td>A (towards pin 1)</td><td>-6.10, -3.00</td><td>18.4 deg</td><td>8.0 x 1.0, round ends</td><td>(-2.31, -1.74) and (-9.89, -4.26)</td><td>7.4 mm around the slot end</td></tr>'
+             '<tr><td>B (towards pin 4)</td><td>-6.10, +3.00</td><td>-18.4 deg</td><td>8.0 x 1.0, round ends</td><td>(-2.31, +1.74) and (-9.89, +4.26)</td><td>7.4 mm around the slot end</td></tr></table>'
+             '<ul><li>Coordinates are relative to the relay origin with the relay at rotation 0 (y up, as in the EasyEDA PCB). Rotate the slots with the relay.</li>'
+             '<li>Creepage is measured pad edge to pad edge along the shortest path round the slot end: 7.4 mm against the 6.4 mm goal in PLAN.md (a 7 mm slot would give 6.6 mm, 6 mm only 5.9 mm).</li>'
+             '<li>Slot edge to the nearest pad: 1.27 mm. The slots lie under the relay body, so the relay does not need extra board area.</li>'
+             '<li>Routing rules: COM leaves to the left through the gap between the slots; coil pins leave up (pin 4) and down (pin 1), never across a slot. NO / NC are 12.2 mm from the coil, no slot needed.</li>'
+             '<li>Make the slots on the Board Outline layer like the existing isolation slot, and no copper (also no pour) within 0.5 mm of them.</li>'
+             '<li>This is a board-level measure. The relay itself still needs its own coil-to-contact rating checked, and the whole mains section needs the engineer review in PLAN.md section 14.</li></ul></div>')
     o.append('<div class="card"><h2>Open items before routing</h2><ol>'
-             '<li>Relay K1 / K2: decide how to isolate COM from the coil pads (slots around the coil pins, or another orientation). Then fix the floor plan and the slot position in PLAN.md section 14.</li>'
+             '<li>Relay K1 / K2: slots decided (see above). Update the floor plan and the main isolation slot position in PLAN.md section 14, since the relays no longer straddle the slot.</li>'
              '<li>Set the 2-way KF128 holes (J2, J3, J10, J11) to 1.40 mm or accept 1.60 mm.</li>'
              '<li>Open the J1 footprint in EasyEDA and confirm the shell slots and the pegs against the drawing.</li>'
              '<li>Read the remaining datasheet drawings: U1, U3, U4, U5, U6, J9 and the SOT-23 / SMB parts.</li>'
