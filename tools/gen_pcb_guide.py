@@ -21,7 +21,7 @@ NOTES = {
               "Silkscreen: draw the box with a thick line, add the text MAINS 230 V and L / N next to each terminal pin."],
  "power": ["U2 (HLK-5M05, 38 x 23 mm) lies across the shortened main slot (x 28.1 to 29.4, y 51 to 77 mm): AC pins at the left end, 5 V pins at the right end. Pin pitch checked against the datasheet (6 mm, 18 mm, 33.6 mm).",
            "D4, D5 and C1 go right next to the HLK +5V pin; U3 and its capacitors beside them. C15 across the HLK output pins."],
- "relay1": ["K1 turned 270 degrees at (17.5, 27): COM and the coil pins face up, NO / NC face down. J14 (COM) and J4 (NO / NC) are the two 2-way terminals below the relay; two 8 x 1 mm slots between COM and the coil pins (see footprint-placement.html).",
+ "relay1": ["K1 turned 270 degrees at (17.5, 27): COM and the coil pins face up, NO / NC face down. J4 (3-way, pins NO / COM / NC) sits below the relay; two 8 x 1 mm slots between COM and the coil pins (see footprint-placement.html).",
             "Q1, D1, R18, R10, LED3, C17 sit just right of the relay. Contact tracks 1.5 mm, short, never within 6.4 mm of low-voltage copper."],
  "relay2": ["Same as relay 1, one box below it. J5 is on the left edge, cable entry to the left.", "Keep the two relay boxes identical so the second channel can be copied from the first."],
  "esp32": ["U1 at the top right: no PCB antenna, so keep the U.FL connector near the top edge and nothing tall next to it.",
@@ -40,7 +40,7 @@ NOTES = {
 }
 NETS = [
  ("L, N (mains)", "1.0 mm min", "Mains conductors: spacing and slot matter more than width. Keep short; 1 oz copper."),
- ("Relay contacts COMn / NOn / NCn", "1.5 mm", "Control-circuit currents only (contactor coil). Run only below the relay (J14 / J4 / J15 / J5)."),
+ ("Relay contacts COMn / NOn / NCn", "1.5 mm", "Control-circuit currents only (contactor coil). Run only below the relay (J4 / J5)."),
  ("+5V_HLK, +5V", "0.8 mm", "Peak about 0.75 A in the plan; 0.8 mm on 1 oz is comfortable."),
  ("+3V3", "0.6 mm", "ESP32 bursts to about 0.45 A."),
  ("GND", "pour on both layers", "Low-voltage side only. No pour on the mains side or across the slot."),

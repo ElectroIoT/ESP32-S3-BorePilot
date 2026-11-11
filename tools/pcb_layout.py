@@ -40,11 +40,10 @@ small("C6", 55.5, 61.5)
 # COM runs down between the two slots under the relay body to J14 / J15, NO / NC go to J4 / J5 below the relay.
 # Low-voltage parts (driver, diode, LED) sit in a strip above the relay, at least 7.8 mm from the COM pad.
 def relay(n, x0, y0):
-    k, j_no, j_com = f"K{n}", ("J4", "J5")[n - 1], ("J14", "J15")[n - 1]
+    k, j_no = f"K{n}", ("J4", "J5")[n - 1]
     q, d, r_g, r_l, led, cap = (("Q1", "D1", "R18", "R10", "LED3", "C17"), ("Q2", "D2", "R19", "R11", "LED4", "C18"))[n - 1]
     put(k, x0, y0, 19.2, 15.6, 270)
-    put(j_no, x0, y0 - 14, 10.2, 8)
-    put(j_com, x0, y0 - 22.5, 10.2, 8)
+    put(j_no, x0, y0 - 16, 15.5, 8)
     put(d, x0 - 2.4, y0 + 17.2, 5.4, 4.4)
     put(q, x0 + 2.6, y0 + 17.2, 3.4, 3)
     small(r_g, x0 + 7.4, y0 + 17.2)
@@ -120,8 +119,8 @@ small("R7", 72, 10.5)
 BLOCKS = [
     ("mains_in", "MAINS IN 230 V", "#ff4d4d", ["J2", "J3"]),
     ("power", "POWER 5V / 3V3", "#ff9f43", ["U2", "C15", "D4", "D5", "C1", "U3", "C2", "C3", "C5", "C6"]),
-    ("relay1", "RELAY 1", "#2fbf71", ["K1", "J4", "J14", "Q1", "D1", "R18", "R10", "LED3", "C17"]),
-    ("relay2", "RELAY 2", "#1b9e5b", ["K2", "J5", "J15", "Q2", "D2", "R19", "R11", "LED4", "C18"]),
+    ("relay1", "RELAY 1", "#2fbf71", ["K1", "J4", "Q1", "D1", "R18", "R10", "LED3", "C17"]),
+    ("relay2", "RELAY 2", "#1b9e5b", ["K2", "J5", "Q2", "D2", "R19", "R11", "LED4", "C18"]),
     ("esp32", "ESP32-S3", "#a66cff", ["U1", "J13", "C4", "C9", "C10", "R3", "C8", "SW1", "SW2"]),
     ("disp_hdr", "DISPLAY OLED / 16x2", "#ff4d94", ["J8", "J7", "U5", "R12", "R13", "R14", "R15", "R5", "C12", "C13"]),
     ("lcd_drv", "12864 LCD DRIVER", "#e91e63", ["U6", "Q3", "R20", "RV2", "C14", "C19"]),
@@ -160,7 +159,7 @@ def check():
     prob = []
     rs = {k: rect(v) for k, v in L.items()}
     keys = list(rs)
-    edge = {"J1", "J10", "J11", "J6", "J2", "J3", "J7", "J8", "J12", "J13", "J4", "J5", "J9", "J14", "J15"}
+    edge = {"J1", "J10", "J11", "J6", "J2", "J3", "J7", "J8", "J12", "J13", "J4", "J5", "J9"}
     for i in range(len(keys)):
         a = rs[keys[i]]
         inside = a[0] >= 0.5 and a[1] >= 0.5 and a[2] <= BOARD_W - 0.5 and a[3] <= BOARD_H - 0.5
@@ -179,7 +178,7 @@ def check():
             if (cx - hx) ** 2 + (cy - hy) ** 2 < 3.4 ** 2:
                 prob.append(f"{keys[i]} touches mounting hole at ({hx},{hy})")
     sx0, sx1 = SLOT["x"] - 3.2, SLOT["x"] + SLOT["w"] + 3.2
-    mains = {"J2", "J3", "J4", "J5", "J14", "J15", "U2", "K1", "K2"}
+    mains = {"J2", "J3", "J4", "J5", "U2", "K1", "K2"}
     for k, a in rs.items():
         if k in mains:
             continue

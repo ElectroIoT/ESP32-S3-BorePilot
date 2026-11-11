@@ -70,15 +70,15 @@ def build():
              "".join(f'<tr><td>{e(a)}</td><td>{e(b)}</td><td>{e(c)}</td><td>{e(d)}</td><td>{e(f)}</td></tr>' for a, b, c, d, f in RELAY_SLOTS) +
              '</table></div><p>Creepage COM to coil pad around a slot end: 7.4 mm (goal 6.4 mm). Keep copper (also pours) 0.5 mm from every slot.</p>'
              '<h3>Routing rules for the relay</h3><ul>'
-             '<li><b>COM</b> leaves the pad downward, between the two slots and under the relay body, straight to J14 (2-way terminal, both pins COM).</li>'
-             '<li><b>NO / NC</b> go straight down to J4 (NO, NC), which sits below the relay body.</li>'
+             '<li><b>COM</b> leaves the pad downward, between the two slots and under the relay body, straight to the middle pin of J4 / J5.</li>'
+             '<li><b>NO / NC</b> go straight down to the outer pins of J4 / J5 below the relay body.</li>'
              '<li><b>Coil</b>: pin 1 (RLY_D) and pin 4 (+5V) go up into the low-voltage strip above the relay (Q1 / D1 / R18 / R10 / LED3 / C17). Keep that strip at least 6.4 mm (7.8 mm centre to centre) above the COM pad.</li>'
              '<li>No mains track may enter the strip, no low-voltage track may go below the relay: nothing crosses.</li></ul></section>')
     o.append('<section class="card" id="conflict"><h2><span class="tag done">DECIDED</span> Main slot and relay position</h2>'
              '<p>The long main slot is shortened to the HLK-5M05 area only: x = 28.1 to 29.4 mm, y = 51 to 77 mm. It separates the AC pin column of U2 from its DC column. '
              'The relays sit below it (K1 at x = 17.5, K2 at x = 39.5, y = 27 mm) and are isolated by their own slots, so no slot crosses a relay. '
-             'Between the mains area (left, J2 / J3, U2 AC side, J14, J4, J15, J5) and the low-voltage area keep 6.4 mm by clearance where there is no slot.</p>'
-             '<p class="mut">Why split terminals: on the SRD relay the coil column lies between COM and NO / NC, so a single 3-way terminal forces a mains track to cross the coil tracks. With COM and NO / NC on separate terminals nothing crosses. The cost is two more KF128-5.08-2P pieces (8 in total).</p></section>')
+             'Between the mains area (left, J2 / J3, U2 AC side, J4, J5) and the low-voltage area keep 6.4 mm by clearance where there is no slot.</p>'
+             '<p class="mut">Why COM in the middle: on the SRD relay the coil column lies between COM and NO / NC. With the terminal order NO / COM / NC the three mains tracks run straight down and nothing crosses.</p></section>')
     # placement table
     o.append('<section class="card" id="table"><h2>Placement table</h2><p class="mut">Centre of each part in mm, rotation in degrees. These come from the floor plan in <code>tools/pcb_layout.py</code> and are estimates: check each part against its real footprint size. '
              'Relay layout updated 2026-11-11 (split terminals). Tick a row when the part is placed (saved in this browser).</p><div class="scroll"><table><tr><th>Done</th><th>Block</th><th>Ref</th><th>Part</th><th>X mm</th><th>Y mm</th><th>Rot</th><th>Size mm</th></tr>')
