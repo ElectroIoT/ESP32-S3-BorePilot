@@ -13,7 +13,32 @@ def font(name, size): return ImageFont.truetype(F + name, size)
 BOLD, REG, LIGHT = "segoeuib.ttf", "segoeui.ttf", "segoeuil.ttf"
 NAVY1, NAVY2, ACC, ACC2, TXT, MUT = (10, 22, 48), (16, 56, 92), (63, 208, 255), (47, 191, 113), (240, 246, 255), (150, 175, 205)
 
-board = Image.open(os.path.join(IMG, "board-top.png")).convert("RGBA")
+board2d = Image.open(os.path.join(IMG, "board-top.png")).convert("RGBA")
+REN = os.path.join(IMG, "renders")
+
+
+def cutout(path, thr=14):
+    """Load a 3D render and make the black background transparent with a soft edge."""
+    im = Image.open(path).convert("RGB")
+    im = im.crop((0, 0, im.width, im.height - 26))
+    px = im.load()
+    mask = Image.new("L", im.size, 255)
+    mp = mask.load()
+    for y in range(im.height):
+        for x in range(im.width):
+            r, g, b = px[x, y]
+            if max(r, g, b) < thr:
+                mp[x, y] = 0
+    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(1.2))
+    out = im.convert("RGBA")
+    out.putalpha(mask)
+    return out
+
+
+iso = cutout(os.path.join(REN, "blue_iso.png"))
+top3d = cutout(os.path.join(REN, "blue_top.png"))
+bot3d = cutout(os.path.join(REN, "blue_bottom.png"))
+board = iso
 
 
 def gradient(w, h, c1=NAVY1, c2=NAVY2):
@@ -26,14 +51,17 @@ def gradient(w, h, c1=NAVY1, c2=NAVY2):
     return g
 
 
-def board_card(size_w, rot=0):
-    b = board.copy()
+def board_card(size_w, rot=0, src=None):
+    b = (src or board).copy()
     r = size_w / b.width
     b = b.resize((size_w, int(b.height * r)), Image.LANCZOS)
-    sh = Image.new("RGBA", (b.width + 80, b.height + 80), (0, 0, 0, 0))
-    ImageDraw.Draw(sh).rounded_rectangle((40, 50, 40 + b.width, 50 + b.height), 18, fill=(0, 0, 0, 170))
-    sh = sh.filter(ImageFilter.GaussianBlur(18))
-    sh.alpha_composite(b, (40, 40))
+    sh = Image.new("RGBA", (b.width + 120, b.height + 120), (0, 0, 0, 0))
+    a = b.split()[3].point(lambda v: 150 if v > 40 else 0)
+    black = Image.new("RGBA", b.size, (0, 0, 0, 255))
+    black.putalpha(a)
+    sh.alpha_composite(black, (60, 78))
+    sh = sh.filter(ImageFilter.GaussianBlur(16))
+    sh.alpha_composite(b, (60, 60))
     return sh
 
 
@@ -140,67 +168,134 @@ def features():
     im.convert("RGB").save(os.path.join(SOC, "03_features_1080x1640.png"))
 
 
-def board_b64():
-    b = board.convert("RGB")
-    b = b.resize((480, int(480 * b.height / b.width)), Image.LANCZOS)
+def b64png(im, width):
+    im = im.resize((width, int(im.height * width / im.width)), Image.LANCZOS)
     buf = io.BytesIO()
-    b.save(buf, "JPEG", quality=86)
-    return base64.b64encode(buf.getvalue()).decode(), b.size
+    im.save(buf, "PNG", optimize=True)
+    return base64.b64encode(buf.getvalue()).decode(), im.size
+
+
+STYLE = """<style>
+.t{font-family:'Segoe UI',Arial,sans-serif}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes dash{to{stroke-dashoffset:-36}}
+@keyframes appear{0%,2%{opacity:0;transform:translateX(-14px)}8%,%END%{opacity:1;transform:none}%END2%,100%{opacity:0}}
+</style>"""
 
 
 def hero_svg():
-    data, (bw, bh) = board_b64()
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" width="1200" height="460" font-family="Segoe UI,Arial,sans-serif">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1630"/><stop offset="1" stop-color="#10385c"/></linearGradient>
-<filter id="sh"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-opacity=".5"/></filter></defs>
-<rect width="1200" height="460" rx="24" fill="url(#bg)"/>
-<g fill="none" stroke="#3fd0ff" stroke-width="3" stroke-linecap="round"><path d="M80 130 q40 -40 80 0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/></path>
-<path d="M62 150 q58 -62 116 0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin=".3s" repeatCount="indefinite"/></path>
-<path d="M44 170 q76 -84 152 0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin=".6s" repeatCount="indefinite"/></path></g>
-<circle cx="120" cy="170" r="7" fill="#3fd0ff"/>
-<text x="230" y="120" fill="#3fd0ff" font-size="20" font-weight="700" letter-spacing="3">OPEN-SOURCE IoT PUMP CONTROLLER</text>
-<text x="226" y="215" fill="#f0f6ff" font-size="96" font-weight="700">BorePilot</text>
-<text x="230" y="265" fill="#f0f6ff" font-size="32" font-weight="300">Smart borewell pump controller</text>
-<text x="230" y="310" fill="#96afcd" font-size="22">ESP32-S3  |  2 relays  |  PZEM-004T  |  Home Assistant  |  USB-C</text>
-<g font-size="20" fill="#f0f6ff"><rect x="230" y="340" width="150" height="42" rx="21" fill="#2fbf71" opacity=".25"/><text x="252" y="368">Start / Stop</text>
-<rect x="394" y="340" width="150" height="42" rx="21" fill="#3fd0ff" opacity=".25"/><text x="420" y="368">V / A / kWh</text>
-<rect x="558" y="340" width="170" height="42" rx="21" fill="#f4c20d" opacity=".25"/><text x="582" y="368">Dry-run guard</text></g>
-<g filter="url(#sh)"><image href="data:image/jpeg;base64,{data}" x="{1200-bw-40}" y="{(460-bh)//2}" width="{bw}" height="{bh}"/></g>
-<circle cx="{1200-bw-40+bw*0.26}" cy="{(460-bh)//2+bh*0.64}" r="9" fill="#2fbf71"><animate attributeName="opacity" values="1;.15;1" dur="1.6s" repeatCount="indefinite"/></circle>
-<circle cx="{1200-bw-40+bw*0.53}" cy="{(460-bh)//2+bh*0.64}" r="9" fill="#2fbf71"><animate attributeName="opacity" values="1;.15;1" dur="1.6s" begin=".8s" repeatCount="indefinite"/></circle>
-<text x="1160" y="438" text-anchor="end" fill="#96afcd" font-size="16">ElectroIoT.in</text>
-</svg>'''
+    data, (bw, bh) = b64png(iso, 600)
+    x0, y0 = 1200 - bw - 30, (520 - bh) // 2
+    dots = "".join(f'<circle cx="{20 + i * 60}" cy="{20 + j * 60}" r="1.4" fill="#3fd0ff" opacity=".12"/>' for i in range(21) for j in range(9))
+    style = STYLE.replace("%END%", "90%").replace("%END2%", "96%")
+    svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">{style}
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1630"/><stop offset="1" stop-color="#0e4466"/></linearGradient>
+<radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#3fd0ff" stop-opacity=".55"/><stop offset="1" stop-color="#3fd0ff" stop-opacity="0"/></radialGradient>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000" flood-opacity=".55"/></filter>
+<linearGradient id="scan" x1="0" x2="1"><stop offset="0" stop-color="#3fd0ff" stop-opacity="0"/><stop offset=".5" stop-color="#3fd0ff" stop-opacity=".9"/><stop offset="1" stop-color="#3fd0ff" stop-opacity="0"/></linearGradient>
+<clipPath id="board"><rect x="{x0}" y="{y0}" width="{bw}" height="{bh}"/></clipPath></defs>
+<rect width="1200" height="520" rx="26" fill="url(#bg)"/>{dots}
+<ellipse cx="{x0 + bw / 2}" cy="{y0 + bh / 2 + 20}" rx="{bw / 2 + 40}" ry="{bh / 2 + 10}" fill="url(#glow)"><animate attributeName="opacity" values=".5;1;.5" dur="4s" repeatCount="indefinite"/></ellipse>
+<g class="t">
+<text x="60" y="92" fill="#3fd0ff" font-size="20" font-weight="700" letter-spacing="3">OPEN-SOURCE IoT PUMP CONTROLLER</text>
+<text x="56" y="190" fill="#f0f6ff" font-size="104" font-weight="700">BorePilot</text>
+<text x="60" y="245" fill="#f0f6ff" font-size="34" font-weight="300">Smart borewell pump controller</text>
+<text x="60" y="292" fill="#96afcd" font-size="22">ESP32-S3  |  2 relays  |  PZEM-004T  |  Home Assistant  |  USB-C</text>
+<g font-size="20" fill="#f0f6ff">
+<rect x="60" y="330" width="156" height="44" rx="22" fill="#2fbf71" opacity=".28"/><text x="84" y="359">Start / Stop</text>
+<rect x="230" y="330" width="156" height="44" rx="22" fill="#3fd0ff" opacity=".28"/><text x="256" y="359">V / A / kWh</text>
+<rect x="400" y="330" width="178" height="44" rx="22" fill="#f4c20d" opacity=".28"/><text x="424" y="359">Dry-run guard</text>
+<rect x="60" y="388" width="156" height="44" rx="22" fill="#a66cff" opacity=".28"/><text x="88" y="417">Wi-Fi + OTA</text>
+<rect x="230" y="388" width="156" height="44" rx="22" fill="#ff6b6b" opacity=".28"/><text x="262" y="417">230 V aware</text>
+</g>
+<text x="60" y="480" fill="#96afcd" font-size="17">100 x 90 mm, 2 layers  |  MIT licence  |  ElectroIoT.in</text></g>
+<g style="animation:float 5s ease-in-out infinite"><g filter="url(#sh)"><image href="data:image/png;base64,{data}" x="{x0}" y="{y0}" width="{bw}" height="{bh}"/></g>
+<g clip-path="url(#board)"><rect x="{x0}" y="{y0}" width="{bw}" height="6" fill="url(#scan)"><animate attributeName="y" values="{y0};{y0 + bh};{y0}" dur="6s" repeatCount="indefinite"/></rect></g></g>
+<g fill="none" stroke="#3fd0ff" stroke-width="3.5" stroke-linecap="round">
+<path d="M{x0 + 330} 80 q40 -34 80 0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/></path>
+<path d="M{x0 + 312} 98 q58 -56 116 0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin=".3s" repeatCount="indefinite"/></path>
+<path d="M{x0 + 294} 116 q76 -78 152 0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin=".6s" repeatCount="indefinite"/></path></g>
+<circle cx="{x0 + 370}" cy="112" r="6" fill="#3fd0ff"/>
+</svg>"""
     open(os.path.join(IMG, "borepilot-hero-animated.svg"), "w", encoding="utf-8").write(svg)
 
 
 def flow_svg():
-    def box(x, y, w, h, t, s, col):
-        return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="16" fill="#12263f" stroke="{col}" stroke-width="2"/>'
-                f'<text x="{x+w/2}" y="{y+38}" text-anchor="middle" fill="#f0f6ff" font-size="22" font-weight="700">{t}</text>'
-                f'<text x="{x+w/2}" y="{y+66}" text-anchor="middle" fill="#96afcd" font-size="15">{s}</text>')
-    def arrow(x1, y1, x2, y2, col, d="3s"):
-        return (f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{col}" stroke-width="3" stroke-dasharray="10 8">'
-                f'<animate attributeName="stroke-dashoffset" from="36" to="0" dur="{d}" repeatCount="indefinite"/></line>'
-                f'<polygon points="{x2},{y2} {x2-10*(1 if x2>x1 else -1)},{y2-6} {x2-10*(1 if x2>x1 else -1)},{y2+6}" fill="{col}"/>')
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" font-family="Segoe UI,Arial,sans-serif">
-<rect width="1200" height="420" rx="24" fill="#0a1630"/>
-<text x="600" y="44" text-anchor="middle" fill="#3fd0ff" font-size="24" font-weight="700">How BorePilot works</text>
-{box(40,150,230,100,"Home Assistant","phone, dashboard, automations","#3fd0ff")}
-{box(380,130,250,140,"BorePilot","ESP32-S3 + HLK 5 V + relays","#2fbf71")}
-{box(740,70,210,90,"Relay 1","START contactor / pump","#f4c20d")}
-{box(740,240,210,90,"Relay 2","STOP / spare, NO + NC","#f4c20d")}
-{box(1000,150,170,100,"Pump","single phase, 230 V","#ff6b6b")}
-{box(380,320,250,80,"PZEM-004T","V, A, W, kWh, Hz","#3fd0ff")}
-{box(40,320,230,80,"Tank node (optional)","ESP-NOW level","#96afcd")}
-{arrow(270,200,380,200,"#3fd0ff")}{arrow(380,215,270,215,"#3fd0ff","4s")}
-{arrow(630,170,740,115,"#2fbf71")}{arrow(630,230,740,285,"#2fbf71")}
-{arrow(950,115,1000,185,"#f4c20d")}{arrow(950,285,1000,215,"#f4c20d")}
-{arrow(505,320,505,270,"#3fd0ff")}
-{arrow(270,360,380,300,"#96afcd","5s")}
-<text x="325" y="190" text-anchor="middle" fill="#96afcd" font-size="14">Wi-Fi</text>
-</svg>'''
+    def node(x, y, w, h, t, s, col):
+        return (f'<g class="t"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="16" fill="#12263f" stroke="{col}" stroke-width="2"/>'
+                f'<text x="{x + w / 2}" y="{y + 36}" text-anchor="middle" fill="#f0f6ff" font-size="21" font-weight="700">{t}</text>'
+                f'<text x="{x + w / 2}" y="{y + 62}" text-anchor="middle" fill="#96afcd" font-size="14">{s}</text></g>')
+
+    def link(pid, d, col, dur, begin="0s"):
+        return (f'<path id="{pid}" d="{d}" fill="none" stroke="{col}" stroke-opacity=".35" stroke-width="3" stroke-dasharray="10 8" style="animation:dash 1.6s linear infinite"/>'
+                f'<circle r="6" fill="{col}"><animateMotion dur="{dur}" begin="{begin}" repeatCount="indefinite" calcMode="linear"><mpath href="#{pid}"/></animateMotion></circle>')
+    style = STYLE.replace("%END%", "90%").replace("%END2%", "96%")
+    svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" width="1200" height="460">{style}
+<rect width="1200" height="460" rx="26" fill="#0a1630"/>
+<text class="t" x="600" y="46" text-anchor="middle" fill="#3fd0ff" font-size="25" font-weight="700">How BorePilot works</text>
+{node(40, 150, 230, 100, "Home Assistant", "dashboard, phone, automations", "#3fd0ff")}
+{node(390, 120, 250, 160, "BorePilot", "ESP32-S3, HLK 5 V, relays, display", "#2fbf71")}
+{node(760, 60, 200, 90, "Relay 1", "START contactor", "#f4c20d")}
+{node(760, 250, 200, 90, "Relay 2", "STOP / spare, NO + NC", "#f4c20d")}
+{node(1010, 150, 160, 100, "Pump", "single phase, 230 V", "#ff6b6b")}
+{node(390, 350, 250, 80, "PZEM-004T", "V, A, W, kWh, Hz", "#3fd0ff")}
+{node(40, 350, 230, 80, "Tank node", "ESP-NOW level (optional)", "#96afcd")}
+{link("a1", "M270 190 L390 190", "#3fd0ff", "2.4s")}
+{link("a2", "M390 215 L270 215", "#3fd0ff", "3s", "0.6s")}
+{link("a3", "M640 170 C700 170 700 105 760 105", "#2fbf71", "2s")}
+{link("a4", "M640 230 C700 230 700 295 760 295", "#2fbf71", "2s", "0.5s")}
+{link("a5", "M960 105 C1000 105 1000 185 1010 190", "#f4c20d", "1.6s", "1s")}
+{link("a6", "M960 295 C1000 295 1000 215 1010 210", "#f4c20d", "1.6s", "1.4s")}
+{link("a7", "M515 350 L515 280", "#3fd0ff", "1.8s")}
+{link("a8", "M270 385 C330 385 340 300 390 270", "#96afcd", "3s", "0.2s")}
+<text class="t" x="330" y="180" text-anchor="middle" fill="#96afcd" font-size="14">Wi-Fi</text>
+<g transform="translate(1090 296)"><g style="transform-origin:0 0;animation:spin 2.2s linear infinite"><circle r="20" fill="none" stroke="#ff6b6b" stroke-width="3"/><path d="M0 0 L16 -6 M0 0 L-12 12 M0 0 L-4 -17" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/></g></g>
+<g fill="#3fd0ff"><circle cx="1070" cy="400" r="5"><animate attributeName="cy" values="380;430" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.6s" repeatCount="indefinite"/></circle>
+<circle cx="1100" cy="400" r="5"><animate attributeName="cy" values="380;430" dur="1.6s" begin=".5s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.6s" begin=".5s" repeatCount="indefinite"/></circle>
+<circle cx="1130" cy="400" r="5"><animate attributeName="cy" values="380;430" dur="1.6s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.6s" begin="1s" repeatCount="indefinite"/></circle></g>
+</svg>"""
     open(os.path.join(IMG, "borepilot-flow-animated.svg"), "w", encoding="utf-8").write(svg)
 
 
-hero(); square(); features(); hero_svg(); flow_svg()
+def anatomy_svg():
+    data, (bw, bh) = b64png(top3d, 640)
+    X, Y = 40, 40
+    k = bw / 882.0
+    items = [
+        ("Mains in", "J2 AC in, J3 tap for the PZEM", 150, 55, "#ff6b6b"),
+        ("HLK-5M05", "230 V AC to 5 V / 1 A module", 190, 220, "#ff6b6b"),
+        ("ESP32-S3-WROOM-1U", "Wi-Fi, external antenna, 16 MB flash", 680, 130, "#a66cff"),
+        ("START / STOP / MENU", "buttons, RESET and BOOT", 510, 380, "#3fd0ff"),
+        ("128x64 LCD header", "or 16x2 I2C LCD / I2C OLED", 830, 520, "#ff4d94"),
+        ("2 x SPDT relay", "NO / COM / NC, slots around the coil", 250, 580, "#f4c20d"),
+        ("Relay terminals", "J4, J5: NO, COM, NC", 190, 720, "#2fbf71"),
+        ("Float inputs", "J10, J11 level switches", 540, 715, "#c0a000"),
+    ]
+    n = len(items)
+    dur = n * 1.8
+    style = STYLE.replace("%END%", "11%").replace("%END2%", "13%")
+    # each item visible for one slot of the cycle: use per-item delay, keyframes pattern repeats via animation-duration = dur
+    style = style.replace("@keyframes appear{0%,2%{opacity:0;transform:translateX(-14px)}8%,11%{opacity:1;transform:none}13%,100%{opacity:0}}",
+                          "@keyframes appear{0%{opacity:0;transform:translateX(-14px)}6%,%HOLD%{opacity:1;transform:none}%FADE%,100%{opacity:0}}").replace("%HOLD%", f"{100 / n * 0.83:.1f}%").replace("%FADE%", f"{100 / n * 0.95:.1f}%")
+    W, H = 1200, bh + 2 * Y
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}">{style}',
+           f'<rect width="{W}" height="{H}" rx="26" fill="#0a1630"/>',
+           f'<image href="data:image/png;base64,{data}" x="{X}" y="{Y}" width="{bw}" height="{bh}"/>',
+           f'<text class="t" x="{W - 40}" y="64" text-anchor="end" fill="#3fd0ff" font-size="28" font-weight="700">Board tour</text>']
+    for i, (t, sub, px, py, col) in enumerate(items):
+        cx, cy = X + px * k, Y + py * k
+        ly = 130 + i * ((H - 200) / (n - 1))
+        lx = 740
+        out.append(f'<g style="opacity:0;animation:appear {dur}s linear infinite;animation-delay:{i * 1.8:.1f}s">'
+                   f'<circle cx="{cx:.0f}" cy="{cy:.0f}" r="14" fill="none" stroke="{col}" stroke-width="3"/><circle cx="{cx:.0f}" cy="{cy:.0f}" r="5" fill="{col}"/>'
+                   f'<path d="M{cx + 14:.0f} {cy:.0f} L{lx - 10} {ly:.0f}" stroke="{col}" stroke-width="2" fill="none" stroke-dasharray="6 5"/>'
+                   f'<rect x="{lx}" y="{ly - 30:.0f}" width="420" height="60" rx="14" fill="#12263f" stroke="{col}" stroke-width="2"/>'
+                   f'<text class="t" x="{lx + 18}" y="{ly - 4:.0f}" fill="#f0f6ff" font-size="21" font-weight="700">{t}</text>'
+                   f'<text class="t" x="{lx + 18}" y="{ly + 20:.0f}" fill="#96afcd" font-size="15">{sub}</text></g>')
+    out.append("</svg>")
+    open(os.path.join(IMG, "borepilot-anatomy-animated.svg"), "w", encoding="utf-8").write("\n".join(out))
+
+
+hero(); square(); features(); hero_svg(); flow_svg(); anatomy_svg()
 print("assets written")
